@@ -9,11 +9,11 @@ public class Loader : MonoBehaviour
     {
         for (int i = 0; i < 100; i++)
         {
-            StaticData.MapData.Add(new List<WorldMapCellScript>());
+            StaticData.MapData.Add(new List<WorldMapCell>());
 
             for (int k = 0; k < 100; k++)
             {
-                WorldMapCellScript gg = new WorldMapCellScript();
+                WorldMapCell gg = new WorldMapCell();
                 gg.Message = i.ToString() + "HI" + k.ToString();
                 StaticData.MapData[i].Add(gg);
                 
