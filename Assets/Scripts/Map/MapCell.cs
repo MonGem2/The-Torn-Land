@@ -24,18 +24,19 @@ public class MapCell : MonoBehaviour
         Door
     };
 
-    public MapCell()
+    public MapCell():base()
     {
         type = CellType.Floar;
         color = Color.blue;
     }
 
-    public MapCell(int _x, int _y, Color _color, CellType _type)
+    public MapCell(int _x, int _y, Color _color, CellType _type):base()
     {
         x = _x;
         y = _y;
         color = _color;
         type = _type;
+        
     }
 
     // Start is called before the first frame update

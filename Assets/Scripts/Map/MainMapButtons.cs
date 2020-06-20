@@ -15,5 +15,14 @@ public class MainMapButtons : MonoBehaviour
             SceneManager.LoadScene("RoguelikeScene");
 
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("i'm here");
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos.z = 0;
+            Debug.Log(mousePos);
+            Player.transform.position = mousePos;
+
+        }
     }
 }

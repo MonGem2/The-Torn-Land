@@ -29,14 +29,16 @@ public class MapRogulikeGenerator : MonoBehaviour
         {
             for (int k = 0; k < ThisCell.MapHeight; k++)
             {
-               
-                GameObject cell = Instantiate(CellPerhub);
-                cell.transform.SetParent(gameObject.transform);
-                cell.GetComponent<MapCell>().X = i;
-                cell.GetComponent<MapCell>().Y = k;
-                cell.GetComponent<MapCell>().Type = generator.Map[i, k].Type;
-                cell.GetComponent<MapCell>().Color = generator.Map[i, k].Color;
-                MapCells.Add(cell);
+                if (generator.Map[i, k].Type != MapCell.CellType.Floar)
+                {
+                    GameObject cell = Instantiate(CellPerhub);
+                    cell.transform.SetParent(gameObject.transform);
+                    cell.GetComponent<MapCell>().X = i;
+                    cell.GetComponent<MapCell>().Y = k;
+                    cell.GetComponent<MapCell>().Type = generator.Map[i, k].Type;
+                    cell.GetComponent<MapCell>().Color = generator.Map[i, k].Color;
+                    MapCells.Add(cell);
+                }
             }
         }
     }
