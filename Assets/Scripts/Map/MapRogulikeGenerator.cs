@@ -10,7 +10,8 @@ public class MapRogulikeGenerator : MonoBehaviour
 {
     public WorldMapCell ThisCell = new WorldMapCell();//StaticData.MapData[0][0];//ActiveCell;
     public GameObject CellPerhub;
-    public int UnBorder = 10;
+    public GameObject EmptyPerhub;
+    public int UnBorder = 5;
     private Generator generator;
     
     public List<GameObject> MapCells = new List<GameObject>();
@@ -24,19 +25,30 @@ public class MapRogulikeGenerator : MonoBehaviour
         generator.Build(UnBorder);
         generator.ConnectCaves();
         generator.ConnectCaves();
+        generator.EmptyCellSet();
 
         for (int i = 0; i < ThisCell.MapWidth; i++)
         {
             for (int k = 0; k < ThisCell.MapHeight; k++)
             {
-                if (generator.Map[i, k].Type != MapCell.CellType.Floar)
+                if (generator.Map[i, k] == (int)MapCell.CellType.Wall)
                 {
                     GameObject cell = Instantiate(CellPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     cell.GetComponent<MapCell>().X = i;
                     cell.GetComponent<MapCell>().Y = k;
-                    cell.GetComponent<MapCell>().Type = generator.Map[i, k].Type;
-                    cell.GetComponent<MapCell>().Color = generator.Map[i, k].Color;
+                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.Map[i, k];
+                    cell.GetComponent<MapCell>().Color = UnityEngine.Color.gray;
+                    MapCells.Add(cell);
+                }
+                if (generator.Map[i, k] == -1)
+                {
+                    GameObject cell = Instantiate(EmptyPerhub);
+                    cell.transform.SetParent(gameObject.transform);
+                    cell.GetComponent<MapCell>().X = i;
+                    cell.GetComponent<MapCell>().Y = k;
+                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.Map[i, k];
+                    cell.GetComponent<MapCell>().Color = UnityEngine.Color.black;
                     MapCells.Add(cell);
                 }
             }
@@ -162,7 +174,7 @@ Interesting Patterns
         /// <summary>
         /// Contains the map
         /// </summary>
-        public MapCell[,] Map;
+        public int[,] Map;
 
         #endregion
 
@@ -202,10 +214,10 @@ Interesting Patterns
         {
             Neighbours = 4;
             Iterations = 50000;
-            CloseCellProb = 45;//UnityEngine.Random.Range(45,80);
+            CloseCellProb = 45 /*UnityEngine.Random.Range(45,80)*/;
 
             LowerLimit = 16;
-            UpperLimit = 2500;
+            UpperLimit = 10000;
 
             MapSize = new Size(50, 50);
 
@@ -228,6 +240,22 @@ Interesting Patterns
             return Caves.Count();
         }
 
+        public void EmptyCellSet()
+        {
+            Point cell;
+            for (int x = 0; x < MapSize.Width; x++)
+                for (int y = 0; y < MapSize.Height; y++)
+                {
+                    cell = new Point(x, y);
+
+                    if (
+                            Point_Get(cell) == 0
+                            && Neighbours_Get1(cell).Where(n => Point_Get(n) == 0 || Point_Get(n) == -1).Count() == 9
+                        )
+                        Point_Set(cell, -1);
+                }
+        }
+
         #endregion
 
 
@@ -241,7 +269,7 @@ Interesting Patterns
         private void BuildCaves(int unBorderLimits)
         {
 
-            Map = new MapCell[MapSize.Width, MapSize.Height];
+            Map = new int[MapSize.Width, MapSize.Height];
 
 
             //go through each map cell and randomly determine whether to close it
@@ -249,21 +277,36 @@ Interesting Patterns
             for (int x = 0; x < MapSize.Width; x++)
                 for (int y = 0; y < MapSize.Height; y++)
                 {
-                    Map[x, y] = new MapCell(x, y, UnityEngine.Color.red, MapCell.CellType.Wall);
+                    Map[x, y] = 0;
                     if (UnityEngine.Random.Range(0, 100) < CloseCellProb)
-                        Map[x, y] = new MapCell(x, y, UnityEngine.Color.blue, MapCell.CellType.Floar);
+                        Map[x, y] = 1;
                 }
 
             for (int x = 0; x < unBorderLimits; x++)
-                for (int y = 0; y < unBorderLimits; y++)
+                for (int y = 0; y < MapSize.Height; y++)
                 {
-                    Map[x, y] = new MapCell(x, y, UnityEngine.Color.blue, MapCell.CellType.Floar);
+                    if (UnityEngine.Random.Range(0, 100) < 50)
+                        Map[x, y] = 1;
                 }
             for (int x = MapSize.Width - unBorderLimits; x < MapSize.Width; x++)
+                for (int y = 0; y < MapSize.Height; y++)
+                {
+                    if (UnityEngine.Random.Range(0, 100) < 50)
+                        Map[x, y] = 1;
+                }
+            for (int x = 0; x < MapSize.Width; x++)
+                for (int y = 0; y < unBorderLimits; y++)
+                {
+                    if (UnityEngine.Random.Range(0, 100) < 50)
+                        Map[x, y] = 1;
+                }
+            for (int x = 0; x < MapSize.Width; x++)
                 for (int y = MapSize.Height - unBorderLimits; y < MapSize.Height; y++)
                 {
-                    Map[x, y] = new MapCell(x, y, UnityEngine.Color.blue, MapCell.CellType.Floar);
+                    if (UnityEngine.Random.Range(0, 100) < 50)
+                        Map[x, y] = 1;
                 }
+
             Point cell;
 
             //Pick cells at random
@@ -279,13 +322,13 @@ Interesting Patterns
                     Point_Set(cell, 0);
             }
 
-
+            
 
             //
             //  Smooth of the rough cave edges and any single blocks by making several 
             //  passes on the map and removing any cells with 3 or more empty neighbours
             //
-            for (int ctr = 0; ctr < 2; ctr++)
+            for (int ctr = 0; ctr < 5; ctr++)
             {
                 //examine each cell individually
                 for (int x = 0; x < MapSize.Width; x++)
@@ -301,6 +344,7 @@ Interesting Patterns
                     }
             }
 
+           
             //
             //  fill in any empty cells that have 4 full neighbours
             //  to get rid of any holes in an cave
@@ -316,7 +360,12 @@ Interesting Patterns
                         )
                         Point_Set(cell, 1);
                 }
+
+            
+
         }
+
+        
 
         #endregion
 
@@ -732,15 +781,7 @@ Interesting Patterns
         /// <param name="val"></param>
         private void Point_Set(Point p, int val)
         {
-            Map[p.X, p.Y].Type = (MapCell.CellType)val;
-            if (val == 1)
-            {
-                Map[p.X, p.Y].Color = UnityEngine.Color.blue;
-            }
-            if (val == 0)
-            {
-                Map[p.X, p.Y].Color = UnityEngine.Color.red;
-            }
+            Map[p.X, p.Y] = val;
         }
 
         /// <summary>
@@ -750,7 +791,7 @@ Interesting Patterns
         /// <returns></returns>
         private int Point_Get(Point p)
         {
-            return (int)Map[p.X, p.Y].Type;
+            return Map[p.X, p.Y];
         }
 
         #endregion

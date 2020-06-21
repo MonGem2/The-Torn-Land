@@ -19,6 +19,7 @@ public class MapCell : MonoBehaviour
 
     public enum CellType
     {
+        Empty = -1,
         Wall,
         Floar,
         Door
@@ -26,8 +27,8 @@ public class MapCell : MonoBehaviour
 
     public MapCell():base()
     {
-        type = CellType.Floar;
-        color = Color.blue;
+        //type = CellType.Floar;
+        //color = Color.blue;
     }
 
     public MapCell(int _x, int _y, Color _color, CellType _type):base()
@@ -43,12 +44,18 @@ public class MapCell : MonoBehaviour
     void Start()
     {
         gameObject.transform.localPosition = new Vector3(X, Y);
-        gameObject.GetComponent<Image>().material = new Material(gameObject.GetComponent<Image>().material) { color = this.color };
+        gameObject.GetComponent<Image>().material = new Material(gameObject.GetComponent<Image>().material);
+        gameObject.GetComponent<Image>().material.color = this.color;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //if (gameObject.GetComponent<Image>().material.color != color)
+        //{
+
+        //}
+        //Debug.Log(color.ToString() + "    " + x + "     " + y);
+       
     }
 }
