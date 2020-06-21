@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 public class MapRogulikeGenerator : MonoBehaviour
 {
-    public WorldMapCell ThisCell = new WorldMapCell();//StaticData.MapData[0][0];//ActiveCell;
+    public WorldMapCell ThisCell;//StaticData.MapData[0][0];//ActiveCell;
     public GameObject CellPerhub;
     public GameObject EmptyPerhub;
     public int UnBorder = 5;
@@ -18,6 +18,13 @@ public class MapRogulikeGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!Loader.IsMapGenered)
+        {
+            Loader.LoadMap();
+            StaticData.ActiveCell = StaticData.MapData[10][10];
+            
+        }
+        ThisCell = StaticData.ActiveCell;
         Debug.Log(ThisCell.Message);
 
         generator = new Generator();

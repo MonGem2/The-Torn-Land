@@ -6,6 +6,13 @@ using UnityEngine.SceneManagement;
 public class MainMapButtons : MonoBehaviour
 {
     public GameObject Player;
+    private void Start()
+    {
+        if (!Loader.IsMapGenered)
+        {
+            Loader.LoadMap();
+        }
+    }
     void Update()
     {
         if(Input.GetKey(KeyCode.Space))

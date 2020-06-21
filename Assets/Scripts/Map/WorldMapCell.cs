@@ -14,6 +14,8 @@ public class WorldMapCell
 
     public int MapHeight { get => mapHeight; set => mapHeight = value; }
     public int MapWidth { get => mapWidth; set => mapWidth = value; }
+    public int PosX;
+    public int PosY;
     public string Message { get => message; set => message = value; }
     public int DangerousLvl { get => dangerousLvl; set => dangerousLvl = value; }
     public EnvironType Environ { get => environ; set => environ = value; }
@@ -36,9 +38,10 @@ public class WorldMapCell
         Dungeon
     };
 
-    public WorldMapCell()
+    public WorldMapCell(int posx, int posy)
     {
-
+        PosX = posx;
+        PosY = posy;
     }
 
     public WorldMapCell(string message, int height, int width)

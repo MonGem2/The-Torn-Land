@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Loader : MonoBehaviour
+public static class Loader
 {
-    // Start is called before the first frame update
-    void Start()
+    public static bool IsMapGenered=false;
+    public static void LoadMap()
     {
         for (int i = 0; i < 100; i++)
         {
@@ -13,17 +13,12 @@ public class Loader : MonoBehaviour
 
             for (int k = 0; k < 100; k++)
             {
-                WorldMapCell gg = new WorldMapCell();
+                WorldMapCell gg = new WorldMapCell(k, i);
                 gg.Message = i.ToString() + "HI" + k.ToString();
                 StaticData.MapData[i].Add(gg);
                 
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        IsMapGenered = true;
     }
 }

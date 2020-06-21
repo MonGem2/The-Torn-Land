@@ -113,5 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CellPerhub: {fileID: 5452303053200002350, guid: e2b74eb036cb6384495f3a5e9a501707,
     type: 3}
+  EmptyPerhub: {fileID: 433937569189849185, guid: 9cf8ae4cc32d82c4eaf9c9914247a578,
+    type: 3}
   UnBorder: 2
   MapCells: []
