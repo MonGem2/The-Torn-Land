@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Drawing;
 using System.Linq;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 public class MapRogulikeGenerator : MonoBehaviour
 {
@@ -13,7 +14,10 @@ public class MapRogulikeGenerator : MonoBehaviour
     public GameObject EmptyPerhub;
     public int UnBorder = 5;
     private Generator generator;
-    
+    private bool Result;
+    Task<int[,]> outer;
+
+
     public List<GameObject> MapCells = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
@@ -22,18 +26,28 @@ public class MapRogulikeGenerator : MonoBehaviour
         {
             Loader.LoadMap();
             StaticData.ActiveCell = StaticData.MapData[10][10];
-            
+
         }
         ThisCell = StaticData.ActiveCell;
         Debug.Log(ThisCell.Message);
 
         generator = new Generator();
+        outer = Task.Factory.StartNew(() =>
+        {
+            generator.Build(UnBorder);
+            generator.ConnectCaves();
+            generator.ConnectCaves();
+            generator.EmptyCellSet();
+            return generator.Map;
+        });
 
-        generator.Build(UnBorder);
-        generator.ConnectCaves();
-        generator.ConnectCaves();
-        generator.EmptyCellSet();
+        
 
+    }
+
+    void MapSet()
+    {
+        
         for (int i = 0; i < ThisCell.MapWidth; i++)
         {
             for (int k = 0; k < ThisCell.MapHeight; k++)
@@ -62,10 +76,16 @@ public class MapRogulikeGenerator : MonoBehaviour
         }
     }
 
+
+
     // Update is called once per frame
     void Update()
     {
-        
+        if (outer!=null && outer.IsCompleted)
+        {
+            MapSet();
+            outer = null;
+        }
     }
 
 
@@ -123,6 +143,17 @@ Interesting Patterns
     /// </summary>
     class Generator
     {
+        //public System.Random rnd = new System.Random();
+
+        private static readonly System.Random random = new System.Random();
+        private static readonly object syncLock = new object();
+        public static int RandomNumber(int min, int max)
+        {
+            lock (syncLock)
+            { // synchronize
+                return random.Next(min, max);
+            }
+        }
 
 
         #region properties
@@ -221,12 +252,12 @@ Interesting Patterns
         {
             Neighbours = 4;
             Iterations = 50000;
-            CloseCellProb = 45 /*UnityEngine.Random.Range(45,80)*/;
+            CloseCellProb = RandomNumber(45,80);
 
             LowerLimit = 16;
             UpperLimit = 10000;
 
-            MapSize = new Size(50, 50);
+            MapSize = new Size(25, 25);
 
             EmptyNeighbours = 3;
             EmptyCellNeighbours = 4;
@@ -285,32 +316,32 @@ Interesting Patterns
                 for (int y = 0; y < MapSize.Height; y++)
                 {
                     Map[x, y] = 0;
-                    if (UnityEngine.Random.Range(0, 100) < CloseCellProb)
+                    if (RandomNumber(0, 100) < CloseCellProb)
                         Map[x, y] = 1;
                 }
 
             for (int x = 0; x < unBorderLimits; x++)
                 for (int y = 0; y < MapSize.Height; y++)
                 {
-                    if (UnityEngine.Random.Range(0, 100) < 50)
+                    if (RandomNumber(0, 100) < 50)
                         Map[x, y] = 1;
                 }
             for (int x = MapSize.Width - unBorderLimits; x < MapSize.Width; x++)
                 for (int y = 0; y < MapSize.Height; y++)
                 {
-                    if (UnityEngine.Random.Range(0, 100) < 50)
+                    if (RandomNumber(0, 100) < 50)
                         Map[x, y] = 1;
                 }
             for (int x = 0; x < MapSize.Width; x++)
                 for (int y = 0; y < unBorderLimits; y++)
                 {
-                    if (UnityEngine.Random.Range(0, 100) < 50)
+                    if (RandomNumber(0, 100) < 50)
                         Map[x, y] = 1;
                 }
             for (int x = 0; x < MapSize.Width; x++)
                 for (int y = MapSize.Height - unBorderLimits; y < MapSize.Height; y++)
                 {
-                    if (UnityEngine.Random.Range(0, 100) < 50)
+                    if (RandomNumber(0, 100) < 50)
                         Map[x, y] = 1;
                 }
 
@@ -319,7 +350,7 @@ Interesting Patterns
             //Pick cells at random
             for (int x = 0; x <= Iterations; x++)
             {
-                cell = new Point(UnityEngine.Random.Range(0, MapSize.Width), UnityEngine.Random.Range(0, MapSize.Height));
+                cell = new Point(RandomNumber(0, MapSize.Width), RandomNumber(0, MapSize.Height));
 
                 //if the randomly selected cell has more closed neighbours than the property Neighbours
                 //set it closed, else open it
@@ -390,7 +421,7 @@ Interesting Patterns
             {
 
                 //random point in cave
-                pCavePoint = pCave.ToList()[UnityEngine.Random.Range(0, pCave.Count())];
+                pCavePoint = pCave.ToList()[RandomNumber(0, pCave.Count())];
 
                 pDirection = Direction_Get(pDirection);
 
@@ -491,7 +522,7 @@ Interesting Patterns
             Corridors = new List<Point>(); //corridors built stored here
 
             //get started by randomly selecting a cave..
-            currentcave = Caves[UnityEngine.Random.Range(0, Caves.Count())];
+            currentcave = Caves[RandomNumber(0, Caves.Count())];
             ConnectedCaves.Add(currentcave);
             Caves.Remove(currentcave);
 
@@ -504,15 +535,15 @@ Interesting Patterns
                 //no corridors are present, sp build off a cave
                 if (Corridors.Count() == 0)
                 {
-                    currentcave = ConnectedCaves[UnityEngine.Random.Range(0, ConnectedCaves.Count())];
+                    currentcave = ConnectedCaves[RandomNumber(0, ConnectedCaves.Count())];
                     Cave_GetEdge(currentcave, ref cor_point, ref cor_direction);
                 }
                 else
                     //corridors are presnt, so randomly chose whether a get a start
                     //point from a corridor or cave
-                    if (UnityEngine.Random.Range(0, 100) > 50)
+                    if (RandomNumber(0, 100) > 50)
                 {
-                    currentcave = ConnectedCaves[UnityEngine.Random.Range(0, ConnectedCaves.Count())];
+                    currentcave = ConnectedCaves[RandomNumber(0, ConnectedCaves.Count())];
                     Cave_GetEdge(currentcave, ref cor_point, ref cor_direction);
                 }
                 else
@@ -595,7 +626,7 @@ Interesting Patterns
             do
             {
                 //the modifiers below prevent the first of last point being chosen
-                pLocation = Corridors[UnityEngine.Random.Range(1, Corridors.Count - 1)];
+                pLocation = Corridors[RandomNumber(1, Corridors.Count - 1)];
 
                 //attempt to locate all the empy map points around the location
                 //using the directions to offset the randomly chosen point
@@ -607,7 +638,7 @@ Interesting Patterns
 
             } while (validdirections.Count == 0);
 
-            pDirection = validdirections[UnityEngine.Random.Range(0, validdirections.Count)];
+            pDirection = validdirections[RandomNumber(0, validdirections.Count)];
             pLocation.Offset(pDirection);
 
         }
@@ -634,7 +665,7 @@ Interesting Patterns
             {
                 pTurns--;
 
-                corridorlength = UnityEngine.Random.Range(Corridor_Min, Corridor_Max);
+                corridorlength = RandomNumber(Corridor_Min, Corridor_Max);
                 //build corridor
                 while (corridorlength > 0)
                 {
@@ -728,7 +759,7 @@ Interesting Patterns
             Point newdir;
             do
             {
-                newdir = Directions[UnityEngine.Random.Range(0, Directions.Count())];
+                newdir = Directions[RandomNumber(0, Directions.Count())];
 
             } while (newdir.X != -p.X & newdir.Y != -p.Y);
 
@@ -752,7 +783,7 @@ Interesting Patterns
             Point NewDir;
             do
             {
-                NewDir = Directions[UnityEngine.Random.Range(0, Directions.Count())];
+                NewDir = Directions[RandomNumber(0, Directions.Count())];
             } while (
                         Direction_Reverse(NewDir) == pDir
                          | Direction_Reverse(NewDir) == pDirExclude
