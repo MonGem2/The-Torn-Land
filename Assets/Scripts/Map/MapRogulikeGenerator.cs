@@ -22,27 +22,39 @@ public class MapRogulikeGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         if (!Loader.IsMapGenered)
         {
+            Debug.Log("coo");
             Loader.LoadMap();
             StaticData.ActiveCell = StaticData.MapData[10][10];
-
+            ThisCell = StaticData.ActiveCell;
         }
-        ThisCell = StaticData.ActiveCell;
-        Debug.Log(ThisCell.Message);
-
+        //Debug.Log(StaticData.MapData[9][10].Message);
+        //ThisCell = StaticData.ActiveCell;
+        //Debug.Log(ThisCell.Message);
+        Loader.GetNeighborWorldMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY));
         generator = new Generator();
-        outer = Task.Factory.StartNew(() =>
+        //Debug.Log($"{this.transform.position}CoordinateInside:{ThisCell.PosY},{ThisCell.PosX}");
+        //Debug.Log($"{this.transform.position}MessageInside:{ThisCell.Message}");
+        generator.ResultMap = Loader.LoadFromFile(new Vector2(ThisCell.PosX, ThisCell.PosY));
+
+        if (generator.ResultMap == null)
         {
-            generator.Build(UnBorder);
-            generator.ConnectCaves();
-            generator.ConnectCaves();
-            generator.EmptyCellSet();
-            return generator.Map;
-        });
 
-        
 
+            outer = Task.Factory.StartNew(() =>
+            {
+                generator.Build(UnBorder);
+                generator.ConnectCaves();
+                generator.ConnectCaves();
+                generator.EmptyCellSet();
+                generator.EndGeneration();
+                return generator.ResultMap;
+            });
+            return;
+        }
+        MapSet();
     }
 
     void MapSet()
@@ -52,23 +64,23 @@ public class MapRogulikeGenerator : MonoBehaviour
         {
             for (int k = 0; k < ThisCell.MapHeight; k++)
             {
-                if (generator.Map[i, k] == (int)MapCell.CellType.Wall)
+                if (generator.ResultMap[i, k] == (int)MapCell.CellType.Wall)
                 {
                     GameObject cell = Instantiate(CellPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     cell.GetComponent<MapCell>().X = i;
                     cell.GetComponent<MapCell>().Y = k;
-                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.Map[i, k];
+                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.ResultMap[i, k];
                     cell.GetComponent<MapCell>().Color = UnityEngine.Color.gray;
                     MapCells.Add(cell);
                 }
-                if (generator.Map[i, k] == -1)
+                if (generator.ResultMap[i, k] == -1)
                 {
                     GameObject cell = Instantiate(EmptyPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     cell.GetComponent<MapCell>().X = i;
                     cell.GetComponent<MapCell>().Y = k;
-                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.Map[i, k];
+                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.ResultMap[i, k];
                     cell.GetComponent<MapCell>().Color = UnityEngine.Color.black;
                     MapCells.Add(cell);
                 }
@@ -84,6 +96,9 @@ public class MapRogulikeGenerator : MonoBehaviour
         if (outer!=null && outer.IsCompleted)
         {
             MapSet();
+            
+            Loader.SaveInFileMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY), generator.ResultMap);
+
             outer = null;
         }
     }
@@ -213,7 +228,7 @@ Interesting Patterns
         /// Contains the map
         /// </summary>
         public int[,] Map;
-
+        public int[,] ResultMap;
         #endregion
 
         #region lookups
@@ -834,7 +849,10 @@ Interesting Patterns
 
         #endregion
 
-
+        public void EndGeneration()
+        {
+            ResultMap = Map;
+        }
 
     }
 
