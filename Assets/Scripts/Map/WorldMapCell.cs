@@ -5,8 +5,8 @@ using UnityEngine;
 public class WorldMapCell
 {
     private string message = "";
-    private int mapHeight = 25;
-    private int mapWidth = 25;
+    private int mapHeight ;
+    private int mapWidth ;
     private int dangerousLvl = 0;
     private EnvironType environ = EnvironType.Plain;
 

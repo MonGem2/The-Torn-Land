@@ -22,28 +22,49 @@ public class MapRogulikeGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         if (!Loader.IsMapGenered)
         {
+            Debug.Log("coo");
             Loader.LoadMap();
             StaticData.ActiveCell = StaticData.MapData[10][10];
-
+            ThisCell = StaticData.ActiveCell;
         }
-        ThisCell = StaticData.ActiveCell;
-        Debug.Log(ThisCell.Message);
-
-        generator = new Generator();
-        outer = Task.Factory.StartNew(() =>
-        {
-            generator.Build(UnBorder);
-            generator.ConnectCaves();
-            generator.ConnectCaves();
-            generator.EmptyCellSet();
-            generator.SetTreasures();
-            return generator.Map;
-        });
-
+        //Debug.Log(StaticData.MapData[9][10].Message);
+        //ThisCell = StaticData.ActiveCell;
+        //Debug.Log(ThisCell.Message);
         
+        generator = new Generator();
+        //Debug.Log($"{this.transform.position}CoordinateInside:{ThisCell.PosY},{ThisCell.PosX}");
+        //Debug.Log($"{this.transform.position}MessageInside:{ThisCell.Message}");
+        generator.ResultMap = Loader.LoadFromFile(new Vector2(ThisCell.PosX, ThisCell.PosY));
 
+        if (generator.ResultMap == null)
+        {
+            generator.Map = Loader.GetNeighborWorldMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY));
+
+            outer = Task.Factory.StartNew(() =>
+            {
+                Debug.Log("Stage1");
+                generator.Build(UnBorder);
+                Debug.Log("Stage2");
+                generator.ConnectCaves();
+                Debug.Log("Stage3");
+                generator.ConnectCaves();
+                Debug.Log("Stage4");
+                generator.EmptyCellSet();
+                Debug.Log("Stage5");
+                generator.EndGeneration();
+                Debug.Log("Stage6");
+                return generator.ResultMap;
+            });
+            return;
+        }
+        else
+        {
+            Debug.Log("MapSet");
+            MapSet();
+        }
     }
 
     void MapSet()
@@ -53,33 +74,33 @@ public class MapRogulikeGenerator : MonoBehaviour
         {
             for (int k = 0; k < ThisCell.MapHeight; k++)
             {
-                if (generator.Map[i, k] == (int)MapCell.CellType.Wall)
+                if (generator.ResultMap[i, k] == (int)MapCell.CellType.Wall)
                 {
                     GameObject cell = Instantiate(CellPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     cell.GetComponent<MapCell>().X = i;
                     cell.GetComponent<MapCell>().Y = k;
-                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.Map[i, k];
+                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.ResultMap[i, k];
                     cell.GetComponent<MapCell>().Color = UnityEngine.Color.gray;
                     MapCells.Add(cell);
                 }
-                if (generator.Map[i, k] == -1)
+                if (generator.ResultMap[i, k] == -1)
                 {
                     GameObject cell = Instantiate(EmptyPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     cell.GetComponent<MapCell>().X = i;
                     cell.GetComponent<MapCell>().Y = k;
-                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.Map[i, k];
+                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.ResultMap[i, k];
                     cell.GetComponent<MapCell>().Color = UnityEngine.Color.black;
                     MapCells.Add(cell);
                 }
-                if (generator.Map[i, k] == 5)
+                if (generator.ResultMap[i, k] == 5)
                 {
                     GameObject cell = Instantiate(EmptyPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     cell.GetComponent<MapCell>().X = i;
                     cell.GetComponent<MapCell>().Y = k;
-                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.Map[i, k];
+                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.ResultMap[i, k];
                     cell.GetComponent<MapCell>().Color = UnityEngine.Color.red;
                     MapCells.Add(cell);
                 }
@@ -95,6 +116,9 @@ public class MapRogulikeGenerator : MonoBehaviour
         if (outer!=null && outer.IsCompleted)
         {
             MapSet();
+            
+            Loader.SaveInFileMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY), generator.ResultMap);
+
             outer = null;
         }
     }
@@ -156,6 +180,8 @@ Interesting Patterns
     {
         //public System.Random rnd = new System.Random();
 
+        #region НЕВАЖНО
+
         private static readonly System.Random random = new System.Random();
         private static readonly object syncLock = new object();
         public static int RandomNumber(int min, int max)
@@ -166,6 +192,7 @@ Interesting Patterns
             }
         }
 
+        #endregion
 
         #region properties
 
@@ -224,7 +251,7 @@ Interesting Patterns
         /// Contains the map
         /// </summary>
         public int[,] Map;
-
+        public int[,] ResultMap;
         #endregion
 
         #region lookups
@@ -263,12 +290,12 @@ Interesting Patterns
         {
             Neighbours = 4;
             Iterations = 50000;
-            CloseCellProb = RandomNumber(45,80);
+            CloseCellProb = 45;//RandomNumber(45,80);
 
             LowerLimit = 16;
             UpperLimit = 10000;
 
-            MapSize = new Size(25, 25);
+            MapSize = new Size(StaticData.WorldCellSize, StaticData.WorldCellSize);
 
             EmptyNeighbours = 3;
             EmptyCellNeighbours = 4;
@@ -292,8 +319,8 @@ Interesting Patterns
         public void EmptyCellSet()
         {
             Point cell;
-            for (int x = 0; x < MapSize.Width; x++)
-                for (int y = 0; y < MapSize.Height; y++)
+            for (int x = 0; x < MapSize.Width*3; x++)
+                for (int y = 0; y < MapSize.Height*3; y++)
                 {
                     cell = new Point(x, y);
 
@@ -333,50 +360,50 @@ Interesting Patterns
         private void BuildCaves(int unBorderLimits)
         {
 
-            Map = new int[MapSize.Width, MapSize.Height];
+            //Map = new int[MapSize.Width, MapSize.Height];
 
 
             //go through each map cell and randomly determine whether to close it
             //the +5 offsets are to leave an empty border round the edge of the map
-            for (int x = 0; x < MapSize.Width; x++)
-                for (int y = 0; y < MapSize.Height; y++)
+            for (int x = StaticData.WorldCellSize; x < MapSize.Width*2; x++)
+                for (int y = StaticData.WorldCellSize; y < MapSize.Height*2; y++)
                 {
                     Map[x, y] = 0;
                     if (RandomNumber(0, 100) < CloseCellProb)
                         Map[x, y] = 1;
                 }
 
-            for (int x = 0; x < unBorderLimits; x++)
-                for (int y = 0; y < MapSize.Height; y++)
-                {
-                    if (RandomNumber(0, 100) < 50)
-                        Map[x, y] = 1;
-                }
-            for (int x = MapSize.Width - unBorderLimits; x < MapSize.Width; x++)
-                for (int y = 0; y < MapSize.Height; y++)
-                {
-                    if (RandomNumber(0, 100) < 50)
-                        Map[x, y] = 1;
-                }
-            for (int x = 0; x < MapSize.Width; x++)
-                for (int y = 0; y < unBorderLimits; y++)
-                {
-                    if (RandomNumber(0, 100) < 50)
-                        Map[x, y] = 1;
-                }
-            for (int x = 0; x < MapSize.Width; x++)
-                for (int y = MapSize.Height - unBorderLimits; y < MapSize.Height; y++)
-                {
-                    if (RandomNumber(0, 100) < 50)
-                        Map[x, y] = 1;
-                }
+            //for (int x = 0; x < unBorderLimits; x++)
+            //    for (int y = 0; y < MapSize.Height; y++)
+            //    {
+            //        if (RandomNumber(0, 100) < 50)
+            //            Map[x, y] = 1;
+            //    }
+            //for (int x = MapSize.Width - unBorderLimits; x < MapSize.Width; x++)
+            //    for (int y = 0; y < MapSize.Height; y++)
+            //    {
+            //        if (RandomNumber(0, 100) < 50)
+            //            Map[x, y] = 1;
+            //    }
+            //for (int x = 0; x < MapSize.Width; x++)
+            //    for (int y = 0; y < unBorderLimits; y++)
+            //    {
+            //        if (RandomNumber(0, 100) < 50)
+            //            Map[x, y] = 1;
+            //    }
+            //for (int x = 0; x < MapSize.Width; x++)
+            //    for (int y = MapSize.Height - unBorderLimits; y < MapSize.Height; y++)
+            //    {
+            //        if (RandomNumber(0, 100) < 50)
+            //            Map[x, y] = 1;
+            //    }
 
             Point cell;
 
             //Pick cells at random
             for (int x = 0; x <= Iterations; x++)
             {
-                cell = new Point(RandomNumber(0, MapSize.Width), RandomNumber(0, MapSize.Height));
+                cell = new Point(RandomNumber(MapSize.Width, MapSize.Width*2), RandomNumber(MapSize.Height, MapSize.Height*2));
 
                 //if the randomly selected cell has more closed neighbours than the property Neighbours
                 //set it closed, else open it
@@ -395,8 +422,8 @@ Interesting Patterns
             for (int ctr = 0; ctr < 5; ctr++)
             {
                 //examine each cell individually
-                for (int x = 0; x < MapSize.Width; x++)
-                    for (int y = 0; y < MapSize.Height; y++)
+                for (int x = MapSize.Width; x < MapSize.Width*2; x++)
+                    for (int y = MapSize.Height; y < MapSize.Height*2; y++)
                     {
                         cell = new Point(x, y);
 
@@ -413,8 +440,8 @@ Interesting Patterns
             //  fill in any empty cells that have 4 full neighbours
             //  to get rid of any holes in an cave
             //
-            for (int x = 0; x < MapSize.Width; x++)
-                for (int y = 0; y < MapSize.Height; y++)
+            for (int x = MapSize.Width; x < MapSize.Width*2; x++)
+                for (int y = MapSize.Height; y < MapSize.Height*2; y++)
                 {
                     cell = new Point(x, y);
 
@@ -478,8 +505,8 @@ Interesting Patterns
             Point cell;
 
             //examine each cell in the map...
-            for (int x = 0; x < MapSize.Width; x++)
-                for (int y = 0; y < MapSize.Height; y++)
+            for (int x = 0; x < MapSize.Width*3; x++)
+                for (int y = 0; y < MapSize.Height*3; y++)
                 {
                     cell = new Point(x, y);
                     //if the cell is closed, and that cell doesn't occur in the list of caves..
@@ -835,7 +862,7 @@ Interesting Patterns
         /// <returns></returns>
         private bool Point_Check(Point p)
         {
-            return p.X >= 0 & p.X < MapSize.Width & p.Y >= 0 & p.Y < MapSize.Height;
+            return p.X >= 0 & p.X < MapSize.Width*3 & p.Y >= 0 & p.Y < MapSize.Height*3;
         }
 
         /// <summary>
@@ -860,7 +887,23 @@ Interesting Patterns
 
         #endregion
 
+        public void EndGeneration()
+        {
 
+            Debug.Log("Pidr");
+            int di = 0;
+            int dk;
+            ResultMap = new int[StaticData.WorldCellSize, StaticData.WorldCellSize];
+            for (int i = StaticData.WorldCellSize; i < StaticData.WorldCellSize*2; i++, di++)
+            {
+                dk = 0;
+                for (int k = StaticData.WorldCellSize; k < StaticData.WorldCellSize*2; k++, dk++)
+                {
+
+                    ResultMap[di, dk] = Map[i, k];
+                }
+            }
+        }
 
     }
 
