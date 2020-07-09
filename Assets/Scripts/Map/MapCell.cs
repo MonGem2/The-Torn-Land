@@ -22,7 +22,9 @@ public class MapCell : MonoBehaviour
         Empty = -1,
         Wall,
         Floar,
-        Door
+        Door,
+        Mob,
+        Treasure
     };
 
     public MapCell():base()

@@ -38,6 +38,7 @@ public class MapRogulikeGenerator : MonoBehaviour
             generator.ConnectCaves();
             generator.ConnectCaves();
             generator.EmptyCellSet();
+            generator.SetTreasures();
             return generator.Map;
         });
 
@@ -70,6 +71,16 @@ public class MapRogulikeGenerator : MonoBehaviour
                     cell.GetComponent<MapCell>().Y = k;
                     cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.Map[i, k];
                     cell.GetComponent<MapCell>().Color = UnityEngine.Color.black;
+                    MapCells.Add(cell);
+                }
+                if (generator.Map[i, k] == 5)
+                {
+                    GameObject cell = Instantiate(EmptyPerhub);
+                    cell.transform.SetParent(gameObject.transform);
+                    cell.GetComponent<MapCell>().X = i;
+                    cell.GetComponent<MapCell>().Y = k;
+                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.Map[i, k];
+                    cell.GetComponent<MapCell>().Color = UnityEngine.Color.red;
                     MapCells.Add(cell);
                 }
             }
@@ -294,12 +305,27 @@ Interesting Patterns
                 }
         }
 
+        public void SetTreasures()
+        {
+            for (int x = 0; x < MapSize.Width; x++)
+                for (int y = 0; y < MapSize.Height; y++)
+                {
+                    if (Map[x, y] == 1 && Neighbours_Get1(new Point(x, y)).Where(n => Point_Get(n) == 0).Count() >= 3)
+                        if (RandomNumber(0, 100) < 3)
+                            Map[x, y] = 5;
+                }
+        }
+
+
         #endregion
 
 
         #region cave related
 
         #region make caves
+
+
+
 
         /// <summary>
         /// Calling this method will build caves, smooth them off and fill in any holes
