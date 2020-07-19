@@ -9,14 +9,23 @@ public class Bullet : MonoBehaviour
     public Loader loader;
     public BulletData data;
     Vector2 Direction;
+    Vector2 PlayerPosition;
     public Animation animation;
     public void Shoot(Vector2 playerPos, Vector2 targetPos)
     {
-        Direction = (targetPos - playerPos).normalized;
+        PlayerPosition = playerPos;
+        Direction = (targetPos- playerPos).normalized;
         if (data.type == BulletType.Stab)
         {
             transform.position=playerPos +Direction * data.Distance;
-            gameObject.transform.Rotate(0, 0, (float)Math.Acos(Direction.y) + data.AdditionalAngle + UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle));
+            if (Direction.y > 0)
+            {
+                gameObject.transform.Rotate(0, 0, (float)Math.Acos(Direction.x) * 180 / (float)Math.PI + data.AdditionalAngle);// + UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle));
+            }
+            else
+            {
+                gameObject.transform.Rotate(0, 0, -((float)Math.Acos(Direction.x) * 180 / (float)Math.PI + data.AdditionalAngle));// + UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle));
+            }
             //DeleteOnTime(data.FlyTime);
         }
         if (data.type == BulletType.Swing)
@@ -27,7 +36,24 @@ public class Bullet : MonoBehaviour
         if (data.type == BulletType.Ray)
         {
             LineRenderer lnr = gameObject.GetComponent<LineRenderer>();
-            lnr.SetPositions(new Vector3[] { playerPos + Direction * data.Distance, Direction * data.Range });
+            if (data.Through)
+            {
+                lnr.SetPositions(new Vector3[] { playerPos + Direction * data.Distance, playerPos + Direction * data.Range });
+            }
+            else
+            {
+                var hit = Physics2D.Raycast(playerPos + Direction * data.Distance, Direction, data.Range);
+                if (hit.transform == null)
+                {
+                    lnr.SetPositions(new Vector3[] { playerPos + Direction * data.Distance, playerPos + Direction * data.Range });
+                }
+                else
+                {
+                    lnr.SetPositions(new Vector3[] { playerPos + Direction * data.Distance, hit.point });
+                }
+            }
+            StartCoroutine(RayAttck(data.AttackTimeout));
+            //Debug.Log($"Player pos:{playerPos}, result pos:{Direction}, End lisne:{targetPos}");
             //DeleteOnTime(data.FlyTime);
         }
         if (data.type == BulletType.Bullet)
@@ -52,6 +78,64 @@ public class Bullet : MonoBehaviour
         }
         StartCoroutine(DeleteOnTime(data.FlyTime));
     }
+    IEnumerator RayAttck(float WaitForSecond)
+    {
+        if (!data.Through)
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(WaitForSecond);
+                var hit = Physics2D.Raycast(PlayerPosition + Direction * data.Distance, Direction, data.Range);
+                // Debug.LogWarning(hit.transform);
+                if (hit.transform == null)
+                {
+                    continue;
+                }
+                foreach (var item in data.DontAttack)
+                {
+                    if (item == hit.transform.gameObject.tag)
+                    {
+                        DestroyTrigger(false);
+                        yield break;
+                    }
+                }
+                if (hit.transform.gameObject.tag == "enemy")
+                {
+                    hit.transform.gameObject.GetComponent<Enemy>().Damage();
+                }
+            }
+        }
+        while (true)
+        {
+            yield return new WaitForSeconds(WaitForSecond);
+            var hit = Physics2D.RaycastAll(PlayerPosition + Direction * data.Distance, Direction, data.Range);
+            // Debug.LogWarning(hit.transform);
+            if (hit.Length == 0)
+            {
+                continue;
+            }
+            foreach (var item in data.DontAttack)
+            {
+                foreach (var item1 in hit)
+                {
+                    if (item == item1.transform.gameObject.tag)
+                    {
+                        DestroyTrigger(false);
+                        yield break;
+                    }
+                }
+                
+            }
+            foreach (var item in hit)
+            {
+                if (item.transform.gameObject.tag == "enemy")
+                {
+                    item.transform.gameObject.GetComponent<Enemy>().Damage();
+                }
+            }
+            
+        }
+    }
     IEnumerator DeleteOnTime(float time)
     {
         //Debug.Log("i'l delete this shit");
@@ -59,28 +143,27 @@ public class Bullet : MonoBehaviour
         //Debug.Log("i'm deleting this shit");
         DestroyTrigger(false);
     }
-    void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("i'm here");
+        //Debug.Log("i'm finaly here");
         foreach (var item in data.DontAttack)
         {
-            if (item == other.gameObject.tag)
+            if (item == collision.tag)
             {
                 DestroyTrigger(false);
                 return;
             }
         }
-        if (other.gameObject.tag == "enemy")
+        if (collision.tag == "enemy")
         {
-            other.gameObject.GetComponent<Enemy>().Damage();
+            collision.GetComponent<Enemy>().Damage();
         }
         if (!data.Through)
         {
             DestroyTrigger(true);
         }
-
-
     }
+
     void DestroyTrigger(bool DoAnimation) 
     {
         if (DoAnimation)
@@ -113,6 +196,7 @@ public class BulletData {
     public bool Through;
     public float AdditionalAngle;
     public float DeltaAngle;
+    internal float AttackTimeout;
 }
 public enum BulletType { 
     Stab=0,
