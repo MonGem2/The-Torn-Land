@@ -8,7 +8,7 @@ public class WorldState : MonoBehaviour
     public MapRogulikeGenerator[] MapCells=new MapRogulikeGenerator[4];
     public MapRogulikeGenerator WorldCellPerhub;
     public MapRogulikeGenerator ActiveMapCell;
-
+    public Loader loader;
     public void CreateWorldMapCell(int DX, int DY, MapRogulikeGenerator myCanvas, Vector3 position)
     {
 
@@ -37,9 +37,8 @@ public class WorldState : MonoBehaviour
         MapRogulikeGenerator MapCell = Instantiate(WorldCellPerhub);
         MapCell.transform.SetParent(gameObject.transform);
         MapCell.transform.position = myCanvas.transform.position + new Vector3(DX * StaticData.WorldCellSize, DY * -StaticData.WorldCellSize);
-        
-        MapCell.ThisCell = StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX];
-        
+
+        MapCell.Setter(loader, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX]);
         //Debug.Log($"Coordinate:{DY}, DX:{DX}");
         //Debug.Log($"ResultCoordinate:{tmpCell.PosY + DY},:{tmpCell.PosX + DX}");
         //Debug.Log($"MessageThis:{StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX].Message}");
@@ -55,6 +54,7 @@ public class WorldState : MonoBehaviour
         {
             if (MapCells[i] == null)
             {
+                Debug.Log("qwertyuiop");
                 MapCells[i] = mapCell;
                 return;
             }
@@ -68,6 +68,7 @@ public class WorldState : MonoBehaviour
 
         }
         //Debug.Log("k:"+k);
+        
         Destroy(MapCells[k].gameObject);
         MapCells[k] = mapCell;
     }

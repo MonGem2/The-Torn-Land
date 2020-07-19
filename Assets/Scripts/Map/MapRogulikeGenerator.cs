@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 public class MapRogulikeGenerator : MonoBehaviour
 {
+    public Loader loader;
     public WorldMapCell ThisCell;//StaticData.MapData[0][0];//ActiveCell;
     public GameObject CellPerhub;
     public GameObject EmptyPerhub;
@@ -17,16 +18,65 @@ public class MapRogulikeGenerator : MonoBehaviour
     private bool Result;
     Task<int[,]> outer;
 
+    public void Setter(Loader loader, WorldMapCell thisscell, int UnBorder=5)
+    {
+        Debug.Log("asdfghjkl;:"+loader.IsMapGenered);
+        this.loader = loader;
+        ThisCell = thisscell;
+        this.UnBorder = UnBorder;
+        if (!loader.IsMapGenered)
+        {
+            Debug.Log("coo");
+            loader.LoadMap();
+            StaticData.ActiveCell = StaticData.MapData[10][10];
+            ThisCell = StaticData.ActiveCell;
+        }
+        //Debug.Log(StaticData.MapData[9][10].Message);
+        //ThisCell = StaticData.ActiveCell;
+        //Debug.Log(ThisCell.Message);
 
+        generator = new Generator();
+        //Debug.Log($"{this.transform.position}CoordinateInside:{ThisCell.PosY},{ThisCell.PosX}");
+        //Debug.Log($"{this.transform.position}MessageInside:{ThisCell.Message}");
+        generator.ResultMap = loader.LoadFromFile(new Vector2(ThisCell.PosX, ThisCell.PosY));
+
+        if (generator.ResultMap == null)
+        {
+            generator.Map = loader.GetNeighborWorldMapCell();
+
+            outer = Task.Factory.StartNew(() =>
+            {
+                Debug.Log("Stage1");
+                generator.Build(UnBorder);
+                Debug.Log("Stage2");
+                generator.ConnectCaves();
+                Debug.Log("Stage3");
+                generator.ConnectCaves();
+                Debug.Log("Stage4");
+                generator.EmptyCellSet();
+                Debug.Log("Stage5");
+                generator.EndGeneration();
+                Debug.Log("Stage6");
+                return generator.ResultMap;
+            });
+            return;
+        }
+        else
+        {
+            Debug.Log("MapSet");
+            MapSet();
+        }
+    }
     public List<GameObject> MapCells = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
-        
-        if (!Loader.IsMapGenered)
+        if(loader == null)
+        { return; }
+        if (!loader.IsMapGenered)
         {
             Debug.Log("coo");
-            Loader.LoadMap();
+            loader.LoadMap();
             StaticData.ActiveCell = StaticData.MapData[10][10];
             ThisCell = StaticData.ActiveCell;
         }
@@ -37,11 +87,11 @@ public class MapRogulikeGenerator : MonoBehaviour
         generator = new Generator();
         //Debug.Log($"{this.transform.position}CoordinateInside:{ThisCell.PosY},{ThisCell.PosX}");
         //Debug.Log($"{this.transform.position}MessageInside:{ThisCell.Message}");
-        generator.ResultMap = Loader.LoadFromFile(new Vector2(ThisCell.PosX, ThisCell.PosY));
+        generator.ResultMap = loader.LoadFromFile(new Vector2(ThisCell.PosX, ThisCell.PosY));
 
         if (generator.ResultMap == null)
         {
-            generator.Map = Loader.GetNeighborWorldMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY));
+            generator.Map = loader.GetNeighborWorldMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY));
 
             outer = Task.Factory.StartNew(() =>
             {
@@ -69,43 +119,94 @@ public class MapRogulikeGenerator : MonoBehaviour
 
     void MapSet()
     {
-        
+
         for (int i = 0; i < ThisCell.MapWidth; i++)
         {
             for (int k = 0; k < ThisCell.MapHeight; k++)
             {
+                Debug.Log($"Loading cell:{i},{k} and it's :{generator.ResultMap[i, k]}");
                 if (generator.ResultMap[i, k] == (int)MapCell.CellType.Wall)
                 {
+                    Debug.Log($"it's wall");
                     GameObject cell = Instantiate(CellPerhub);
                     cell.transform.SetParent(gameObject.transform);
-                    cell.GetComponent<MapCell>().X = i;
-                    cell.GetComponent<MapCell>().Y = k;
-                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.ResultMap[i, k];
-                    cell.GetComponent<MapCell>().Color = UnityEngine.Color.gray;
                     MapCells.Add(cell);
+                    int temp = GetCountRightNeighbours(k, i, MapCell.CellType.Wall, true);
+                    if (temp > 1)
+                    {
+                        Debug.Log("GG:1");
+                        cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.gray, MapCell.CellType.Wall, temp, 1);
+                        continue;
+                    }
+                    generator.ResultMap[i, k] = (int)MapCell.CellType.Wall;
+                    temp = GetCountUpNeighbours(k, i, MapCell.CellType.Wall, true);
+                    if (temp > 1)
+                    {
+                        Debug.Log("GG:2");
+                        cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.gray, MapCell.CellType.Wall, 1, temp);
+                        continue;
+                    }
+                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.gray, MapCell.CellType.Wall, 1, 1);
+
                 }
-                if (generator.ResultMap[i, k] == -1)
+                if (generator.ResultMap[i, k] == (int)MapCell.CellType.Empty)
                 {
+                    Debug.Log($"it's empty");
                     GameObject cell = Instantiate(EmptyPerhub);
                     cell.transform.SetParent(gameObject.transform);
-                    cell.GetComponent<MapCell>().X = i;
-                    cell.GetComponent<MapCell>().Y = k;
-                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.ResultMap[i, k];
-                    cell.GetComponent<MapCell>().Color = UnityEngine.Color.black;
                     MapCells.Add(cell);
-                }
-                if (generator.ResultMap[i, k] == 5)
-                {
-                    GameObject cell = Instantiate(EmptyPerhub);
-                    cell.transform.SetParent(gameObject.transform);
-                    cell.GetComponent<MapCell>().X = i;
-                    cell.GetComponent<MapCell>().Y = k;
-                    cell.GetComponent<MapCell>().Type = (MapCell.CellType)generator.ResultMap[i, k];
-                    cell.GetComponent<MapCell>().Color = UnityEngine.Color.red;
-                    MapCells.Add(cell);
+                    int temp = GetCountRightNeighbours(k, i, MapCell.CellType.Empty, true);
+                    if (temp > 1)
+                    {
+                        Debug.Log("GG:1");
+                        cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.black, MapCell.CellType.Empty, temp, 1);
+                        continue;
+                    }
+                    generator.ResultMap[i, k] = (int)MapCell.CellType.Empty;
+                    temp = GetCountUpNeighbours(k, i, MapCell.CellType.Empty, true);
+                    if (temp > 1)
+                    {
+                        Debug.Log("GG:2");
+                        cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.black, MapCell.CellType.Empty, 1, temp);
+                        continue;
+                    }
+                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.gray, MapCell.CellType.Empty, 1, 1);
                 }
             }
         }
+        //loader.OutArray(generator.ResultMap, 25);
+    }
+    int GetCountRightNeighbours(int x, int y, MapCell.CellType cellType, bool SetChecked = false)
+    {
+        if (x == StaticData.WorldCellSize)
+        {
+            return 0;
+        }
+        if (generator.ResultMap[y, x] == (int)cellType)
+        {
+            if (SetChecked)
+            {
+                generator.ResultMap[y, x] = (int)MapCell.CellType.Checked;
+            }
+            return 1 + GetCountRightNeighbours(x + 1, y, cellType, SetChecked);
+        }
+        return 0;
+    }
+    int GetCountUpNeighbours(int x, int y, MapCell.CellType cellType, bool SetChecked = false)
+    {
+        if (y == StaticData.WorldCellSize)
+        {
+            return 0;
+        }
+        if (generator.ResultMap[y, x] == (int)cellType)
+        {
+            if (SetChecked)
+            {
+                generator.ResultMap[y, x] = (int)MapCell.CellType.Checked;
+            }
+            return 1 + GetCountUpNeighbours(x, y + 1, cellType, SetChecked);
+        }
+        return 0;
     }
 
 
@@ -115,10 +216,10 @@ public class MapRogulikeGenerator : MonoBehaviour
     {
         if (outer!=null && outer.IsCompleted)
         {
-            MapSet();
             
-            Loader.SaveInFileMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY), generator.ResultMap);
-
+            
+            loader.SaveInFileMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY), generator.ResultMap);
+            MapSet();
             outer = null;
         }
     }

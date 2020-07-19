@@ -4,11 +4,12 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-public static class Loader
+public class Loader:MonoBehaviour
 {
-    public static int WorldSize = 100;
-    public static bool IsMapGenered=false;
-    public static void LoadMap()
+    public int WorldSize = 100;
+    public bool IsMapGenered=false;
+    public List<GameObject> BulletsPerhubs;
+    public void LoadMap()
     {
         for (int i = 0; i < WorldSize; i++)
         {
@@ -27,7 +28,7 @@ public static class Loader
         
         IsMapGenered = true;
     }
-    public static void SaveInFileMapCell(Vector2 position,int[,] map)
+    public void SaveInFileMapCell(Vector2 position,int[,] map)
     {
         BinaryFormatter formatter = new BinaryFormatter();
         // получаем поток, куда будем записывать сериализованный объект
@@ -44,7 +45,7 @@ public static class Loader
         // десериализация из файла people.dat                                               
                                                                                             
     }                                                                                       
-    public static int[,] LoadFromFile(Vector2 position)
+    public int[,] LoadFromFile(Vector2 position)
     {
         
         if (File.Exists($"{position.x}_{position.y}.mapcell"))
@@ -55,11 +56,12 @@ public static class Loader
             {
                 result = (int[,])formatter.Deserialize(fs);
             }
+            Debug.Log("Loading from file");
             return result;
         }
         return null;
     }                                  
-    public static int[,] GetNeighborWorldMapCell(Vector2 position)                          
+    public int[,] GetNeighborWorldMapCell(Vector2 position)
     {
         bool Cell0_0 = false;
         bool Cell1_0 = false;
@@ -96,7 +98,7 @@ public static class Loader
         //001
         //001
         //001
-        if (position.x == Loader.WorldSize-1)
+        if (position.x == WorldSize-1)
         {
             Cell2_0 = true;
             Cell2_1 = true;
@@ -247,7 +249,120 @@ public static class Loader
         //OutArray(Result);
         return Result;
     }
-    static int[,] FillArrayRange(int[,] array, Vector2 from, Vector2 to, int[,] Content)
+    public int[,] GetNeighborWorldMapCell(bool UP=true, bool Down=true, bool Left=true,
+        bool Right=true, bool UP_Left=true, bool UP_Right=true, bool Down_Left=true, bool Down_Right=true)
+    {
+        int[,] Result = new int[StaticData.WorldCellSize * 3, StaticData.WorldCellSize * 3];
+        //100
+        //000
+        //000        
+        if (UP_Left)
+        {
+            Result = FillArrayRange(Result, new Vector2(0, 0), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize), 1);
+        }
+        else
+        {
+            Result = FillArrayRange(Result, new Vector2(0, 0), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize), 0);
+        }
+        
+        //Debug.Log("Stage6");
+        //010
+        //000
+        //000
+
+        if (UP)
+        {
+            Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize, 0), new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize), 1);
+        }
+        else
+        {
+            Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize, 0), new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize), 0);
+        }
+        
+        //Debug.Log("Stage7");
+        //001
+        //000
+        //000
+        if (UP_Right)
+        {
+            Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, 0), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize), 1);
+        }
+        else
+        {
+            Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, 0), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize), 0);
+        }
+        
+        //Debug.Log("Stage8");
+        //000
+        //100
+        //000
+        if (Left)
+        {
+            Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 2), 1);
+        }
+        else
+        {
+            Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 2), 0);
+        }
+        
+        //Debug.Log("Stage9");
+        //000
+        //001
+        //000
+        if (Right)
+        {
+            Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize * 2), 1);
+        }
+        else
+        {
+            Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize * 2), 0);
+        }
+        
+        //Debug.Log("Stage10");
+        //000
+        //000
+        //100
+        if (Down_Left)
+        {
+            Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 3), 1);
+        }
+        else
+        {
+            Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 3), 0);
+        }
+        
+        //Debug.Log("Stage11");
+        //000
+        //000
+        //010
+        if (Down)
+        {
+            Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize * 3), 1);
+        }
+        else
+        {
+            Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize * 3), 0);
+        }
+   
+        //Debug.Log("Stage12");
+        //000
+        //000
+        //001
+        if (Down_Right)
+        {
+            Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize * 3), 1);
+        }
+        else
+        {
+            Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize * 3), 0);
+        }
+        
+
+        //OutArray(Result);
+        return Result;
+
+    }    
+    int[,] FillArrayRange(int[,] array, Vector2 from, Vector2 to, int[,] Content)
     {
         int di=0, dk = 0;
         for (int i = (int)from.y; i < to.y; i++,di++)
@@ -262,7 +377,7 @@ public static class Loader
         }
         return array;
     }
-    static int[,] FillArrayRange(int[,] array, Vector2 from, Vector2 to, int Content)
+    int[,] FillArrayRange(int[,] array, Vector2 from, Vector2 to, int Content)
     {
         
         for (int i = (int)from.y; i < to.y; i++)
@@ -275,7 +390,7 @@ public static class Loader
         }
         return array;
     }
-    public static void OutArray(int[,] array)
+    public void OutArray(int[,] array)
     {
         string str = "";
         for (int i = 0; i < 75; i++)
