@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,5 +15,11 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         
+    }
+
+    internal void Damage()
+    {
+        Debug.Log("i'm hitted");
+        //ToDo
     }
 }
