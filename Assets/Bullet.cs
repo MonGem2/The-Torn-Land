@@ -73,11 +73,23 @@ public class Bullet : MonoBehaviour
         }
         if(data.type==BulletType.Area)
         {
-            transform.position = playerPos + Direction * data.Range;
+            Debug.Log("Holl");
+            if (Vector2.Distance(playerPos, targetPos) < data.Range)
+            {
+                transform.position = targetPos;
+                transform.position.Set(transform.position.x, transform.position.y, 1);
+            }
+            else
+            {
+                transform.position = playerPos + Direction * data.Range;
+                transform.position.Set(transform.position.x, transform.position.y, 1);
+            }
+            
             //DeleteOnTime(data.FlyTime);
         }
         StartCoroutine(DeleteOnTime(data.FlyTime));
     }
+
     IEnumerator RayAttck(float WaitForSecond)
     {
         if (!data.Through)
@@ -137,15 +149,45 @@ public class Bullet : MonoBehaviour
         }
     }
     IEnumerator DeleteOnTime(float time)
-    {
+    { 
         //Debug.Log("i'l delete this shit");
         yield return new  WaitForSeconds(time);
         //Debug.Log("i'm deleting this shit");
         DestroyTrigger(false);
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnterStay2D(Collision2D collision)
     {
-        //Debug.Log("i'm finaly here");
+        
+        Debug.Log("i'm finaly here 1");
+        foreach (var item in data.DontAttack)
+        {
+            if (item == collision.gameObject.tag)
+            {
+                DestroyTrigger(false);
+                return;
+            }
+        }
+        //Physics.IgnoreCollision(collision.collider, collider);
+        if (collision.gameObject.tag == "enemy")
+        {
+            if (data.type == BulletType.Area)
+            {
+                //data.PhysicDamage / data.AttackTimeout * Time.deltaTime;
+                collision.gameObject.GetComponent<Enemy>().Damage();
+            }
+            else
+            {
+                collision.gameObject.GetComponent<Enemy>().Damage();
+            }
+        }
+        if (!data.Through)
+        {
+            DestroyTrigger(true);
+        }
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        Debug.Log("i'm finaly here");
         foreach (var item in data.DontAttack)
         {
             if (item == collision.tag)
@@ -154,16 +196,25 @@ public class Bullet : MonoBehaviour
                 return;
             }
         }
+        //Physics.IgnoreCollision(collision.collider, collider);
         if (collision.tag == "enemy")
         {
-            collision.GetComponent<Enemy>().Damage();
+            //data.PhysicDamage / data.AttackTimeout * Time.deltaTime;
+            if (data.type == BulletType.Area)
+            {
+                //data.PhysicDamage / data.AttackTimeout * Time.deltaTime;
+                collision.GetComponent<Enemy>().Damage();
+            }
+            else
+            {
+                collision.GetComponent<Enemy>().Damage();
+            }
         }
         if (!data.Through)
         {
             DestroyTrigger(true);
         }
     }
-
     void DestroyTrigger(bool DoAnimation) 
     {
         if (DoAnimation)

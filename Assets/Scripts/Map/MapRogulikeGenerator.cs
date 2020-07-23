@@ -75,7 +75,7 @@ public class MapRogulikeGenerator : MonoBehaviour
         { return; }
         if (!loader.IsMapGenered)
         {
-            Debug.Log("coo");
+            //Debug.Log("coo");
             loader.LoadMap();
             StaticData.ActiveCell = StaticData.MapData[10][10];
             ThisCell = StaticData.ActiveCell;
@@ -112,7 +112,7 @@ public class MapRogulikeGenerator : MonoBehaviour
         }
         else
         {
-            Debug.Log("MapSet");
+            //Debug.Log("MapSet");
             MapSet();
         }
     }
@@ -124,17 +124,17 @@ public class MapRogulikeGenerator : MonoBehaviour
         {
             for (int k = 0; k < ThisCell.MapHeight; k++)
             {
-                Debug.Log($"Loading cell:{i},{k} and it's :{generator.ResultMap[i, k]}");
+                //Debug.Log($"Loading cell:{i},{k} and it's :{generator.ResultMap[i, k]}");
                 if (generator.ResultMap[i, k] == (int)MapCell.CellType.Wall)
                 {
-                    Debug.Log($"it's wall");
+                   // Debug.Log($"it's wall");
                     GameObject cell = Instantiate(CellPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     MapCells.Add(cell);
                     int temp = GetCountRightNeighbours(k, i, MapCell.CellType.Wall, true);
                     if (temp > 1)
                     {
-                        Debug.Log("GG:1");
+                       // Debug.Log("GG:1");
                         cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.gray, MapCell.CellType.Wall, temp, 1);
                         continue;
                     }
@@ -142,7 +142,7 @@ public class MapRogulikeGenerator : MonoBehaviour
                     temp = GetCountUpNeighbours(k, i, MapCell.CellType.Wall, true);
                     if (temp > 1)
                     {
-                        Debug.Log("GG:2");
+                       // Debug.Log("GG:2");
                         cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.gray, MapCell.CellType.Wall, 1, temp);
                         continue;
                     }
@@ -151,14 +151,14 @@ public class MapRogulikeGenerator : MonoBehaviour
                 }
                 if (generator.ResultMap[i, k] == (int)MapCell.CellType.Empty)
                 {
-                    Debug.Log($"it's empty");
+                  //  Debug.Log($"it's empty");
                     GameObject cell = Instantiate(EmptyPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     MapCells.Add(cell);
                     int temp = GetCountRightNeighbours(k, i, MapCell.CellType.Empty, true);
                     if (temp > 1)
                     {
-                        Debug.Log("GG:1");
+                      //  Debug.Log("GG:1");
                         cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.black, MapCell.CellType.Empty, temp, 1);
                         continue;
                     }
@@ -166,7 +166,7 @@ public class MapRogulikeGenerator : MonoBehaviour
                     temp = GetCountUpNeighbours(k, i, MapCell.CellType.Empty, true);
                     if (temp > 1)
                     {
-                        Debug.Log("GG:2");
+                      //  Debug.Log("GG:2");
                         cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.black, MapCell.CellType.Empty, 1, temp);
                         continue;
                     }

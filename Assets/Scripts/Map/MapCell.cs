@@ -37,7 +37,7 @@ public class MapCell : MonoBehaviour
 
     public void SetAll(int _x, int _y, Color _color, CellType _type, float sizeX, float sizeY)
     {
-        Debug.Log("i'm here 11");
+        //Debug.Log("i'm here 11");
         x = _x;
         y = _y;
         color = _color;
@@ -51,7 +51,7 @@ public class MapCell : MonoBehaviour
     {
         //mySizeY = 1;
         //SizeX = 1;
-        Debug.Log(mySizeX + "   ggg  " + mySizeY);
+       // Debug.Log(mySizeX + "   ggg  " + mySizeY);
         gameObject.transform.localPosition = new Vector3(X, Y);
         gameObject.GetComponent<Image>().material = new Material(gameObject.GetComponent<Image>().material);
         gameObject.GetComponent<Image>().material.color = this.color;

@@ -39,28 +39,72 @@ public class Player : MonoBehaviour
             //bl.Shoot(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
 
-            GameObject bullet = Instantiate(loader.BulletsPerhubs[1]);
+            //GameObject bullet = Instantiate(loader.BulletsPerhubs[1]);
+            //Bullet bl = bullet.GetComponent<Bullet>();
+            //BulletData data = new BulletData();
+            //data.AdditionalAngle = 0;
+            //data.DeltaAngle = 15;
+            //data.Distance = new Vector2(0.5f, 0.5f);
+            //data.DontAttack = new List<string>();
+            //data.DontAttack.Add("player");
+            //data.EffectsIDs = new List<int>();
+            //data.FlyTime = 0. 2f;
+            //data.ManaDamage = 0;
+            //data.PerhubID = 0;
+            //data.PhysicDamage = 5;
+            //data.Range = 10;
+            //data.SoulDamage = 0;
+            //data.Through = false;
+            //data.type = BulletType.Ray;
+            //data.AttackTimeout = 0.05f;
+            //bl.data = data;
+            //bl.loader = loader;
+            //bl.Shoot(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+
+            GameObject bullet = Instantiate(loader.BulletsPerhubs[2]);
             Bullet bl = bullet.GetComponent<Bullet>();
             BulletData data = new BulletData();
             data.AdditionalAngle = 0;
             data.DeltaAngle = 15;
             data.Distance = new Vector2(0.5f, 0.5f);
             data.DontAttack = new List<string>();
-            data.DontAttack.Add("player");
+            //data.DontAttack.Add("player");
             data.EffectsIDs = new List<int>();
-            data.FlyTime = 0.2f;
+            data.FlyTime = 200;
             data.ManaDamage = 0;
             data.PerhubID = 0;
             data.PhysicDamage = 5;
-            data.Range = 10;
+            data.Range = 2;
             data.SoulDamage = 0;
-            data.Through = false;
-            data.type = BulletType.Ray;
+            data.Through = true;
+            data.type = BulletType.Area;
             data.AttackTimeout = 0.05f;
             bl.data = data;
             bl.loader = loader;
-            
             bl.Shoot(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+            //GameObject bullet = Instantiate(loader.BulletsPerhubs[2]);
+            //Bullet bl = bullet.GetComponent<Bullet>();
+            //BulletData data = new BulletData();
+            //data.AdditionalAngle = 0;
+            //data.DeltaAngle = 15;
+            //data.Distance = new Vector2(0.5f, 0.5f);
+            //data.DontAttack = new List<string>();
+            //data.DontAttack.Add("player");
+            //data.EffectsIDs = new List<int>();
+            //data.FlyTime = 2;
+            //data.ManaDamage = 0;
+            //data.PerhubID = 0;
+            //data.PhysicDamage = 5;
+            //data.Range = 2;
+            //data.SoulDamage = 0;
+            //data.Through = false;
+            //data.type = BulletType.Area;
+            //data.AttackTimeout = 0.05f;
+            //bl.data = data;
+            //bl.loader = loader;
+            //bl.Shoot(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
         }
     }
 }

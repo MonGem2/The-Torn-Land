@@ -56,7 +56,7 @@ public class Loader:MonoBehaviour
             {
                 result = (int[,])formatter.Deserialize(fs);
             }
-            Debug.Log("Loading from file");
+            //Debug.Log("Loading from file");
             return result;
         }
         return null;
