@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviour
         }
         if (data.type == BulletType.Swing)
         {
-            transform.position = playerPos + Direction * data.Distance;
+            transform.position = playerPos ;
             //DeleteOnTime(data.FlyTime);
         }
         if (data.type == BulletType.Ray)
@@ -77,12 +77,12 @@ public class Bullet : MonoBehaviour
             if (Vector2.Distance(playerPos, targetPos) < data.Range)
             {
                 transform.position = targetPos;
-                transform.position.Set(transform.position.x, transform.position.y, 1);
+                transform.position=new Vector3(transform.position.x, transform.position.y, 1);
             }
             else
             {
                 transform.position = playerPos + Direction * data.Range;
-                transform.position.Set(transform.position.x, transform.position.y, 1);
+                transform.position=new Vector3(transform.position.x, transform.position.y, 1);
             }
             
             //DeleteOnTime(data.FlyTime);

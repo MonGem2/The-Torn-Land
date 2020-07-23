@@ -95,17 +95,17 @@ public class MapRogulikeGenerator : MonoBehaviour
 
             outer = Task.Factory.StartNew(() =>
             {
-                Debug.Log("Stage1");
+                //Debug.Log("Stage1");
                 generator.Build(UnBorder);
-                Debug.Log("Stage2");
+                //Debug.Log("Stage2");
                 generator.ConnectCaves();
-                Debug.Log("Stage3");
+                //Debug.Log("Stage3");
                 generator.ConnectCaves();
-                Debug.Log("Stage4");
+                //Debug.Log("Stage4");
                 generator.EmptyCellSet();
-                Debug.Log("Stage5");
+                //Debug.Log("Stage5");
                 generator.EndGeneration();
-                Debug.Log("Stage6");
+                //Debug.Log("Stage6");
                 return generator.ResultMap;
             });
             return;
