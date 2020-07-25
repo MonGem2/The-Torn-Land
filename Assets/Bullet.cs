@@ -8,13 +8,41 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     public Loader loader;
     public BulletData data;
-    Vector2 Direction;
+    Vector2 Direction=new Vector2();
     Vector2 PlayerPosition;
     public Animation animation;
+    float DAngle;
     public void Shoot(Vector2 playerPos, Vector2 targetPos)
     {
+
         PlayerPosition = playerPos;
-        Direction = (targetPos- playerPos).normalized;
+        DAngle = UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle);
+        Vector2 Dir = (targetPos- playerPos).normalized;
+        double ResAngle = (double)((float)Math.Acos(Math.Abs(Dir.x)) * 180 / (float)Math.PI + data.AdditionalAngle + DAngle);
+        Debug.Log($"Target angle:{Math.Acos(Math.Abs(Dir.x)) * 180 / (float)Math.PI}");
+        if (Dir.x > 0)
+        {
+            
+            if (Dir.y < 0)
+            {
+                ResAngle =-ResAngle ;  
+            }
+
+        }
+        else
+        {
+            if (Dir.y > 0)
+            {
+                ResAngle = 180-ResAngle;
+            }
+            else
+            {
+                ResAngle += 180;
+            }
+
+        }
+        Direction.x = (float)Math.Cos(ResAngle * Math.PI / 180);
+        Direction.y = (float)Math.Sin(ResAngle * Math.PI / 180);
         if (data.type == BulletType.Stab)
         {
             transform.position=playerPos +Direction * data.Distance;
@@ -30,12 +58,23 @@ public class Bullet : MonoBehaviour
         }
         if (data.type == BulletType.Swing)
         {
-            transform.position = playerPos ;
+            LineRenderer lnr = gameObject.GetComponent<LineRenderer>();
+            transform.position = playerPos;
+            if (Direction.y > 0)
+            {
+                transform.Rotate(0, 0, (float)Math.Acos(Direction.x) * 180 / (float)Math.PI + data.AdditionalAngle +DAngle);// + UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle));
+            }
+            else
+            {
+                transform.Rotate(0, 0, -((float)Math.Acos(Direction.x) * 180 / (float)Math.PI + data.AdditionalAngle) +DAngle);// + UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle));
+            }
+            
             //DeleteOnTime(data.FlyTime);
         }
         if (data.type == BulletType.Ray)
         {
             LineRenderer lnr = gameObject.GetComponent<LineRenderer>();
+            Debug.Log($"My count of points:{lnr.positionCount}");
             if (data.Through)
             {
                 lnr.SetPositions(new Vector3[] { playerPos + Direction * data.Distance, playerPos + Direction * data.Range });
@@ -52,6 +91,7 @@ public class Bullet : MonoBehaviour
                     lnr.SetPositions(new Vector3[] { playerPos + Direction * data.Distance, hit.point });
                 }
             }
+            Debug.Log($"My count of points(the same in the end):{lnr.positionCount}");
             StartCoroutine(RayAttck(data.AttackTimeout));
             //Debug.Log($"Player pos:{playerPos}, result pos:{Direction}, End lisne:{targetPos}");
             //DeleteOnTime(data.FlyTime);
@@ -60,13 +100,9 @@ public class Bullet : MonoBehaviour
         {
             //Debug.Log("GGWP");
             transform.position= playerPos + Direction * data.Distance;
-            if (Direction.y > 0)
-            {
-                gameObject.transform.Rotate(0, 0, (float)Math.Acos(Direction.x) * 180 / (float)Math.PI + data.AdditionalAngle);// + UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle));
-            }
-            else {
-                gameObject.transform.Rotate(0, 0, -((float)Math.Acos(Direction.x) * 180 / (float)Math.PI + data.AdditionalAngle));// + UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle));
-            }
+            Debug.Log(ResAngle);
+            gameObject.transform.Rotate(0, 0, (float)ResAngle);
+            
             //Debug.Log($"Direction y: {Direction.y}, Direction angle:{Math.Acos(Direction.y)*180 / Math.PI}, additional angle:{data.AdditionalAngle}");
             //Debug.Log($"Result:{(float)Math.Acos(Direction.y)*180/(float)Math.PI + data.AdditionalAngle}");
             //DeleteOnTime(data.FlyTime);
@@ -76,8 +112,8 @@ public class Bullet : MonoBehaviour
             Debug.Log("Holl");
             if (Vector2.Distance(playerPos, targetPos) < data.Range)
             {
-                transform.position = targetPos;
-                transform.position=new Vector3(transform.position.x, transform.position.y, 1);
+                transform.position = playerPos+ Direction*Vector2.Distance(targetPos, playerPos);
+                transform.position = new Vector3(transform.position.x, transform.position.y, 1);
             }
             else
             {
@@ -148,6 +184,7 @@ public class Bullet : MonoBehaviour
             
         }
     }
+
     IEnumerator DeleteOnTime(float time)
     { 
         //Debug.Log("i'l delete this shit");
@@ -180,14 +217,14 @@ public class Bullet : MonoBehaviour
                 collision.gameObject.GetComponent<Enemy>().Damage();
             }
         }
-        if (!data.Through)
+        if (!data.Through&&collision.gameObject.GetComponent<Bullet>()==null)
         {
             DestroyTrigger(true);
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.Log("i'm finaly here");
+       // Debug.Log("i'm finaly here");
         foreach (var item in data.DontAttack)
         {
             if (item == collision.tag)
@@ -210,7 +247,7 @@ public class Bullet : MonoBehaviour
                 collision.GetComponent<Enemy>().Damage();
             }
         }
-        if (!data.Through)
+        if (!data.Through&&collision.GetComponent<Bullet>()==null)
         {
             DestroyTrigger(true);
         }
@@ -231,9 +268,23 @@ public class Bullet : MonoBehaviour
             transform.position = (Vector2)transform.position + Direction * data.Range / data.FlyTime * Time.deltaTime;
             
         }
+        if (data.type == BulletType.Swing)
+        {
+            if (Direction.y > 0)
+            {
+                transform.Rotate(new Vector3(0, 0, data.DeltaAngle * 2 / data.FlyTime * Time.deltaTime));
+            }
+            else
+            {
+                transform.Rotate(new Vector3(0, 0, + data.DeltaAngle * 2 / data.FlyTime * Time.deltaTime));
+            }
+            
+           // Debug.Log(data.DeltaAngle * 2 / data.FlyTime );
+        }
     }
 }
 public class BulletData {
+    public float ShootPeriod;
     public List<string> DontAttack;
     public int PerhubID;
     public float PhysicDamage = 0;
