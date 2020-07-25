@@ -420,5 +420,8 @@ public class Loader:MonoBehaviour
         }
         Debug.Log(str);
     }
-
+    public Bullet CloneBullet(int bulletId)
+    {
+        return Instantiate(BulletsPerhubs[bulletId]).GetComponent<Bullet>();
+    }
 }
