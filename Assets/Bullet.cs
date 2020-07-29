@@ -14,7 +14,7 @@ public class Bullet : MonoBehaviour
     float DAngle;
     public void Shoot(Vector2 playerPos, Vector2 targetPos)
     {
-
+        
         PlayerPosition = playerPos;
         DAngle = UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle);
         Vector2 Dir = (targetPos- playerPos).normalized;
@@ -74,7 +74,7 @@ public class Bullet : MonoBehaviour
         if (data.type == BulletType.Ray)
         {
             LineRenderer lnr = gameObject.GetComponent<LineRenderer>();
-            Debug.Log($"My count of points:{lnr.positionCount}");
+            //Debug.Log($"My count of points:{lnr.positionCount}");
             if (data.Through)
             {
                 lnr.SetPositions(new Vector3[] { playerPos + Direction * data.Distance, playerPos + Direction * data.Range });
@@ -91,7 +91,7 @@ public class Bullet : MonoBehaviour
                     lnr.SetPositions(new Vector3[] { playerPos + Direction * data.Distance, hit.point });
                 }
             }
-            Debug.Log($"My count of points(the same in the end):{lnr.positionCount}");
+            //Debug.Log($"My count of points(the same in the end):{lnr.positionCount}");
             StartCoroutine(RayAttck(data.AttackTimeout));
             //Debug.Log($"Player pos:{playerPos}, result pos:{Direction}, End lisne:{targetPos}");
             //DeleteOnTime(data.FlyTime);
@@ -100,7 +100,7 @@ public class Bullet : MonoBehaviour
         {
             //Debug.Log("GGWP");
             transform.position= playerPos + Direction * data.Distance;
-            Debug.Log(ResAngle);
+            //Debug.Log(ResAngle);
             gameObject.transform.Rotate(0, 0, (float)ResAngle);
             
             //Debug.Log($"Direction y: {Direction.y}, Direction angle:{Math.Acos(Direction.y)*180 / Math.PI}, additional angle:{data.AdditionalAngle}");
@@ -109,7 +109,7 @@ public class Bullet : MonoBehaviour
         }
         if(data.type==BulletType.Area)
         {
-            Debug.Log("Holl");
+            //Debug.Log("Holl");
             if (Vector2.Distance(playerPos, targetPos) < data.Range)
             {
                 transform.position = playerPos+ Direction*Vector2.Distance(targetPos, playerPos);
