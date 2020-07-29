@@ -522,6 +522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loader: {fileID: 573169229}
+  MoveLock: 0
 --- !u!1 &1502138397
 GameObject:
   m_ObjectHideFlags: 0

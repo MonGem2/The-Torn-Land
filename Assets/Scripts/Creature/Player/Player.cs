@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,59 +11,12 @@ public class Player : Creature
     // Start is called before the first frame update
     void Start()
     {
+        loader.LoadSkills();
+        //Debug.LogWarning(loader.Skils.Count);
         Skills = new List<Skill>();
-        Skill skill = new Skill();
-        skill.Cooldown = 0;
-        skill.EffectsIds = new List<int>();
-        skill.MPIntake = 10;
-        skill.STIntake = 10;
-        skill.SPIntake = 10;
-        skill.Bullets = new List<BulletData>();
-        {
-            {
-                BulletData data = new BulletData();
-                data.AdditionalAngle = 30;
-                data.DeltaAngle = 0;
-                data.Distance = new Vector2(0.5f, 0.5f);
-                data.DontAttack = new List<string>();
-                //data.DontAttack.Add("player");
-                data.EffectsIDs = new List<int>();
-                data.FlyTime = 200;
-                data.ManaDamage = 0;
-                data.PerhubID = 2;
-                data.PhysicDamage = 5;
-                data.Range = 2;
-                data.SoulDamage = 0;
-                data.Through = true;
-                data.type = BulletType.Area;
-                data.AttackTimeout = 0.05f;
-                skill.Bullets.Add(data);
-            }
-            {
-                BulletData data = new BulletData();
-                data.AdditionalAngle = -30;
-                data.DeltaAngle = 0;
-                data.Distance = new Vector2(0.5f, 0.5f);
-                data.DontAttack = new List<string>();
-                //data.DontAttack.Add("player");
-                data.EffectsIDs = new List<int>();
-                data.FlyTime = 200;
-                data.ManaDamage = 0;
-                data.PerhubID = 2;
-                data.PhysicDamage = 5;
-                data.Range = 2;
-                data.SoulDamage = 0;
-                data.Through = true;
-                data.type = BulletType.Area;
-                data.AttackTimeout = 0.05f;
-                skill.Bullets.Add(data);
-            }
-        }
-        Skills.Add(skill);
-        ActiveSkill = skill;
+        Skills.Add(loader.Skills[0]);
+        ActiveSkill = loader.Skills[0];
     }
-    public override void Damage(BulletData bulletData)
-    { }
     void  Death()
     { }
     // Update is called once per frame

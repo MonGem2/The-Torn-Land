@@ -9,8 +9,11 @@ public class Loader:MonoBehaviour
     public int WorldSize = 100;
     public bool IsMapGenered=false;
     public List<GameObject> BulletsPerhubs;
+    public List<State> States=new List<State>();
+    public List<Skill> Skills=new List<Skill>();
     public void LoadMap()
     {
+        //LoadSkills();
         for (int i = 0; i < WorldSize; i++)
         {
             StaticData.MapData.Add(new List<WorldMapCell>());
@@ -420,8 +423,133 @@ public class Loader:MonoBehaviour
         }
         Debug.Log(str);
     }
-    public Bullet CloneBullet(int bulletId)
+    public void LoadSkills()
     {
-        return Instantiate(BulletsPerhubs[bulletId]).GetComponent<Bullet>();
+        {
+            Skill skill = new Skill();
+            skill.Cooldown = 10;
+            skill.EffectsIds = new List<int>();
+            skill.MPIntake = 10;
+            skill.STIntake = 10;
+            skill.SPIntake = 10;
+            skill.Bullets = new List<BulletData>();
+            {
+                {
+                    BulletData data = new BulletData();
+                    data.AdditionalAngle = 0;
+                    data.DeltaAngle = 5;
+                    data.Distance = new Vector2(0.5f, 0.5f);
+                    data.DontAttack = new List<string>();
+                    //data.DontAttack.Add("player");
+                    data.EffectsIDs = new List<int>();
+                    data.FlyTime = 3;
+                    data.ManaDamage = 0;
+                    data.PerhubID = 0;
+                    data.PhysicDamage = 5;
+                    data.Range = 10;
+                    data.SoulDamage = 0;
+                    data.Through = false;
+                    data.type = BulletType.Bullet;
+                    data.AttackTimeout = 0.05f;
+                    data.ShootPeriod = 0.3f;
+                    skill.Bullets.Add(data);
+                }
+                {
+                    BulletData data = new BulletData();
+                    data.AdditionalAngle = 0;
+                    data.DeltaAngle = 5;
+                    data.Distance = new Vector2(0.5f, 0.5f);
+                    data.DontAttack = new List<string>();
+                    //data.DontAttack.Add("player");
+                    data.EffectsIDs = new List<int>();
+                    data.FlyTime = 3;
+                    data.ManaDamage = 0;
+                    data.PerhubID = 0;
+                    data.PhysicDamage = 5;
+                    data.Range = 10;
+                    data.SoulDamage = 0;
+                    data.Through = false;
+                    data.type = BulletType.Bullet;
+                    data.AttackTimeout = 0.05f;
+                    data.ShootPeriod = 0.3f;
+                    skill.Bullets.Add(data);
+                }
+                {
+                    BulletData data = new BulletData();
+                    data.AdditionalAngle = 0;
+                    data.DeltaAngle = 5;
+                    data.Distance = new Vector2(0.5f, 0.5f);
+                    data.DontAttack = new List<string>();
+                    //data.DontAttack.Add("player");
+                    data.EffectsIDs = new List<int>();
+                    data.FlyTime = 3;
+                    data.ManaDamage = 0;
+                    data.PerhubID = 0;
+                    data.PhysicDamage = 5;
+                    data.Range = 10;
+                    data.SoulDamage = 0;
+                    data.Through = false;
+                    data.type = BulletType.Bullet;
+                    data.AttackTimeout = 0.05f;
+                    data.ShootPeriod = 0.3f;
+                    skill.Bullets.Add(data);
+                }
+                {
+                    BulletData data = new BulletData();
+                    data.AdditionalAngle = 0;
+                    data.DeltaAngle = 5;
+                    data.Distance = new Vector2(0.5f, 0.5f);
+                    data.DontAttack = new List<string>();
+                    //data.DontAttack.Add("player");
+                    data.EffectsIDs = new List<int>();
+                    data.FlyTime = 3;
+                    data.ManaDamage = 0;
+                    data.PerhubID = 0;
+                    data.PhysicDamage = 5;
+                    data.Range = 10;
+                    data.SoulDamage = 0;
+                    data.Through = false;
+                    data.type = BulletType.Bullet;
+                    data.AttackTimeout = 0.05f;
+                    data.ShootPeriod = 0.3f;
+                    skill.Bullets.Add(data);
+                }
+                {
+                    BulletData data = new BulletData();
+                    data.AdditionalAngle = 0;
+                    data.DeltaAngle = 5;
+                    data.Distance = new Vector2(0.5f, 0.5f);
+                    data.DontAttack = new List<string>();
+                    //data.DontAttack.Add("player");
+                    data.EffectsIDs = new List<int>();
+                    data.FlyTime = 3;
+                    data.ManaDamage = 0;
+                    data.PerhubID = 0;
+                    data.PhysicDamage = 5;
+                    data.Range = 10;
+                    data.SoulDamage = 0;
+                    data.Through = false;
+                    data.type = BulletType.Bullet;
+                    data.AttackTimeout = 0.05f;
+                    data.ShootPeriod = 0.3f;
+                    skill.Bullets.Add(data);
+                }
+
+            }
+            Skills.Add(skill);
+        }
+    
     }
+    public void LoadStates()
+    {
+        {
+            State state = new State();
+            state.Duration = 10;
+            state.type = StateType.SkillHider;
+            state.Params = new List<int>();
+            States.Add(state);
+        }
+    }
+
+
 }
