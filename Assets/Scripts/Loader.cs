@@ -427,11 +427,11 @@ public class Loader:MonoBehaviour
     {
         {
             Skill skill = new Skill();
-            skill.Cooldown = 10;
+            skill.Cooldown = 3;
             skill.EffectsIds = new List<int>();
-            skill.MPIntake = 10;
-            skill.STIntake = 10;
-            skill.SPIntake = 10;
+            skill.MPIntake = 15;
+            skill.STIntake = 15;
+            skill.SPIntake = 15;
             skill.Bullets = new List<BulletData>();
             {
                 {

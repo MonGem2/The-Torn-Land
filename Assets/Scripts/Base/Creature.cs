@@ -9,11 +9,11 @@ public class Creature : MonoBehaviour
     // Races race { get; set; }
     public Loader loader;
     protected float _maxHp;
-    public float MaxHP
+    public virtual float MaxHP
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -30,11 +30,11 @@ public class Creature : MonoBehaviour
 
     }
     protected float _maxMp;
-    public float MaxMP
+    public virtual float MaxMP
     {
         get
         {
-            int AditionalHP=0;
+            int AditionalHP = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -42,25 +42,25 @@ public class Creature : MonoBehaviour
                     AditionalHP += item.Params[1];
                 }
             }
-            return _maxHp*AditionalHP;
+            return _maxMp * AditionalHP;
         }
         set
         {
-            _maxHp = value;
+            _maxMp = value;
         }
 
     }
     protected float _maxSt;
-    public float MaxST
+    public virtual float MaxST
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional+= item.Params[2];
+                    Aditional += item.Params[2];
                 }
             }
             return _maxSt * Aditional;
@@ -71,12 +71,12 @@ public class Creature : MonoBehaviour
         }
 
     }
-    protected float _maxSp;
-    public float MaxSP
+    protected  float _maxSp;
+    public virtual float MaxSP
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -93,17 +93,20 @@ public class Creature : MonoBehaviour
 
     }
 
-    public float HP { get; set; } = 100;
-    public float MP { get; set; } = 100;
-    public float ST { get; set; } = 100;
-    public float SP { get; set; } = 100;
-
+    protected float hP = 100;
+    public virtual float HP { get => hP; set => hP = value; }
+    protected float mP = 100;
+    public virtual float MP { get => mP; set => mP = value; }
+    protected float sT = 100;
+    public virtual float ST { get => sT; set => sT = value; }
+    protected float sP = 100;
+    public virtual float SP { get => sP; set => sP = value; }
     protected float _sumBaseDamage;
-    public float SumBaseDamage
+    public virtual float SumBaseDamage
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -120,11 +123,11 @@ public class Creature : MonoBehaviour
 
     }
     protected float _regSpeedHP;
-    public float RegSpeedHP
+    public virtual float RegSpeedHP
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -141,11 +144,11 @@ public class Creature : MonoBehaviour
 
     }
     protected float _regSpeedMP;
-    public float RegSpeedMP
+    public virtual float RegSpeedMP
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -162,11 +165,11 @@ public class Creature : MonoBehaviour
 
     }
     protected float _regSpeedST;
-    public float RegSpeedST
+    public virtual float RegSpeedST
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -183,11 +186,11 @@ public class Creature : MonoBehaviour
 
     }
     protected float _regSpeedSP;
-    public float RegSpeedSP
+    public virtual float RegSpeedSP
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -204,11 +207,11 @@ public class Creature : MonoBehaviour
 
     }
     protected float _magResist;
-    public float MagResist
+    public virtual float MagResist
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -225,11 +228,11 @@ public class Creature : MonoBehaviour
 
     }
     protected float _phyResist;
-    public float PhysResist
+    public virtual float PhysResist
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -246,11 +249,11 @@ public class Creature : MonoBehaviour
 
     }
     protected float _soulResist;
-    public float SoulResist
+    public virtual float SoulResist
     {
         get
         {
-            int Aditional = 0;
+            int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -270,6 +273,8 @@ public class Creature : MonoBehaviour
     public List<State> States = new List<State>();
     public List<Skill> Skills = new List<Skill>();
     public Skill ActiveSkill;
+
+
     protected void Start()
     {
         StartCoroutine(Regeneration(5));
@@ -284,7 +289,7 @@ public class Creature : MonoBehaviour
     }
     public virtual void Damage(BulletData bulletData, bool MaxEffectSet = true)
     {
-        
+
         foreach (var item in States)
         {
             if (item.type == StateType.InfinityPower)
@@ -298,7 +303,7 @@ public class Creature : MonoBehaviour
         if (HP < 0)
         {
             Death();
-            
+
         }
         if (MP > MaxMP)
         {
@@ -307,11 +312,11 @@ public class Creature : MonoBehaviour
             {
                 AddEffect(0);
             }
-        }       
+        }
         //Debug.LogWarning("//TODO:IntakeDamage");
     }
 
-    public bool IntakeMP(float Count, bool MaxEffectSet=true)
+    public bool IntakeMP(float Count, bool MaxEffectSet = true)
     {
         foreach (var item in States)
         {
@@ -320,12 +325,12 @@ public class Creature : MonoBehaviour
                 if (item.Params[1] == 1) { return false; }
             }
         }
-        MP -= Count/MagResist;
+        MP -= Count / MagResist;
         if (MP < 0)
         {
             MP = 0;
-            
-            AddEffect(0);return false;
+
+            AddEffect(0); return false;
         }
         if (MP > MaxMP)
         {
@@ -352,8 +357,8 @@ public class Creature : MonoBehaviour
         if (ST < 0)
         {
             ST = 0;
-            
-            AddEffect(0);return false;
+
+            AddEffect(0); return false;
         }
         if (ST > MaxST)
         {
@@ -380,8 +385,8 @@ public class Creature : MonoBehaviour
         if (SP < 0)
         {
             SP = 0;
-            
-            AddEffect(0);return false;
+
+            AddEffect(0); return false;
         }
         if (SP > MaxSP)
         {
@@ -397,7 +402,7 @@ public class Creature : MonoBehaviour
     }
     protected void AddSkill(int SkillID)
     {
-        Skills.Add(loader.Skills[SkillID].Clone());        
+        Skills.Add(loader.Skills[SkillID].Clone());
     }
     protected void RemoveSkill(int SkillID)
     {
@@ -405,13 +410,18 @@ public class Creature : MonoBehaviour
     }
     private protected IEnumerator UseSkill(Skill skill, Vector2 targetPos)
     {
-        if (!skill.CanBeUsed||skill.locked)
+        if (!skill.CanBeUsed || skill.locked)
         {
             yield break;
         }
-
+        if (MP < skill.MPIntake||SP<skill.SPIntake||ST<skill.STIntake)
+        {
+            yield break;
+        }
+        
         skill.CanBeUsed = false;
         StartCoroutine(SkillCooldownReset(skill.Cooldown, skill));
+        
         IntakeMP(skill.MPIntake);
         IntakeST(skill.STIntake);
         IntakeSP(skill.SPIntake);
@@ -423,7 +433,7 @@ public class Creature : MonoBehaviour
             bullet.data = item;
             bullet.Shoot(transform.position, targetPos);
 
-            
+
         }
 
 
@@ -456,7 +466,7 @@ public class Creature : MonoBehaviour
             yield return new WaitForSeconds(state.Duration);
             MoveLock = false;
             yield break;
-        }     
+        }
         yield return new WaitForSeconds(state.Duration);
         States.Remove(state);
     }
@@ -464,17 +474,17 @@ public class Creature : MonoBehaviour
     {
         foreach (var item in state.Params)
         {
-                AddSkill(item);
-         
+            AddSkill(item);
+
         }
-        
+
     }
     protected void SkillAdderOff(State state)
     {
         foreach (var item in state.Params)
         {
-                RemoveSkill(item);
-         
+            RemoveSkill(item);
+
         }
 
     }
@@ -485,7 +495,7 @@ public class Creature : MonoBehaviour
             foreach (var item in Skills)
             {
                 item.locked = true;
-            }       
+            }
         }
         foreach (var item in Skills)
         {
@@ -517,7 +527,7 @@ public class Creature : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(Timeout);
-            bool Magreg=true, HPReg=true, STReg=true, SPReg=true;
+            bool Magreg = true, HPReg = true, STReg = true, SPReg = true;
             foreach (var item in States)
             {
                 if (item.type == StateType.RegenerationStop)
@@ -529,13 +539,13 @@ public class Creature : MonoBehaviour
 
                 }
             }
-            if (Magreg&&MP!=MaxMP)
+            if (Magreg && MP != MaxMP)
             {
-                IntakeMP(-RegSpeedMP*Timeout, false);
+                IntakeMP(-RegSpeedMP * Timeout, false);
             }
-            if (HPReg&&HP!=MaxHP)
+            if (HPReg && HP != MaxHP)
             {
-                HP += RegSpeedHP * Timeout/(MagResist+SoulResist+PhysResist);
+                HP += RegSpeedHP * Timeout*3 / (MagResist + SoulResist + PhysResist);
                 if (HP > MaxHP)
                 { HP = MaxHP; }
             }

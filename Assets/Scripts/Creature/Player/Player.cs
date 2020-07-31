@@ -4,14 +4,68 @@ using UnityEngine;
 
 public class Player : Creature
 {
-    public override void AddEffects(List<int> EffectIds)
-    { 
-        
+    public StatsBarScript StatsBar;
+
+    public override float HP {
+        get { return hP;  }
+        set {
+            hP = value;
+            StatsBar.SetHp(hP);
+        }
+    }
+    public override float MP
+    {
+        get { return mP; }
+        set
+        {
+            mP = value;
+            StatsBar.SetMp(mP);
+        }
+    }
+    public override float ST
+    {
+        get {
+            
+            return sT; }
+        set
+        {
+            Debug.Log("1:"+value);
+            sT = value;
+            Debug.Log(sT);
+            StatsBar.SetSt(sT);
+        }
+    }
+    public override float SP
+    {
+        get { return sP; }
+        set
+        {
+            sP = value;
+            StatsBar.SetSp(sP);
+        }
     }
     // Start is called before the first frame update
     void Start()
     {
+        this.MaxHP = 200;
+        this.MaxMP = 200;
+        this.MaxSP = 200;
+        this.MaxST = 200;
+        this.HP = 10;
+        this.MP = 10;
+        this.ST = 10;
+        this.SP = 10;
+        this.RegSpeedHP = 3;
+        this.RegSpeedMP = 3;
+        this.RegSpeedSP = 3;
+        this.RegSpeedST = 3;
+        this.SumBaseDamage = 5;
+        this.MagResist = 1;
+        this.PhysResist = 1;
+        this.SoulResist = 1;
+        StatsBar.SetMaxParams(this.MaxHP, this.MaxMP, MaxST, 100, 100, MaxMP, MaxSP);
         loader.LoadSkills();
+        StartCoroutine(Regeneration(1));
         //Debug.LogWarning(loader.Skils.Count);
         Skills = new List<Skill>();
         Skills.Add(loader.Skills[0]);
