@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Creature : MonoBehaviour
 {
-
     // Races race { get; set; }
     public Loader loader;
+    protected float _maxHp;
     public float MaxHP
     {
         get
@@ -20,14 +21,15 @@ public class Creature : MonoBehaviour
                     Aditional += item.Params[0];
                 }
             }
-            return MaxHP * Aditional;
+            return _maxHp * Aditional;
         }
         set
         {
-
+            _maxHp = value;
         }
 
     }
+    protected float _maxMp;
     public float MaxMP
     {
         get
@@ -40,15 +42,15 @@ public class Creature : MonoBehaviour
                     AditionalHP += item.Params[1];
                 }
             }
-            return MaxMP*AditionalHP;
+            return _maxHp*AditionalHP;
         }
         set
         {
-
+            _maxHp = value;
         }
 
     }
-    
+    protected float _maxSt;
     public float MaxST
     {
         get
@@ -61,14 +63,15 @@ public class Creature : MonoBehaviour
                     Aditional+= item.Params[2];
                 }
             }
-            return MaxST * Aditional;
+            return _maxSt * Aditional;
         }
         set
         {
-
+            _maxSt = value;
         }
 
     }
+    protected float _maxSp;
     public float MaxSP
     {
         get
@@ -81,11 +84,11 @@ public class Creature : MonoBehaviour
                     Aditional += item.Params[3];
                 }
             }
-            return MaxSP * Aditional;
+            return _maxSp * Aditional;
         }
         set
         {
-
+            _maxSp = value;
         }
 
     }
@@ -95,6 +98,7 @@ public class Creature : MonoBehaviour
     public float ST { get; set; } = 100;
     public float SP { get; set; } = 100;
 
+    protected float _sumBaseDamage;
     public float SumBaseDamage
     {
         get
@@ -107,15 +111,15 @@ public class Creature : MonoBehaviour
                     Aditional += item.Params[4];
                 }
             }
-            return SumBaseDamage * Aditional;
+            return _sumBaseDamage * Aditional;
         }
         set
         {
-
+            _sumBaseDamage = value;
         }
 
     }
-
+    protected float _regSpeedHP;
     public float RegSpeedHP
     {
         get
@@ -128,14 +132,15 @@ public class Creature : MonoBehaviour
                     Aditional += item.Params[5];
                 }
             }
-            return RegSpeedHP * Aditional;
+            return _regSpeedHP * Aditional;
         }
         set
         {
-
+            _regSpeedHP = value;
         }
 
     }
+    protected float _regSpeedMP;
     public float RegSpeedMP
     {
         get
@@ -148,14 +153,15 @@ public class Creature : MonoBehaviour
                     Aditional += item.Params[6];
                 }
             }
-            return RegSpeedMP * Aditional;
+            return _regSpeedMP * Aditional;
         }
         set
         {
-
+            _regSpeedMP = value;
         }
 
     }
+    protected float _regSpeedST;
     public float RegSpeedST
     {
         get
@@ -168,14 +174,15 @@ public class Creature : MonoBehaviour
                     Aditional += item.Params[7];
                 }
             }
-            return RegSpeedST * Aditional;
+            return _regSpeedST * Aditional;
         }
         set
         {
-
+            _regSpeedST = value;
         }
 
     }
+    protected float _regSpeedSP;
     public float RegSpeedSP
     {
         get
@@ -188,15 +195,15 @@ public class Creature : MonoBehaviour
                     Aditional += item.Params[8];
                 }
             }
-            return RegSpeedSP * Aditional;
+            return _regSpeedSP * Aditional;
         }
         set
         {
-
+            _regSpeedSP = value;
         }
 
     }
-
+    protected float _magResist;
     public float MagResist
     {
         get
@@ -209,14 +216,15 @@ public class Creature : MonoBehaviour
                     Aditional += item.Params[9];
                 }
             }
-            return MagResist * Aditional;
+            return _magResist * Aditional;
         }
         set
         {
-
+            _magResist = value;
         }
 
     }
+    protected float _phyResist;
     public float PhysResist
     {
         get
@@ -229,14 +237,15 @@ public class Creature : MonoBehaviour
                     Aditional += item.Params[10];
                 }
             }
-            return PhysResist * Aditional;
+            return _phyResist * Aditional;
         }
         set
         {
-
+            _phyResist = value;
         }
 
     }
+    protected float _soulResist;
     public float SoulResist
     {
         get
@@ -249,17 +258,17 @@ public class Creature : MonoBehaviour
                     Aditional += item.Params[11];
                 }
             }
-            return SoulResist * Aditional;
+            return _soulResist * Aditional;
         }
         set
         {
-
+            _soulResist = value;
         }
 
     }
     public bool MoveLock = false;
-    public List<State> States;
-    public List<Skill> Skills;
+    public List<State> States = new List<State>();
+    public List<Skill> Skills = new List<Skill>();
     public Skill ActiveSkill;
     protected void Start()
     {
@@ -396,7 +405,6 @@ public class Creature : MonoBehaviour
     }
     private protected IEnumerator UseSkill(Skill skill, Vector2 targetPos)
     {
-
         if (!skill.CanBeUsed||skill.locked)
         {
             yield break;
@@ -417,6 +425,8 @@ public class Creature : MonoBehaviour
 
             
         }
+
+
     }
     private protected IEnumerator SkillCooldownReset(float Cooldown, Skill skill)
     {
