@@ -1,11 +1,14 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player : Creature
 {
     public StatsBarScript StatsBar;
-
+    public SkillBarScript SkillBar;
+    public Skill ActiveSkill;
+    public Skill OnClickSkill;
     public override float HP {
         get { return hP;  }
         set {
@@ -29,9 +32,9 @@ public class Player : Creature
             return sT; }
         set
         {
-            Debug.Log("1:"+value);
+           // Debug.Log("1:"+value);
             sT = value;
-            Debug.Log(sT);
+//            Debug.Log(sT);
             StatsBar.SetSt(sT);
         }
     }
@@ -51,10 +54,11 @@ public class Player : Creature
         this.MaxMP = 200;
         this.MaxSP = 200;
         this.MaxST = 200;
-        this.HP = 10;
-        this.MP = 10;
-        this.ST = 10;
-        this.SP = 10;
+        StatsBar.SetMaxParams(this.MaxHP, 100, MaxST, 100, 100, MaxMP, MaxSP);
+        this.HP = MaxHP;
+        this.MP = MaxMP;
+        this.ST = MaxST;
+        this.SP = MaxSP;
         this.RegSpeedHP = 3;
         this.RegSpeedMP = 3;
         this.RegSpeedSP = 3;
@@ -63,22 +67,54 @@ public class Player : Creature
         this.MagResist = 1;
         this.PhysResist = 1;
         this.SoulResist = 1;
-        StatsBar.SetMaxParams(this.MaxHP, this.MaxMP, MaxST, 100, 100, MaxMP, MaxSP);
+        this.Speed = 3;
+        
         loader.LoadSkills();
         StartCoroutine(Regeneration(1));
         //Debug.LogWarning(loader.Skils.Count);
         Skills = new List<Skill>();
         Skills.Add(loader.Skills[0]);
-        ActiveSkill = loader.Skills[0];
+        Skills.Add(loader.Skills[1]);
+        Skills.Add(loader.Skills[2]);
+        ActiveSkill = loader.Skills[2];
+        OnClickSkill = ActiveSkill;
+        SkillBar.SetSkillOnButton(Skills[0].ID, 0);
+        SkillBar.SetSkillOnButton(Skills[1].ID, 1);
     }
     void  Death()
     { }
+    public bool SetActiveSkillByID(int ID)
+    {
+       
+        if (ActiveSkill.ID == ID)
+        {
+            Debug.Log("JJ");
+            ActiveSkill = OnClickSkill;
+            return true;
+        }
+        
+        ActiveSkill = Skills.First(x => x.ID == ID);
+        if (ActiveSkill == null)
+        {
+            ActiveSkill = OnClickSkill;
+            return false;
+        }
+        return true;
+    }
     // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            StartCoroutine(this.UseSkill(ActiveSkill, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
+            
+            if (!AtackLock)
+            {
+                StartCoroutine(this.UseSkill(ActiveSkill, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
+                if (ActiveSkill != OnClickSkill)
+                {
+                    ActiveSkill = OnClickSkill;
+                }
+            }
             //GameObject bullet = Instantiate(loader.BulletsPerhubs[0]);
             //Bullet bl = bullet.GetComponent<Bullet>();
             //BulletData data = new BulletData();

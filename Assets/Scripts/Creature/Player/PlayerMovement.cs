@@ -6,7 +6,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 direction;
     public float kTime = 1;
     private Animator animator;
-
+    
+    public Player player;
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -22,7 +23,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        transform.Translate(direction * speed * Time.deltaTime * kTime);
+        
+        transform.Translate(direction * player.Speed * Time.deltaTime * kTime);
 
         if (direction.x != 0 || direction.y != 0)
         {
@@ -47,18 +49,22 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
             {
                 direction += Vector2.up;
+                direction= direction.normalized;
             }
             if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
             {
                 direction += Vector2.down;
+                direction = direction.normalized;
             }
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             {
                 direction += Vector2.left;
+                direction = direction.normalized;
             }
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
                 direction += Vector2.right;
+                direction = direction.normalized;
             } 
         }
     }

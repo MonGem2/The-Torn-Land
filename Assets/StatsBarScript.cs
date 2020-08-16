@@ -38,6 +38,7 @@ public class StatsBarScript : MonoBehaviour
     }
     public void SetHp(float Hp)
     {
+        //Debug.Log(HpBar.maxValue);        
         HpBar.value = Hp;
     }
     public void SetCp(float Cp)

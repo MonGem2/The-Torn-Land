@@ -9,6 +9,7 @@ public class Creature : MonoBehaviour
     // Races race { get; set; }
     public Loader loader;
     protected float _maxHp;
+    
     public virtual float MaxHP
     {
         get
@@ -25,6 +26,7 @@ public class Creature : MonoBehaviour
         }
         set
         {
+
             _maxHp = value;
         }
 
@@ -270,10 +272,10 @@ public class Creature : MonoBehaviour
 
     }
     public bool MoveLock = false;
+    public bool AtackLock = false;
     public List<State> States = new List<State>();
     public List<Skill> Skills = new List<Skill>();
-    public Skill ActiveSkill;
-
+    public float Speed { get; set; } = 1f;
 
     protected void Start()
     {
@@ -289,7 +291,7 @@ public class Creature : MonoBehaviour
     }
     public virtual void Damage(BulletData bulletData, bool MaxEffectSet = true)
     {
-
+        
         foreach (var item in States)
         {
             if (item.type == StateType.InfinityPower)
@@ -300,14 +302,15 @@ public class Creature : MonoBehaviour
 
         float Damage = bulletData.ManaDamage / MagResist + bulletData.PhysicDamage / PhysResist + bulletData.SoulDamage / SoulResist;
         HP -= Damage;
+        Debug.Log("My hp is:"+HP);
         if (HP < 0)
         {
             Death();
 
         }
-        if (MP > MaxMP)
+        if (HP > MaxHP)
         {
-            MP = MaxMP;
+            HP = MaxHP;
             if (MaxEffectSet)
             {
                 AddEffect(0);
@@ -524,8 +527,10 @@ public class Creature : MonoBehaviour
     }
     protected IEnumerator Regeneration(float Timeout)
     {
+
         while (true)
         {
+            //Debug.Log(HP+"      "+MaxHP);
             yield return new WaitForSeconds(Timeout);
             bool Magreg = true, HPReg = true, STReg = true, SPReg = true;
             foreach (var item in States)
@@ -545,6 +550,7 @@ public class Creature : MonoBehaviour
             }
             if (HPReg && HP != MaxHP)
             {
+                
                 HP += RegSpeedHP * Timeout*3 / (MagResist + SoulResist + PhysResist);
                 if (HP > MaxHP)
                 { HP = MaxHP; }

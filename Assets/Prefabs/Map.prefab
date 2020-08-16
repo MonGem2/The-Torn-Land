@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1983232707002068309}
   m_Layer: 5
   m_Name: Map
-  m_TagString: Indestructible
+  m_TagString: mapcell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

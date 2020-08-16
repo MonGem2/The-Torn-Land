@@ -13,6 +13,7 @@ public class Skill
     public float SPIntake;
     public float STIntake;
     public bool locked;
+    public SkillType skillType;
     public Skill Clone()
     {
         Skill skill = new Skill();
@@ -26,4 +27,12 @@ public class Skill
         skill.STIntake = STIntake;       
         return skill;
     }
+}
+public enum SkillType {
+    ZoneAttack,
+    TargetAttack,
+    Move,
+    Defend,
+    MassDefend,
+    Control
 }
