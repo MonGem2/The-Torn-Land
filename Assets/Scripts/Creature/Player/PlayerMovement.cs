@@ -2,29 +2,36 @@
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed;
+    //public float speed;
     private Vector2 direction;
     public float kTime = 1;
     private Animator animator;
-    
+    public Rigidbody2D rigidbody;
     public Player player;
+    //public float Speed = 10;
     private void Start()
     {
         animator = GetComponent<Animator>();
     }
 
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         TakeInput();
+    }
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        
+        
         Move();
     }
 
     private void Move()
     {
-        
-        transform.Translate(direction * player.Speed * Time.deltaTime * kTime);
+
+        rigidbody.MovePosition((Vector2)transform.position + (direction.normalized * player.Speed * Time.fixedDeltaTime));
+
+        //transform.Translate(direction * player.Speed * Time.deltaTime * kTime);
 
         if (direction.x != 0 || direction.y != 0)
         {
@@ -32,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
                 SetAnimatorMovement(new Vector2(direction.x, 0));
             else 
             {
+                gameObject.transform.parent.GetComponent<WorldState>().LogicGeneration(gameObject.transform.position);
                 SetAnimatorMovement(direction);
             }
         }

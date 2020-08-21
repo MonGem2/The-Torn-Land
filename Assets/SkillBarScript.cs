@@ -10,7 +10,7 @@ public class SkillBarScript : MonoBehaviour
     {
             
     }
-    public void SetSkillOnButton(int Skill, int Button)
+    public void SetSkillOnButton(Skill Skill, int Button)
     {
         if (Button < 0 || Button >= buttons.Count)
         {
@@ -18,16 +18,16 @@ public class SkillBarScript : MonoBehaviour
         }
         buttons[Button].Set( Skill);
     }
-    public void Use(int skill, float Cooldown)
-    {
-        foreach (var item in buttons)
-        {
-            if (item.skill == skill)
-            {
-                item.SetCooldown(Cooldown);                
-            }
-        }
-    }
+    //  public void Use(Skill skill)
+    //  {
+    //      foreach (var item in buttons)
+    //      {
+    //          if (item.skill == skill.ID)
+    //          {
+    //              item.SetCooldown(skill);
+    //          }
+    //      }
+    //  }
     // Update is called once per frame
     void Update()
     {

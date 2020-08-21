@@ -20,7 +20,7 @@ public class MapRogulikeGenerator : MonoBehaviour
 
     public void Setter(Loader loader, WorldMapCell thisscell, int UnBorder=5)
     {
-        Debug.Log("asdfghjkl;:"+loader.IsMapGenered);
+        //Debug.Log("asdfghjkl;:"+loader.IsMapGenered);
         this.loader = loader;
         ThisCell = thisscell;
         this.UnBorder = UnBorder;
@@ -63,7 +63,7 @@ public class MapRogulikeGenerator : MonoBehaviour
         }
         else
         {
-            Debug.Log("MapSet");
+           // Debug.Log("MapSet");
             MapSet();
         }
     }

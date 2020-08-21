@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player : Creature
 {
@@ -9,44 +10,9 @@ public class Player : Creature
     public SkillBarScript SkillBar;
     public Skill ActiveSkill;
     public Skill OnClickSkill;
-    public override float HP {
-        get { return hP;  }
-        set {
-            hP = value;
-            StatsBar.SetHp(hP);
-        }
-    }
-    public override float MP
-    {
-        get { return mP; }
-        set
-        {
-            mP = value;
-            StatsBar.SetMp(mP);
-        }
-    }
-    public override float ST
-    {
-        get {
-            
-            return sT; }
-        set
-        {
-           // Debug.Log("1:"+value);
-            sT = value;
-//            Debug.Log(sT);
-            StatsBar.SetSt(sT);
-        }
-    }
-    public override float SP
-    {
-        get { return sP; }
-        set
-        {
-            sP = value;
-            StatsBar.SetSp(sP);
-        }
-    }
+    public EventSystem eventSystem;
+    public GameObject GUI;
+    public GameObject DeadScreen;
     // Start is called before the first frame update
     void Start()
     {
@@ -54,7 +20,7 @@ public class Player : Creature
         this.MaxMP = 200;
         this.MaxSP = 200;
         this.MaxST = 200;
-        StatsBar.SetMaxParams(this.MaxHP, 100, MaxST, 100, 100, MaxMP, MaxSP);
+        //StatsBar.SetMaxParams(this.MaxHP, 100, MaxST, 100, 100, MaxMP, MaxSP);
         this.HP = MaxHP;
         this.MP = MaxMP;
         this.ST = MaxST;
@@ -73,27 +39,25 @@ public class Player : Creature
         StartCoroutine(Regeneration(1));
         //Debug.LogWarning(loader.Skils.Count);
         Skills = new List<Skill>();
-        Skills.Add(loader.Skills[0]);
-        Skills.Add(loader.Skills[1]);
-        Skills.Add(loader.Skills[2]);
-        ActiveSkill = loader.Skills[2];
+        Skills.Add(loader.Skills[0].Clone());
+        Skills.Add(loader.Skills[1].Clone());
+        Skills.Add(loader.Skills[2].Clone());
+        ActiveSkill = Skills[2];
         OnClickSkill = ActiveSkill;
-        SkillBar.SetSkillOnButton(Skills[0].ID, 0);
-        SkillBar.SetSkillOnButton(Skills[1].ID, 1);
+        SkillBar.SetSkillOnButton(Skills[0], 0);
+        SkillBar.SetSkillOnButton(Skills[1], 1);
     }
-    void  Death()
-    { }
-    public bool SetActiveSkillByID(int ID)
+    public bool SetActiveSkill(Skill skill)
     {
        
-        if (ActiveSkill.ID == ID)
+        if (ActiveSkill ==skill)
         {
             Debug.Log("JJ");
             ActiveSkill = OnClickSkill;
             return true;
         }
-        
-        ActiveSkill = Skills.First(x => x.ID == ID);
+
+        ActiveSkill = skill;
         if (ActiveSkill == null)
         {
             ActiveSkill = OnClickSkill;
@@ -106,8 +70,23 @@ public class Player : Creature
     {
         if (Input.GetMouseButtonDown(0))
         {
-            
-            if (!AtackLock)
+            bool CanShoot=true;
+            // Debug.Log(EventSystem.current.lastSelectedGameObject.tag);
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                var pd = new PointerEventData(eventSystem) { position = Input.mousePosition };
+                var results = new List<RaycastResult>();
+                eventSystem.RaycastAll(pd, results);
+                foreach (var result in results)
+                {
+                    if (result.gameObject.tag == "UI" || result.gameObject.tag == "Untagged")
+                    {
+                       //Debug.Log(result.gameObject.tag);
+                        CanShoot = false;
+                    }
+                }
+            }
+            if (!AtackLock&&CanShoot)
             {
                 StartCoroutine(this.UseSkill(ActiveSkill, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
                 if (ActiveSkill != OnClickSkill)
@@ -207,5 +186,11 @@ public class Player : Creature
             //    bl.Shoot(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
             //}
         }
+    }
+    protected override void Death()
+    {
+        Time.timeScale = 0;
+        GUI.active = false;
+        DeadScreen.active = true;
     }
 }

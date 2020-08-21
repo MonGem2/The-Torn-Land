@@ -8,16 +8,18 @@ using UnityEngine.Windows.Speech;
 public class EntityMovement : MonoBehaviour
 {
     public Vector2 ActivePoint;
-   // int my_point;
-   // public List<Vector2> PathBack; 
-
+    public bool IsChangePoint=false;
+    // int my_point;
+    // public List<Vector2> PathBack; 
+    public Rigidbody2D rigidbody;
     public bool Sleep;
     public float ScnRange=15;
     public float Distance;
-    public Behavior behavior;
+    public Behavior behavior=Behavior.None;
     //bool PointSeted = true;    
     public AIForm entity;
-    public GameObject gm;
+
+   // public GameObject gm;
     bool CheckMovement = false;
     private void OnCollisionStay2D(Collision2D collision)
     {
@@ -38,53 +40,138 @@ public class EntityMovement : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(Sleep);
-        if (entity.ActiveTarget == null&&!Sleep)
+        // Debug.Log(Sleep);
+        if (entity.ActiveTarget == null && !Sleep)
         {
-            Debug.LogWarning("zxcvb");
-            entity.ChangeTarget();           
+            //   Debug.LogWarning("zxcvb");
+            entity.ChangeTarget();
         }
-        if (entity.ActiveTarget != null && !Sleep && Vector2.Distance(entity.ActiveTarget.position, transform.position) > Distance)
+        if (behavior == Behavior.MoveToTarget)
         {
-            if (Vector2.Distance(ActivePoint, transform.position) < entity.Speed*Time.deltaTime)
+            Debug.LogWarning("#1");
+            if (entity.ActiveTarget != null && !Sleep && Vector2.Distance(entity.ActiveTarget.position, transform.position) > Distance+0.1)
             {
-                //ActivePoint = null;
-                entity.ChangeTarget();
-                //Debug.Log("HEEEEEEYYYYYY");
-            
-            }
-            else
-            {
-                if (CheckMovement)
+                Debug.LogWarning("#2");
+                if (Vector2.Distance(ActivePoint, transform.position) < entity.Speed * Time.deltaTime)
                 {
-                    Vector2 vec = (ActivePoint - (Vector2)transform.position).normalized;
-                    if (vec.x >= 0 && vec.y >= 0) { transform.Translate(new Vector2(1, 1).normalized*entity.Speed * Time.deltaTime); }
-                    if (vec.x > 0 && vec.y < 0) { transform.Translate(new Vector2(1, -1).normalized * entity.Speed * Time.deltaTime); }
-                    if (vec.x < 0 && vec.y > 0) { transform.Translate(new Vector2(-1, 1).normalized * entity.Speed * Time.deltaTime); }
-                    if (vec.x <= 0 && vec.y <= 0) { transform.Translate(new Vector2(-1, -1).normalized * entity.Speed * Time.deltaTime); }
-                    CheckMovement = false;
+                //ActivePoint = null;
+                    entity.ChangeTarget();
+                //Debug.Log("HEEEEEEYYYYYY");
                 }
                 else
                 {
-                    transform.Translate((ActivePoint - (Vector2)transform.position).normalized * entity.Speed * Time.deltaTime);
+                    Debug.LogWarning("#3");
+                    if (CheckMovement)
+                    {
+                        Vector2 vec = (ActivePoint - (Vector2)transform.position).normalized;
+                        if (vec.x >= 0 && vec.y >= 0) { transform.Translate(new Vector2(1, 1).normalized * 5 * Time.deltaTime);  }
+                        if (vec.x > 0 && vec.y < 0) { transform.Translate(new Vector2(1, -1).normalized * 5 * Time.deltaTime);  }
+                        if (vec.x < 0 && vec.y > 0) { transform.Translate(new Vector2(-1, 1).normalized * 5 * Time.deltaTime);  }
+                        if (vec.x <= 0 && vec.y <= 0) { transform.Translate(new Vector2(-1, -1).normalized * 5 * Time.deltaTime);  }
+                        CheckMovement = false;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("#4");
+                        transform.Translate((ActivePoint - (Vector2)transform.position).normalized * entity.Speed * Time.deltaTime);
+                    //transform.Translate((ActivePoint - (Vector2)transform.position).normalized * entity.Speed * Time.deltaTime);
+                    }
+
                 }
-                
+            }
+            if (entity.ActiveTarget != null && !Sleep && Vector2.Distance(entity.ActiveTarget.position, transform.position) < Distance-0.1)
+            {
+                Debug.LogWarning("#5");
+                // (PathBack.Last() - (Vector2)transform.position).normalized
+                transform.Translate( (-ActivePoint + (Vector2)transform.position).normalized * entity.Speed * Time.deltaTime);
             }
         }
-        if (entity.ActiveTarget != null && !Sleep && Vector2.Distance(entity.ActiveTarget.position, transform.position) < Distance)
+
+        if (behavior == Behavior.RunAway)
         {
-            // (PathBack.Last() - (Vector2)transform.position).normalized
-            transform.Translate((-ActivePoint + (Vector2)transform.position).normalized * entity.Speed * Time.deltaTime);
+            if (!Sleep && entity.ActiveTarget == null)
+            {
+                entity.ChangeTarget();
+            }
+            if (IsChangePoint)
+            {
+                int x = 0;
+                while (!ChangePoint()) { x++;if (x > 25) { break; } }
+                if (x > 25)
+                {
+                    behavior = Behavior.MoveToTarget;
+                    entity.NoWay();
+                    return;
+                }
+                
+                IsChangePoint = false;
+            }
+            if (!Sleep && Vector2.Distance(ActivePoint, transform.position) < 0.1)
+            {
+                IsChangePoint = true;
+            }
+            if (!Sleep && Vector2.Distance(ActivePoint, transform.position) > 0.1)
+            {
+                transform.Translate((ActivePoint - (Vector2)transform.position).normalized * entity.Speed * Time.deltaTime);
+            }
         }
 
+    }
 
+    bool ChangePoint()
+    {
+        //UnityEngine.Random.
+        Debug.Log("Hi gays");
+        Vector2 Dir= new Vector2(UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(-5, 5))+ (Vector2)(transform.position - entity.ActiveTarget.position).normalized;
+        Dir.Normalize();
+        float MaxRange = 4;
+        if (!Physics2D.RaycastAll(transform.position, Dir, 5).Any(x =>
+        {
+            if (entity.Targets.Contains(x.transform))
+            {
+                return true;
+            }
+            if (x.transform.tag == "undestruct")
+            {
+                if (MaxRange > Vector2.Distance(x.point, transform.position))
+                {
+                    MaxRange = Vector2.Distance(x.point, transform.position);
+
+                    Debug.Log("HMMMM    "+MaxRange+"        "+x.point);
+                }
+
+
+                return true;
+            }
+            return false;
+        }
+        ))
+        {
+            if (MaxRange > 1)
+            {
+                float range = UnityEngine.Random.Range(1, MaxRange );
+                ActivePoint =(Vector2)transform.position+ Dir * range;
+                Debug.Log("and finaly i'm here with point: " +range);
+                Debug.Log("and finaly i'm here with point: " + ActivePoint);
+                Debug.Log("and finaly i'm here with point: " + transform.position);
+               // gameObject.active = false;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        { return false; }
+        //Debug.Log(Physics2D.Raycast(.transform.transform.tag);
     }
     // Update is called once per frame
     void FixedUpdate()
     {
         if (!Sleep)
         {
-            if (entity.ActiveTarget != null)
+            if (entity.ActiveTarget != null&&behavior== Behavior.MoveToTarget)
             {
 
                 //Debug.Log(ActiveTarget.position);
@@ -122,7 +209,7 @@ public class EntityMovement : MonoBehaviour
                 if (IsPathFree)
                 {
                     ActivePoint = ActivePos;
-                    gm.transform.position = ActivePos;
+                    //gm.transform.position = ActivePos;
                     //PointSeted = true;
                 }
 
@@ -137,15 +224,23 @@ public class EntityMovement : MonoBehaviour
     }
     public void DetectSomething(Transform transform)
     {
-        Debug.Log("1");
+        //Debug.Log("1");
+        if (transform.GetComponent<Creature>() == null) {
+            return;
+        }
         foreach (var item in entity.TargetTags)
         {
             if (transform.tag == item)
             {
-                Debug.Log("2");
+                //Debug.Log("2");
+                if (behavior == Behavior.RunAway)
+                {
+                    ChangePoint();
+                }
                 if (!entity.Targets.Contains(transform))
                 {
                     AddTarget(transform);
+                    entity.NewTarget(transform.GetComponent<Creature>());
                 }
                 else if (entity.ActiveTarget == null)
                 {
@@ -157,23 +252,24 @@ public class EntityMovement : MonoBehaviour
     }
     public void AddTarget(Transform transform)
     {
-        Debug.Log("5");
-        Debug.Log("000000000000000");
+      // Debug.Log("5");
+        //Debug.Log("000000000000000");
         Sleep = false;
-        behavior = Behavior.MoveToTarget;
+        if (behavior == Behavior.None)
+        {
+            behavior = Behavior.MoveToTarget;
+        }
         entity.Targets.Add(transform);
-        Debug.Log("6");
+       // Debug.Log("6");
         if (entity.ActiveTarget == null)
         {
             entity.ActiveTarget = transform;
         }
-        Debug.Log("7");
+        //Debug.Log("7");
     }
 }
 public enum Behavior { 
+    None,
     MoveToTarget,
-    Return,
-    RunAway,
-    Defender,
-    Stay
+    RunAway
 }

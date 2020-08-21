@@ -1,15 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
+using Debug = UnityEngine.Debug;
+public delegate void OnChangeParameterTrigger(float value);
 
 public class Creature : MonoBehaviour
 {
     // Races race { get; set; }
+
+    #region Parameters
     public Loader loader;
+    #region MaxHP
     protected float _maxHp;
-    
+    public OnChangeParameterTrigger MaxHPChangeTrigger;
     public virtual float MaxHP
     {
         get
@@ -26,11 +33,17 @@ public class Creature : MonoBehaviour
         }
         set
         {
-
+            if (MaxHPChangeTrigger != null)
+            {
+                MaxHPChangeTrigger(value);
+            }
             _maxHp = value;
         }
 
     }
+    #endregion
+    #region MaxMP
+    public OnChangeParameterTrigger MaxMPChangeTrigger;
     protected float _maxMp;
     public virtual float MaxMP
     {
@@ -48,10 +61,17 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (MaxMPChangeTrigger != null)
+            {
+                MaxMPChangeTrigger(value);
+            }
             _maxMp = value;
         }
 
     }
+    #endregion
+    #region MaxST
+    public OnChangeParameterTrigger MaxSTChangeTrigger;
     protected float _maxSt;
     public virtual float MaxST
     {
@@ -69,11 +89,16 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (MaxSTChangeTrigger != null)
+            { MaxSTChangeTrigger(value); }
             _maxSt = value;
         }
 
     }
-    protected  float _maxSp;
+    #endregion
+    #region MaxSP
+    public OnChangeParameterTrigger MaxSPChangeTrigger;
+    protected float _maxSp;
     public virtual float MaxSP
     {
         get
@@ -90,20 +115,43 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (MaxSPChangeTrigger != null) { MaxSPChangeTrigger(value); }
             _maxSp = value;
         }
 
     }
-
+    #endregion
+    #region HP
+    public OnChangeParameterTrigger HPChangeTrigger;
     protected float hP = 100;
-    public virtual float HP { get => hP; set => hP = value; }
+    public virtual float HP { get => hP; set {
+            if (HPChangeTrigger != null)
+            { HPChangeTrigger(value); }
+            hP = value;
+        } }
+    #endregion
+    #region MP
+    public OnChangeParameterTrigger MPChangeTrigger;
     protected float mP = 100;
-    public virtual float MP { get => mP; set => mP = value; }
+    public virtual float MP { get => mP; set {
+            if (MPChangeTrigger != null) { MPChangeTrigger(value); }
+            mP = value; } }
+    #endregion
+    #region ST
+    public OnChangeParameterTrigger STChangeTrigger;
     protected float sT = 100;
-    public virtual float ST { get => sT; set => sT = value; }
+    public virtual float ST { get => sT; set {
+            if (STChangeTrigger != null) { STChangeTrigger(value); }
+            sT = value; } }
+    #endregion
+    #region SP
+    public OnChangeParameterTrigger SPChangeTrigger;
     protected float sP = 100;
-    public virtual float SP { get => sP; set => sP = value; }
+    public virtual float SP { get => sP; set { if (SPChangeTrigger != null) { SPChangeTrigger(value); } sP = value; } }
+    #endregion
+    #region SumBaseDamage
     protected float _sumBaseDamage;
+    public OnChangeParameterTrigger SumBaseDamageChangeTrigger;
     public virtual float SumBaseDamage
     {
         get
@@ -120,10 +168,15 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (SumBaseDamageChangeTrigger != null)
+            { SumBaseDamageChangeTrigger(value); }
             _sumBaseDamage = value;
         }
 
     }
+    #endregion
+    #region RegSpeedHP
+    public OnChangeParameterTrigger RegSpeedHPChangeTrigger;
     protected float _regSpeedHP;
     public virtual float RegSpeedHP
     {
@@ -141,10 +194,17 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (RegSpeedHPChangeTrigger != null)
+            {
+                RegSpeedHPChangeTrigger(value);
+            }
             _regSpeedHP = value;
         }
 
     }
+    #endregion
+    #region RegSpeedMP
+    public OnChangeParameterTrigger RegSpeedMPChangeTrigger;
     protected float _regSpeedMP;
     public virtual float RegSpeedMP
     {
@@ -162,10 +222,17 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (RegSpeedMPChangeTrigger!=null)
+            {
+                RegSpeedMPChangeTrigger(value);
+            }
             _regSpeedMP = value;
         }
 
     }
+    #endregion
+    #region RegSpeedST
+    public OnChangeParameterTrigger RegSpeedSTChangeTrigger;
     protected float _regSpeedST;
     public virtual float RegSpeedST
     {
@@ -183,10 +250,17 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (RegSpeedSTChangeTrigger != null)
+            {
+                RegSpeedSTChangeTrigger(value);
+            }
             _regSpeedST = value;
         }
 
     }
+    #endregion
+    #region RegSpeedSP
+    public OnChangeParameterTrigger RegSpeedSPChangeTrigger;
     protected float _regSpeedSP;
     public virtual float RegSpeedSP
     {
@@ -204,10 +278,17 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (RegSpeedSPChangeTrigger != null)
+            {
+                RegSpeedSPChangeTrigger(value);
+            }
             _regSpeedSP = value;
         }
 
     }
+    #endregion
+    #region MagResist
+    public OnChangeParameterTrigger MagResistChangeTrigger;
     protected float _magResist;
     public virtual float MagResist
     {
@@ -225,10 +306,17 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (MagResistChangeTrigger != null)
+            {
+                MagResistChangeTrigger(value);
+            }
             _magResist = value;
         }
 
     }
+    #endregion
+    #region PhysResist
+    public OnChangeParameterTrigger PhyResistChangeTrigger;
     protected float _phyResist;
     public virtual float PhysResist
     {
@@ -246,10 +334,17 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (PhyResistChangeTrigger != null)
+            {
+                PhyResistChangeTrigger(value);
+            }
             _phyResist = value;
         }
 
     }
+    #endregion
+    #region SoulResist
+    public OnChangeParameterTrigger SoulResistChangeTrigger;
     protected float _soulResist;
     public virtual float SoulResist
     {
@@ -267,31 +362,39 @@ public class Creature : MonoBehaviour
         }
         set
         {
+            if (SoulResistChangeTrigger != null)
+            {
+                SoulResistChangeTrigger(value);
+            }
             _soulResist = value;
         }
 
     }
+    #endregion
+    #region States
+    protected List<State> _states = new List<State>();
+    public List<State> States { get=>_states; set { UnityEngine.Debug.Log("hheeyy"); _states = value; } }
+    #endregion
+    #region Skills
+    protected List<Skill> _skills=new List<Skill>();
+    public List<Skill> Skills { get=>_skills; set {  _skills = value; } }
+    #endregion
+    #region Speed
+    protected float _speed=1f;
+    public float Speed { get=> _speed; set=>_speed=value; }
+    #endregion
     public bool MoveLock = false;
     public bool AtackLock = false;
-    public List<State> States = new List<State>();
-    public List<Skill> Skills = new List<Skill>();
-    public float Speed { get; set; } = 1f;
-
+    public bool CanAttack = true;
+    #endregion
     protected void Start()
     {
         StartCoroutine(Regeneration(5));
     }
-    public virtual void AddEffects(List<int> EffectIds)
-    {
-        Debug.LogWarning("//TODO:AddEffect");
-    }
-    public virtual void AddEffect(int EffectId)
-    {
-        Debug.LogWarning("//TODO:AddEffect");
-    }
+    #region Intake
     public virtual void Damage(BulletData bulletData, bool MaxEffectSet = true)
     {
-        
+      //  Debug.Log("y1");
         foreach (var item in States)
         {
             if (item.type == StateType.InfinityPower)
@@ -299,26 +402,29 @@ public class Creature : MonoBehaviour
                 if (item.Params[0] == 1) { return; }
             }
         }
-
+     //   Debug.Log("y2");
         float Damage = bulletData.ManaDamage / MagResist + bulletData.PhysicDamage / PhysResist + bulletData.SoulDamage / SoulResist;
         HP -= Damage;
-        Debug.Log("My hp is:"+HP);
+   //     Debug.Log("y3");
+    //    Debug.Log("My hp is:"+HP);
         if (HP < 0)
         {
+       //     Debug.Log("y4");
             Death();
 
         }
         if (HP > MaxHP)
         {
+         //   Debug.Log("y5");
             HP = MaxHP;
             if (MaxEffectSet)
             {
                 AddEffect(0);
             }
         }
+       // Debug.Log("y6");
         //Debug.LogWarning("//TODO:IntakeDamage");
     }
-
     public bool IntakeMP(float Count, bool MaxEffectSet = true)
     {
         foreach (var item in States)
@@ -403,6 +509,8 @@ public class Creature : MonoBehaviour
         return true;
         Debug.LogWarning("//TODO:IntakeSP");
     }
+    #endregion
+    #region SkillsCode
     protected void AddSkill(int SkillID)
     {
         Skills.Add(loader.Skills[SkillID].Clone());
@@ -413,38 +521,85 @@ public class Creature : MonoBehaviour
     }
     private protected IEnumerator UseSkill(Skill skill, Vector2 targetPos)
     {
+
+        if (!CanAttack || AtackLock)
+        {
+            yield break;
+        }
         if (!skill.CanBeUsed || skill.locked)
         {
             yield break;
         }
-        if (MP < skill.MPIntake||SP<skill.SPIntake||ST<skill.STIntake)
+        if (MP < skill.MPIntake || SP < skill.SPIntake || ST < skill.STIntake)
         {
             yield break;
         }
-        
+       // Debug.Log("x2");
         skill.CanBeUsed = false;
+        if (skill.onSkillUse != null)
+        {
+            skill.onSkillUse(skill);
+        }
         StartCoroutine(SkillCooldownReset(skill.Cooldown, skill));
         
         IntakeMP(skill.MPIntake);
         IntakeST(skill.STIntake);
         IntakeSP(skill.SPIntake);
         AddEffects(skill.EffectsIds);
+     //   Debug.Log("x3");
+        CanAttack = false;
+        Vector2 vector = targetPos - (Vector2)transform.position;
         foreach (var item in skill.Bullets)
         {
             yield return new WaitForSeconds(item.ShootPeriod);
             Bullet bullet = Instantiate(loader.BulletsPerhubs[item.PerhubID]).GetComponent<Bullet>();
-            bullet.data = item;
-            bullet.Shoot(transform.position, targetPos);
+            bullet.data = item.Clone();
+            //Debug.Log("My damage:  " + item.ManaDamage + "  " + item.SoulDamage + "  " + item.PhysicDamage);
+            bullet.data.ManaDamage *= SumBaseDamage;
+            bullet.data.SoulDamage *= SumBaseDamage;
+            bullet.data.PhysicDamage *= SumBaseDamage;
+            //Debug.Log("My damage:  "+item.ManaDamage+"  "+item.SoulDamage+"  "+item.PhysicDamage);
+            if (!item.SelfAttack)
+            {
+        //        Debug.Log("123456789");
+                bullet.User = transform;
+            }
+          //  Debug.LogWarning("qweryu:   "+item.Binded);
+            if (item.Binded)
+            {
 
+                bullet.Shoot(transform.position, vector.normalized, transform);
+            }
+            else
+            {
+            //    Debug.Log("-qweww8790-----------");
+                bullet.Shoot(transform.position, targetPos);
+            }
 
         }
-
+        CanAttack = true;
+  //      Debug.Log("x4");
 
     }
     private protected IEnumerator SkillCooldownReset(float Cooldown, Skill skill)
     {
         yield return new WaitForSeconds(Cooldown);
         skill.CanBeUsed = true;
+        if (skill.OnCooldownEnded != null)
+        {
+            skill.OnCooldownEnded(skill);
+        }
+    }
+    #endregion
+    #region StatesCode
+
+    public virtual void AddEffects(List<int> EffectIds)
+    {
+        Debug.LogWarning("//TODO:AddEffect");
+    }
+    public virtual void AddEffect(int EffectId)
+    {
+        Debug.LogWarning("//TODO:AddEffect");
     }
     protected IEnumerator StateAdder(State state)
     {
@@ -525,7 +680,8 @@ public class Creature : MonoBehaviour
             }
         }
     }
-    protected IEnumerator Regeneration(float Timeout)
+    #endregion
+    protected virtual IEnumerator Regeneration(float Timeout)
     {
 
         while (true)
@@ -565,7 +721,7 @@ public class Creature : MonoBehaviour
             }
         }
     }
-    protected void Death()
+    protected virtual void Death()
     {
         Destroy(gameObject);
     }

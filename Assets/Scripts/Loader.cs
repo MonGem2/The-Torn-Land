@@ -11,6 +11,7 @@ public class Loader:MonoBehaviour
     public List<GameObject> BulletsPerhubs;
     public List<State> States=new List<State>();
     public List<Skill> Skills=new List<Skill>();
+    bool SkillsLoaded = false;
     public void LoadMap()
     {
         //LoadSkills();
@@ -425,15 +426,25 @@ public class Loader:MonoBehaviour
     }
     public void LoadSkills()
     {
+        if (SkillsLoaded)
+        {
+            return;
+        }
+        
         {
             Skill skill = new Skill();
             skill.ID = 0;
-            skill.Cooldown = 3;
+            skill.Cooldown = 1;
             skill.EffectsIds = new List<int>();
-            skill.MPIntake = 15;
-            skill.STIntake = 15;
-            skill.SPIntake = 15;
-            skill.skillType = SkillType.Control;
+            skill.MPIntake = 2;
+            skill.STIntake = 2;
+            skill.SPIntake = 2;
+            skill.Range = 10.5f;
+            skill.skillType = GeneralSkillType.Control;
+            skill.SkillBehaviourType = SkillBehaviourType.DefendAttack;
+            skill.SPParameter = SkillParameterType.Litle;
+            skill.STParameter = SkillParameterType.Litle;
+            skill.MPParameter = SkillParameterType.Litle;
             skill.Bullets = new List<BulletData>();
             {
                 {
@@ -447,13 +458,15 @@ public class Loader:MonoBehaviour
                     data.FlyTime = 3;
                     data.ManaDamage = 0;
                     data.PerhubID = 0;
-                    data.PhysicDamage = 5;
+                    data.PhysicDamage = 1.1f;
                     data.Range = 10;
                     data.SoulDamage = 0;
                     data.Through = false;
                     data.type = BulletType.Bullet;
                     data.AttackTimeout = 0.05f;
                     data.ShootPeriod = 0.3f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
                     skill.Bullets.Add(data);
                 }
                 {
@@ -467,13 +480,15 @@ public class Loader:MonoBehaviour
                     data.FlyTime = 3;
                     data.ManaDamage = 0;
                     data.PerhubID = 0;
-                    data.PhysicDamage = 5;
+                    data.PhysicDamage = 1.1f;
                     data.Range = 10;
                     data.SoulDamage = 0;
                     data.Through = false;
                     data.type = BulletType.Bullet;
                     data.AttackTimeout = 0.05f;
                     data.ShootPeriod = 0.3f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
                     skill.Bullets.Add(data);
                 }
                 {
@@ -487,13 +502,15 @@ public class Loader:MonoBehaviour
                     data.FlyTime = 3;
                     data.ManaDamage = 0;
                     data.PerhubID = 0;
-                    data.PhysicDamage = 5;
+                    data.PhysicDamage = 1.1f;
                     data.Range = 10;
                     data.SoulDamage = 0;
                     data.Through = false;
                     data.type = BulletType.Bullet;
                     data.AttackTimeout = 0.05f;
                     data.ShootPeriod = 0.3f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
                     skill.Bullets.Add(data);
                 }
                 {
@@ -507,13 +524,15 @@ public class Loader:MonoBehaviour
                     data.FlyTime = 3;
                     data.ManaDamage = 0;
                     data.PerhubID = 0;
-                    data.PhysicDamage = 5;
+                    data.PhysicDamage = 1.1f;
                     data.Range = 10;
                     data.SoulDamage = 0;
                     data.Through = false;
                     data.type = BulletType.Bullet;
                     data.AttackTimeout = 0.05f;
                     data.ShootPeriod = 0.3f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
                     skill.Bullets.Add(data);
                 }
                 {
@@ -527,13 +546,15 @@ public class Loader:MonoBehaviour
                     data.FlyTime = 3;
                     data.ManaDamage = 0;
                     data.PerhubID = 0;
-                    data.PhysicDamage = 5;
+                    data.PhysicDamage = 1.1f;
                     data.Range = 10;
                     data.SoulDamage = 0;
                     data.Through = false;
                     data.type = BulletType.Bullet;
                     data.AttackTimeout = 0.05f;
                     data.ShootPeriod = 0.3f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
                     skill.Bullets.Add(data);
                 }
 
@@ -544,11 +565,16 @@ public class Loader:MonoBehaviour
             Skill skill = new Skill();
             skill.Cooldown = 1;
             skill.ID = 1;
-            skill.skillType = SkillType.TargetAttack;
+            skill.skillType = GeneralSkillType.TargetAttack;
+            skill.SkillBehaviourType = SkillBehaviourType.DeefDefend;
+            skill.SPParameter = SkillParameterType.None;
+            skill.STParameter = SkillParameterType.None;
+            skill.MPParameter = SkillParameterType.Avarage;
             skill.EffectsIds = new List<int>();
             skill.MPIntake = 15;
             skill.STIntake = 0;
             skill.SPIntake = 0;
+            skill.Range = 15f;
             skill.Bullets = new List<BulletData>();
             {
                 {
@@ -560,7 +586,7 @@ public class Loader:MonoBehaviour
                     //data.DontAttack.Add("player");
                     data.EffectsIDs = new List<int>();
                     data.FlyTime = 0.2f;
-                    data.ManaDamage = 10;
+                    data.ManaDamage = 1.2f;
                     data.PerhubID = 1;
                     data.PhysicDamage = 0;
                     data.Range = 15;
@@ -569,6 +595,8 @@ public class Loader:MonoBehaviour
                     data.type = BulletType.Ray;
                     data.AttackTimeout = 0.05f;
                     data.ShootPeriod = 0f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
                     skill.Bullets.Add(data);
                 }
                 {
@@ -580,7 +608,7 @@ public class Loader:MonoBehaviour
                     //data.DontAttack.Add("player");
                     data.EffectsIDs = new List<int>();
                     data.FlyTime = 0.2f;
-                    data.ManaDamage = 10;
+                    data.ManaDamage = 1.2f;
                     data.PerhubID = 1;
                     data.PhysicDamage = 0;
                     data.Range = 15;
@@ -589,6 +617,8 @@ public class Loader:MonoBehaviour
                     data.type = BulletType.Ray;
                     data.AttackTimeout = 0.05f;
                     data.ShootPeriod = 0f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
                     skill.Bullets.Add(data);
                 }
                 {
@@ -600,7 +630,7 @@ public class Loader:MonoBehaviour
                     //data.DontAttack.Add("player");
                     data.EffectsIDs = new List<int>();
                     data.FlyTime = 0.2f;
-                    data.ManaDamage = 10;
+                    data.ManaDamage = 1.2f;
                     data.PerhubID = 1;
                     data.PhysicDamage = 0;
                     data.Range = 15;
@@ -609,6 +639,8 @@ public class Loader:MonoBehaviour
                     data.type = BulletType.Ray;
                     data.AttackTimeout = 0.05f;
                     data.ShootPeriod = 0f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
                     skill.Bullets.Add(data);
                 }
 
@@ -619,11 +651,16 @@ public class Loader:MonoBehaviour
             Skill skill = new Skill();
             skill.Cooldown = 0.3f;
             skill.ID = 2;
-            skill.skillType = SkillType.TargetAttack;
+            skill.skillType =  GeneralSkillType.TargetAttack;
+            skill.SkillBehaviourType = SkillBehaviourType.Attack;
+            skill.SPParameter = SkillParameterType.None;
+            skill.STParameter = SkillParameterType.Avarage;
+            skill.MPParameter = SkillParameterType.None;
             skill.EffectsIds = new List<int>();
             skill.MPIntake = 0;
             skill.STIntake = 15;
             skill.SPIntake = 0;
+            skill.Range = 1;
             skill.Bullets = new List<BulletData>();
             {
                 {
@@ -637,19 +674,63 @@ public class Loader:MonoBehaviour
                     data.FlyTime = 0.3f;
                     data.ManaDamage = 0;
                     data.PerhubID = 3;
-                    data.PhysicDamage = 5;
+                    data.PhysicDamage = 1.2f;
                     data.Range = 1;
                     data.SoulDamage = 0;
                     data.Through = true;
                     data.type = BulletType.Swing;
                     data.AttackTimeout = 0.1f;
                     data.ShootPeriod = 0f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
                     skill.Bullets.Add(data);
                 }             
 
             }
             Skills.Add(skill);
         }
+        {
+            Skill skill = new Skill();
+            skill.ID = 3;
+            skill.Cooldown = 0.5f;
+            skill.EffectsIds = new List<int>();
+            skill.MPIntake = 2;
+            skill.STIntake = 2;
+            skill.SPIntake = 2;
+            skill.Range = 10.5f;
+            skill.skillType = GeneralSkillType.Control;
+            skill.SkillBehaviourType = SkillBehaviourType.Attack;
+            skill.SPParameter = SkillParameterType.Litle;
+            skill.STParameter = SkillParameterType.Litle;
+            skill.MPParameter = SkillParameterType.Litle;
+            skill.Bullets = new List<BulletData>();
+            {
+                {
+                    BulletData data = new BulletData();
+                    data.AdditionalAngle = 0;
+                    data.DeltaAngle = 5;
+                    data.Distance = new Vector2(0.5f, 0.5f);
+                    data.DontAttack = new List<string>();
+                    //data.DontAttack.Add("player");
+                    data.EffectsIDs = new List<int>();
+                    data.FlyTime = 3;
+                    data.ManaDamage = 0;
+                    data.PerhubID = 0;
+                    data.PhysicDamage = 1.1f;
+                    data.Range = 10;
+                    data.SoulDamage = 0;
+                    data.Through = false;
+                    data.type = BulletType.Bullet;
+                    data.AttackTimeout = 0.05f;
+                    data.ShootPeriod = 0.3f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
+                    skill.Bullets.Add(data);
+                }
+            }
+            Skills.Add(skill);
+        }
+        
 
     }
     public void LoadStates()
