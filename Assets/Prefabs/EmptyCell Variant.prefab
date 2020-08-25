@@ -115,7 +115,12 @@ PrefabInstance:
     - target: {fileID: 5452303053200002350, guid: e2b74eb036cb6384495f3a5e9a501707,
         type: 3}
       propertyPath: m_Name
-      value: EmptyCell
+      value: EmptyCell Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452303053200002350, guid: e2b74eb036cb6384495f3a5e9a501707,
+        type: 3}
+      propertyPath: m_TagString
+      value: undestruct
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 262657956097304622, guid: e2b74eb036cb6384495f3a5e9a501707, type: 3}

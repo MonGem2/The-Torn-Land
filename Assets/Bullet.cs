@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -11,23 +12,33 @@ public class Bullet : MonoBehaviour
     Vector2 Direction=new Vector2();
     Vector2 PlayerPosition;
     public Animation animation;
+    public Transform User;
     float DAngle;
-    public void Shoot(Vector2 playerPos, Vector2 targetPos)
+    public void Shoot(Vector2 playerPos, Vector2 targetPos, Transform bindTo=null)
     {
-        
+        if (bindTo != null&&data.type== BulletType.Swing)
+        {
+            transform.SetParent(bindTo);
+        }
         PlayerPosition = playerPos;
         DAngle = UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle);
-        Vector2 Dir = (targetPos- playerPos).normalized;
-        double ResAngle = (double)((float)Math.Acos(Math.Abs(Dir.x)) * 180 / (float)Math.PI + data.AdditionalAngle + DAngle);
-        Debug.Log($"Target angle:{Math.Acos(Math.Abs(Dir.x)) * 180 / (float)Math.PI}");
+        Vector2 Dir;
+        if (bindTo != null)
+        {
+            //Debug.Log("GGWP");
+            Dir = targetPos.normalized;
+        }
+        else {Dir = (targetPos - playerPos).normalized; }
+        double ResAngle = (double)((float)Math.Acos(Math.Abs(Dir.x)) * 180 / (float)Math.PI);
+        //Debug.Log($"Target angle:{Math.Acos(Math.Abs(Dir.x)) * 180 / (float)Math.PI}");
         if (Dir.x > 0)
         {
             
             if (Dir.y < 0)
             {
-                ResAngle =-ResAngle ;  
+                ResAngle =360-ResAngle ;  
             }
-
+        
         }
         else
         {
@@ -39,8 +50,12 @@ public class Bullet : MonoBehaviour
             {
                 ResAngle += 180;
             }
-
+        
         }
+     //   Debug.Log("ResAngle1:   "+ResAngle);
+        ResAngle += DAngle + data.AdditionalAngle;
+       // Debug.Log("ResAngle2:   " + ResAngle);
+        //Debug.Log($"Res angle:{ResAngle}");
         Direction.x = (float)Math.Cos(ResAngle * Math.PI / 180);
         Direction.y = (float)Math.Sin(ResAngle * Math.PI / 180);
         if (data.type == BulletType.Stab)
@@ -60,15 +75,9 @@ public class Bullet : MonoBehaviour
         {
             LineRenderer lnr = gameObject.GetComponent<LineRenderer>();
             transform.position = playerPos;
-            if (Direction.y > 0)
-            {
-                transform.Rotate(0, 0, (float)Math.Acos(Direction.x) * 180 / (float)Math.PI + data.AdditionalAngle +DAngle);// + UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle));
-            }
-            else
-            {
-                transform.Rotate(0, 0, -((float)Math.Acos(Direction.x) * 180 / (float)Math.PI + data.AdditionalAngle) +DAngle);// + UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle));
-            }
-            
+            transform.Rotate(0, 0, (float)ResAngle-DAngle-data.DeltaAngle);
+            //transform.Rotate(0, 0, (float)Math.Acos(Direction.x) * 180 / (float)Math.PI + data.AdditionalAngle +DAngle);// + UnityEngine.Random.Range(-data.DeltaAngle, data.DeltaAngle));
+
             //DeleteOnTime(data.FlyTime);
         }
         if (data.type == BulletType.Ray)
@@ -112,7 +121,15 @@ public class Bullet : MonoBehaviour
             //Debug.Log("Holl");
             if (Vector2.Distance(playerPos, targetPos) < data.Range)
             {
-                transform.position = playerPos+ Direction*Vector2.Distance(targetPos, playerPos);
+                if (data.Binded)
+                {
+
+                    transform.position = playerPos + Direction *  targetPos.magnitude;
+                }
+                else
+                {
+                    transform.position = playerPos + Direction * Vector2.Distance(targetPos, playerPos);
+                }
                 transform.position = new Vector3(transform.position.x, transform.position.y, 1);
             }
             else
@@ -147,9 +164,15 @@ public class Bullet : MonoBehaviour
                         yield break;
                     }
                 }
-                if (hit.transform.gameObject.tag == "enemy")
+                if (User != null)
                 {
-                    hit.transform.gameObject.GetComponent<Enemy>().Damage();
+                    if (User != hit.transform)
+                    {
+                        if (hit.transform.gameObject.tag == "enemy")
+                        {
+                            hit.transform.gameObject.GetComponent<Creature>().Damage(data);
+                        }
+                    }
                 }
             }
         }
@@ -176,9 +199,12 @@ public class Bullet : MonoBehaviour
             }
             foreach (var item in hit)
             {
-                if (item.transform.gameObject.tag == "enemy")
+                if (item.transform.GetComponent<Creature>()!=null)
                 {
-                    item.transform.gameObject.GetComponent<Enemy>().Damage();
+                    if (User != item.transform)
+                    {
+                        item.transform.gameObject.GetComponent<Creature>().Damage(data);
+                    }
                 }
             }
             
@@ -192,39 +218,16 @@ public class Bullet : MonoBehaviour
         //Debug.Log("i'm deleting this shit");
         DestroyTrigger(false);
     }
-    private void OnCollisionEnterStay2D(Collision2D collision)
-    {
-        
-        Debug.Log("i'm finaly here 1");
-        foreach (var item in data.DontAttack)
-        {
-            if (item == collision.gameObject.tag)
-            {
-                DestroyTrigger(false);
-                return;
-            }
-        }
-        //Physics.IgnoreCollision(collision.collider, collider);
-        if (collision.gameObject.tag == "enemy")
-        {
-            if (data.type == BulletType.Area)
-            {
-                //data.PhysicDamage / data.AttackTimeout * Time.deltaTime;
-                collision.gameObject.GetComponent<Enemy>().Damage();
-            }
-            else
-            {
-                collision.gameObject.GetComponent<Enemy>().Damage();
-            }
-        }
-        if (!data.Through&&collision.gameObject.GetComponent<Bullet>()==null)
-        {
-            DestroyTrigger(true);
-        }
-    }
     private void OnTriggerStay2D(Collider2D collision)
     {
-       // Debug.Log("i'm finaly here");
+        if (User != null)
+        {
+            if (collision.transform == User)
+            {
+                return;
+            }
+
+        }
         foreach (var item in data.DontAttack)
         {
             if (item == collision.tag)
@@ -233,20 +236,43 @@ public class Bullet : MonoBehaviour
                 return;
             }
         }
-        //Physics.IgnoreCollision(collision.collider, collider);
-        if (collision.tag == "enemy")
+        //Debug.Log("HIIIII!");
+        if (collision.tag == "detector")
         {
-            //data.PhysicDamage / data.AttackTimeout * Time.deltaTime;
-            if (data.type == BulletType.Area)
+            //Debug.Log("HIIIII232435!");
+            return;
+        }
+        if (collision.tag == "bullet")
+        {
+            return;
+        }
+        if (collision.tag == "item")
+        {
+            return;
+        }
+        if (collision.tag == "undestruct")
+        {
+            //Debug.Log("HIIIII232435!");
+            if (data.type== BulletType.Bullet)
+            {
+                DestroyTrigger(false);
+            }
+            return;
+        }
+        // Debug.Log("i'm finaly here");
+
+        //Physics.IgnoreCollision(collision.collider, collider);
+
+        //data.PhysicDamage / data.AttackTimeout * Time.deltaTime;
+        if (data.type == BulletType.Area)
             {
                 //data.PhysicDamage / data.AttackTimeout * Time.deltaTime;
-                collision.GetComponent<Enemy>().Damage();
+                collision.GetComponent<Creature>().Damage(data);
             }
             else
             {
-                collision.GetComponent<Enemy>().Damage();
-            }
-        }
+                collision.GetComponent<Creature>().Damage(data);
+            }       
         if (!data.Through&&collision.GetComponent<Bullet>()==null)
         {
             DestroyTrigger(true);
@@ -265,21 +291,26 @@ public class Bullet : MonoBehaviour
     {
         if (data.type == BulletType.Bullet)
         {
-            transform.position = (Vector2)transform.position + Direction * data.Range / data.FlyTime * Time.deltaTime;
+
+            //Debug.Log(Direction);
+            //transform.position = Direction + PlayerPosition;
+            transform.position= (Vector2)transform.position+ Direction*data.Range/data.FlyTime*Time.deltaTime;
+            
             
         }
         if (data.type == BulletType.Swing)
         {
-            if (Direction.y > 0)
-            {
-                transform.Rotate(new Vector3(0, 0, data.DeltaAngle * 2 / data.FlyTime * Time.deltaTime));
-            }
-            else
-            {
-                transform.Rotate(new Vector3(0, 0, + data.DeltaAngle * 2 / data.FlyTime * Time.deltaTime));
-            }
-            
-           // Debug.Log(data.DeltaAngle * 2 / data.FlyTime );
+            transform.Rotate(new Vector3(0, 0, data.DeltaAngle * 2 / data.FlyTime * Time.deltaTime));
+            // if (Direction.y > 0)
+            // {
+            //     
+            // }
+            // else
+            // {
+            //     transform.Rotate(new Vector3(0, 0, + data.DeltaAngle * 2 / data.FlyTime * Time.deltaTime));
+            // }
+
+            // Debug.Log(data.DeltaAngle * 2 / data.FlyTime );
         }
     }
 }
@@ -299,6 +330,29 @@ public class BulletData {
     public float AdditionalAngle;
     public float DeltaAngle;
     internal float AttackTimeout;
+    public bool Binded;
+    public bool SelfAttack;
+    public BulletData Clone() {
+        BulletData bullet = new BulletData();
+        bullet.ShootPeriod = ShootPeriod;
+        bullet.PerhubID = PerhubID;
+        bullet.PhysicDamage = PhysicDamage;
+        bullet.Range = Range;
+        bullet.ManaDamage = ManaDamage;
+        bullet.SoulDamage = SoulDamage;
+        bullet.EffectsIDs = EffectsIDs;
+        bullet.type = type;
+        bullet.FlyTime = FlyTime;
+        bullet.Distance = Distance;
+        bullet.Through = Through;
+        bullet.AdditionalAngle = AdditionalAngle;
+        bullet.DeltaAngle = DeltaAngle;
+        bullet.AttackTimeout = AttackTimeout;
+        bullet.DontAttack = DontAttack;
+        bullet.Binded = Binded;
+        bullet.SelfAttack = SelfAttack;
+        return bullet;
+    }
 }
 public enum BulletType { 
     Stab=0,

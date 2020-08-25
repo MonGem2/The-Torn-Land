@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Wall
   - Indestructible
+  - undestruct
+  - bullet
+  - mapcell
+  - enemy
+  - detector
   layers:
   - Default
   - TransparentFX

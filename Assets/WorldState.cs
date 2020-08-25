@@ -54,7 +54,7 @@ public class WorldState : MonoBehaviour
         {
             if (MapCells[i] == null)
             {
-                Debug.Log("qwertyuiop");
+              //  Debug.Log("qwertyuiop");
                 MapCells[i] = mapCell;
                 return;
             }

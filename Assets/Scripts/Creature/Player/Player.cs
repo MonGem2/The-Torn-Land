@@ -1,49 +1,18 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player : Creature
 {
     public StatsBarScript StatsBar;
-
-    public override float HP {
-        get { return hP;  }
-        set {
-            hP = value;
-            StatsBar.SetHp(hP);
-        }
-    }
-    public override float MP
-    {
-        get { return mP; }
-        set
-        {
-            mP = value;
-            StatsBar.SetMp(mP);
-        }
-    }
-    public override float ST
-    {
-        get {
-            
-            return sT; }
-        set
-        {
-            Debug.Log("1:"+value);
-            sT = value;
-            Debug.Log(sT);
-            StatsBar.SetSt(sT);
-        }
-    }
-    public override float SP
-    {
-        get { return sP; }
-        set
-        {
-            sP = value;
-            StatsBar.SetSp(sP);
-        }
-    }
+    public SkillBarScript SkillBar;
+    public Skill ActiveSkill;
+    public Skill OnClickSkill;
+    public EventSystem eventSystem;
+    public GameObject GUI;
+    public GameObject DeadScreen;
     // Start is called before the first frame update
     void Start()
     {
@@ -51,10 +20,11 @@ public class Player : Creature
         this.MaxMP = 200;
         this.MaxSP = 200;
         this.MaxST = 200;
-        this.HP = 10;
-        this.MP = 10;
-        this.ST = 10;
-        this.SP = 10;
+        //StatsBar.SetMaxParams(this.MaxHP, 100, MaxST, 100, 100, MaxMP, MaxSP);
+        this.HP = MaxHP;
+        this.MP = MaxMP;
+        this.ST = MaxST;
+        this.SP = MaxSP;
         this.RegSpeedHP = 3;
         this.RegSpeedMP = 3;
         this.RegSpeedSP = 3;
@@ -63,22 +33,67 @@ public class Player : Creature
         this.MagResist = 1;
         this.PhysResist = 1;
         this.SoulResist = 1;
-        StatsBar.SetMaxParams(this.MaxHP, this.MaxMP, MaxST, 100, 100, MaxMP, MaxSP);
+        this.Speed = 3;
+        
         loader.LoadSkills();
         StartCoroutine(Regeneration(1));
         //Debug.LogWarning(loader.Skils.Count);
         Skills = new List<Skill>();
-        Skills.Add(loader.Skills[0]);
-        ActiveSkill = loader.Skills[0];
+        Skills.Add(loader.Skills[0].Clone());
+        Skills.Add(loader.Skills[1].Clone());
+        Skills.Add(loader.Skills[2].Clone());
+        ActiveSkill = Skills[2];
+        OnClickSkill = ActiveSkill;
+        SkillBar.SetSkillOnButton(Skills[0], 0);
+        SkillBar.SetSkillOnButton(Skills[1], 1);
     }
-    void  Death()
-    { }
+    public bool SetActiveSkill(Skill skill)
+    {
+       
+        if (ActiveSkill ==skill)
+        {
+            Debug.Log("JJ");
+            ActiveSkill = OnClickSkill;
+            return true;
+        }
+
+        ActiveSkill = skill;
+        if (ActiveSkill == null)
+        {
+            ActiveSkill = OnClickSkill;
+            return false;
+        }
+        return true;
+    }
     // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            StartCoroutine(this.UseSkill(ActiveSkill, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
+            bool CanShoot=true;
+            // Debug.Log(EventSystem.current.lastSelectedGameObject.tag);
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                var pd = new PointerEventData(eventSystem) { position = Input.mousePosition };
+                var results = new List<RaycastResult>();
+                eventSystem.RaycastAll(pd, results);
+                foreach (var result in results)
+                {
+                    if (result.gameObject.tag == "UI" || result.gameObject.tag == "Untagged")
+                    {
+                       //Debug.Log(result.gameObject.tag);
+                        CanShoot = false;
+                    }
+                }
+            }
+            if (!AtackLock&&CanShoot)
+            {
+                StartCoroutine(this.UseSkill(ActiveSkill, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
+                if (ActiveSkill != OnClickSkill)
+                {
+                    ActiveSkill = OnClickSkill;
+                }
+            }
             //GameObject bullet = Instantiate(loader.BulletsPerhubs[0]);
             //Bullet bl = bullet.GetComponent<Bullet>();
             //BulletData data = new BulletData();
@@ -171,5 +186,11 @@ public class Player : Creature
             //    bl.Shoot(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
             //}
         }
+    }
+    protected override void Death()
+    {
+        Time.timeScale = 0;
+        GUI.active = false;
+        DeadScreen.active = true;
     }
 }

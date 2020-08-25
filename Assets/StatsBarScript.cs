@@ -14,7 +14,26 @@ public class StatsBarScript : MonoBehaviour
     public Slider MpBar;
     public Slider SpBar;
     // Start is called before the first frame update
+    public void Start()
+    {
+        HpBar.maxValue = player.MaxHP;
+        HpBar.value = player.HP;
+        player.MaxHPChangeTrigger += (float value) => { HpBar.maxValue = value; };
+        player.HPChangeTrigger += (float value) => { HpBar.value = value; };
+        MpBar.maxValue = player.MaxMP;
+        MpBar.value = player.MP;
+        player.MaxMPChangeTrigger += (float value) => { MpBar.maxValue = value; };
+        player.MPChangeTrigger += (float value) => { MpBar.value = value; };
+        SpBar.maxValue = player.MaxSP;
+        SpBar.value = player.SP;
+        player.MaxSPChangeTrigger += (float value) => { SpBar.maxValue = value; };
+        player.SPChangeTrigger += (float value) => { SpBar.value = value; };
+        StBar.maxValue = player.MaxST;
+        StBar.value = player.ST;
+        player.MaxSTChangeTrigger += (float value) => { StBar.maxValue = value; };
+        player.STChangeTrigger += (float value) => { StBar.value = value; };
 
+    }
     // Update is called once per frame
     public void SetMaxParams(float MaxHp, float MaxCp, float MaxSt, float MaxH, float MaxT, float MaxMp, float MaxSp)
     {
@@ -38,6 +57,7 @@ public class StatsBarScript : MonoBehaviour
     }
     public void SetHp(float Hp)
     {
+        //Debug.Log(HpBar.maxValue);        
         HpBar.value = Hp;
     }
     public void SetCp(float Cp)
