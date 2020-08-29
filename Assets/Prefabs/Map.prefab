@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1983232707002068311}
   - component: {fileID: 1983232707002068310}
   - component: {fileID: 1983232707002068309}
+  - component: {fileID: -4820273710582962737}
   m_Layer: 5
   m_Name: Map
   m_TagString: mapcell
@@ -118,3 +119,11 @@ MonoBehaviour:
     type: 3}
   UnBorder: 2
   MapCells: []
+--- !u!222 &-4820273710582962737
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1983232707002068308}
+  m_CullTransparentMesh: 0
