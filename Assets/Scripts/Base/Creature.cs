@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -14,6 +15,7 @@ public class Creature : MonoBehaviour
 
     #region Parameters
     public Loader loader;
+    public Inventory inventory;
     #region MaxHP
     protected float _maxHp;
     public OnChangeParameterTrigger MaxHPChangeTrigger;
@@ -681,6 +683,8 @@ public class Creature : MonoBehaviour
         }
     }
     #endregion
+    #region Regeneration
+    public EventHandler RegenerationTriggered;
     protected virtual IEnumerator Regeneration(float Timeout)
     {
 
@@ -688,6 +692,10 @@ public class Creature : MonoBehaviour
         {
             //Debug.Log(HP+"      "+MaxHP);
             yield return new WaitForSeconds(Timeout);
+            if (RegenerationTriggered != null)
+            {
+                RegenerationTriggered(Timeout, null);
+            }
             bool Magreg = true, HPReg = true, STReg = true, SPReg = true;
             foreach (var item in States)
             {
@@ -721,10 +729,62 @@ public class Creature : MonoBehaviour
             }
         }
     }
+    #endregion
     protected virtual void Death()
     {
+        
         Destroy(gameObject);
     }
+    #region GetCharacter
+    public float GetMaxHP()
+    {
+        return _maxHp;
+    }
+    public float GetMaxMP()
+    {
+        return _maxMp;
+    }
+    public float GetMaxSP()
+    {
+        return _maxSp;
+    }
+    public float GetMaxST()
+    {
+        return _maxSt;
+    }
+    public float GetMaxSumBaseDamage()
+    {
+        return _sumBaseDamage;
+    }
+    public float GetHPRegSpeed()
+    {
+        return _regSpeedHP;
+    }
+    public float GetSPRegSpeed()
+    {
+        return _regSpeedSP;
+    }
+    public float GetSTRegSpeed()
+    {
+        return _regSpeedST;
+    }
+    public float GetMPRegSpeed()
+    {
+        return _regSpeedMP;
+    }
+    public float GetMagReist()
+    {
+        return _magResist;
+    }
+    public float GetPhyResist()
+    {
+        return _phyResist;
+    }
+    public float GetSoulResist()
+    {
+        return _soulResist;
+    }
+    #endregion
     //public float CraftTalent;
     //public float PhysicalFightTalent;
     //public float ManaFightTalent;

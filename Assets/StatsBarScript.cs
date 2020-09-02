@@ -16,6 +16,7 @@ public class StatsBarScript : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
+        Debug.Log("#StatsBar:Start");
         HpBar.maxValue = player.MaxHP;
         HpBar.value = player.HP;
         player.MaxHPChangeTrigger += (float value) => { HpBar.maxValue = value; };
@@ -32,6 +33,18 @@ public class StatsBarScript : MonoBehaviour
         StBar.value = player.ST;
         player.MaxSTChangeTrigger += (float value) => { StBar.maxValue = value; };
         player.STChangeTrigger += (float value) => { StBar.value = value; };
+        HBar.maxValue = player.MaxHungry;
+        HBar.value = player.Hungry;
+        player.MaxHungryChangeTrigger += (float value) => { HBar.maxValue = value; };
+        player.HungryChangeTrigger += (float value) => { HBar.value = value; };
+        TBar.maxValue = player.MaxThirst;
+        TBar.value = player.Thirst;
+        player.MaxThirstChangeTrigger += (float value) => { TBar.maxValue = value; };
+        player.ThirstChangeTrigger += (float value) => { TBar.value = value; };
+        CpBar.maxValue = player.MaxCorruption;
+        CpBar.value = player.Corruption;
+        player.MaxCorruptionChangeTrigger += (float value) => { CpBar.maxValue = value; };
+        player.CorruptionChangeTrigger += (float value) => { CpBar.value = value; };
 
     }
     // Update is called once per frame

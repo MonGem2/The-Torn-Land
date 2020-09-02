@@ -9,13 +9,14 @@ using Random = UnityEngine.Random;
 public delegate void BehaviourChanged(int value);
 public class AIForm : Creature
 {
-    
+    public List<Item> Loot;
+    public LootSkript LootPerhub;
     public List<Transform> Targets;
     public Transform ActiveTarget;
     public List<string> TargetTags;
     public EntityMovement movement;
     public float ChangeTargetTimeout;
-
+    public float Exp;
     
     public SkillParameterType ManaSkillFilter=SkillParameterType.Large;
     public SkillParameterType StaminaSkillFilter = SkillParameterType.Large;
@@ -507,4 +508,10 @@ public class AIForm : Creature
 
     }
 
+    protected override void Death()
+    {
+        LootSkript loot = Instantiate(LootPerhub);
+        loot.transform.position = transform.position;
+        Destroy(gameObject);
+    }
 }

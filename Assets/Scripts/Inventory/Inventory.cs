@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] private List<Item> Items;
-    [SerializeField] private List<Item> Equips;
+    public List<Item> Items;
+    public List<Item> Equips;
     [SerializeField] private InventoryCell _inventoryCellTemplate;
     [SerializeField] private Transform _container;
     [SerializeField] private Transform _originalParent;
