@@ -129,7 +129,20 @@ public class Creature : MonoBehaviour
     public virtual float HP { get => hP; set {
             if (HPChangeTrigger != null)
             { HPChangeTrigger(value); }
-            hP = value;
+            
+            if (value > MaxHP)
+            {
+                hP = MaxHP;
+            }
+            else if (value < 0)
+            {
+                hP = 0;
+                Death();
+            }
+            else
+            {
+                hP = value;
+            }
         } }
     #endregion
     #region MP
@@ -137,19 +150,60 @@ public class Creature : MonoBehaviour
     protected float mP = 100;
     public virtual float MP { get => mP; set {
             if (MPChangeTrigger != null) { MPChangeTrigger(value); }
-            mP = value; } }
+            if (value > MaxMP)
+            {
+                mP = MaxMP;
+            }
+            else if (value<0)
+            {
+                mP = 0;
+            }
+            else
+            {
+                mP = value;
+            }
+        
+        } }
     #endregion
     #region ST
     public OnChangeParameterTrigger STChangeTrigger;
     protected float sT = 100;
     public virtual float ST { get => sT; set {
             if (STChangeTrigger != null) { STChangeTrigger(value); }
-            sT = value; } }
+            sT = value;
+            if (value > MaxST)
+            {
+                sT = MaxST;
+            }
+            else if (value < 0)
+            {
+                sT = 0;                
+            }
+            else
+            {
+                sT = value;
+            }
+        } }
     #endregion
     #region SP
     public OnChangeParameterTrigger SPChangeTrigger;
     protected float sP = 100;
-    public virtual float SP { get => sP; set { if (SPChangeTrigger != null) { SPChangeTrigger(value); } sP = value; } }
+    public virtual float SP { get => sP; set { if (SPChangeTrigger != null) { SPChangeTrigger(value); }
+            if (value > MaxSP)
+            {
+                sP = MaxSP;
+            }
+            else if (value < 0)
+            {
+                sP = 0;
+                
+            }
+            else
+            {
+                sP = value;
+            }
+
+        } }
     #endregion
     #region SumBaseDamage
     protected float _sumBaseDamage;
@@ -732,7 +786,7 @@ public class Creature : MonoBehaviour
     #endregion
     protected virtual void Death()
     {
-        
+        Debug.Log("12345678");
         Destroy(gameObject);
     }
     #region GetCharacter
