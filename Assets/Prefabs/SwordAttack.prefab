@@ -211,3 +211,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loader: {fileID: 0}
   animation: {fileID: 0}
+  User: {fileID: 0}
