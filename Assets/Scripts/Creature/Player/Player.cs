@@ -8,7 +8,9 @@ public class Player : Creature
 {
     public StatsBarScript StatsBar;
     public SkillBarScript SkillBar;
-    public Skill ActiveSkill;
+    public OnChangeParameterTrigger OnActiveSkillChanged;
+    Skill _activeSkill;
+    public Skill ActiveSkill { get { return _activeSkill; } set { _activeSkill = value;if (OnActiveSkillChanged != null) { OnActiveSkillChanged(value); } } }
     public Skill OnClickSkill;
     public EventSystem eventSystem;
     public GameObject GUI;
@@ -315,7 +317,7 @@ public class Player : Creature
     public bool SetActiveSkill(Skill skill)
     {
        
-        if (ActiveSkill ==skill)
+        if (ActiveSkill == skill)
         {
             Debug.Log("JJ");
             ActiveSkill = OnClickSkill;
@@ -351,13 +353,15 @@ public class Player : Creature
                     }
                 }
             }
-            if (!AtackLock&&CanShoot)
+            if (!AtackLock&&CanShoot&&ActiveSkill.CanBeUsed&&CanAttack)
             {
-                StartCoroutine(this.UseSkill(ActiveSkill, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
+                Skill temp=ActiveSkill;
                 if (ActiveSkill != OnClickSkill)
                 {
                     ActiveSkill = OnClickSkill;
                 }
+                StartCoroutine(this.UseSkill(temp, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
+
             }
             //GameObject bullet = Instantiate(loader.BulletsPerhubs[0]);
             //Bullet bl = bullet.GetComponent<Bullet>();

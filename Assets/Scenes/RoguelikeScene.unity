@@ -723,7 +723,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 5834883303d51234abe1062c72e603a3, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -753,6 +753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1453720539}
+  ico: {fileID: 0}
 --- !u!114 &192908177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,7 +955,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 5834883303d51234abe1062c72e603a3, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -984,6 +985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1453720539}
+  ico: {fileID: 0}
 --- !u!114 &211257896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2533,7 +2535,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 5834883303d51234abe1062c72e603a3, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2563,6 +2565,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1453720539}
+  ico: {fileID: 0}
 --- !u!114 &453471173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2958,7 +2961,8 @@ MonoBehaviour:
   AtackLock: 0
   CanAttack: 1
   Loot: []
-  LootPerhub: {fileID: 0}
+  LootPerhub: {fileID: 2576347870628786613, guid: 653ba1f46eb686e4f9f3aeb180139ea3,
+    type: 3}
   Targets: []
   ActiveTarget: {fileID: 0}
   TargetTags:
@@ -4421,7 +4425,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 5834883303d51234abe1062c72e603a3, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4451,6 +4455,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1453720539}
+  ico: {fileID: 0}
 --- !u!114 &755958801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9106,7 +9111,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 5834883303d51234abe1062c72e603a3, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -9136,6 +9141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1453720539}
+  ico: {fileID: 0}
 --- !u!114 &1966207723
 MonoBehaviour:
   m_ObjectHideFlags: 0

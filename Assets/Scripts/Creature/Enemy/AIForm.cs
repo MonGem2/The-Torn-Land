@@ -87,7 +87,8 @@ public class AIForm : Creature
         CurrentEntityType = StartEntityType;
         SituationSkill = CurrentEntityType;
         MinBehaviour = SkillBehaviourType.RunAway;
-        this.MPChangeTrigger += (x) => {
+        this.MPChangeTrigger += (y) => {
+            float x = (float)y;
             if (x / this.MaxMP >= 0.8)
             {
                 ManaSkillFilter = SkillParameterType.Large;
@@ -106,7 +107,8 @@ public class AIForm : Creature
             ManaSkillFilter = SkillParameterType.None;
 
         };
-        this.STChangeTrigger += (x) => {
+        this.STChangeTrigger += (y) => {
+            float x = (float)y;
             if (x / this.MaxST >= 0.8)
             {
                 StaminaSkillFilter = SkillParameterType.Large;
@@ -125,7 +127,8 @@ public class AIForm : Creature
             StaminaSkillFilter = SkillParameterType.None;
 
         };
-        this.SPChangeTrigger += (x) => {
+        this.SPChangeTrigger += (y) => {
+            float x = (float)y;
             if (x / this.MaxSP >= 0.8)
             {
                 SoulSkillFilter = SkillParameterType.Large;
@@ -144,8 +147,9 @@ public class AIForm : Creature
             SoulSkillFilter = SkillParameterType.None;
 
         };
-        this.HPChangeTrigger += (x) =>
+        this.HPChangeTrigger += (y) =>
         {
+            float x = (float)y;
             if (x / MaxHP <= 0.5)
             {
                 if (behaviour < GeneralSkillType.Heal)

@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using Debug = UnityEngine.Debug;
-public delegate void OnChangeParameterTrigger(float value);
+public delegate void OnChangeParameterTrigger(object value);
 
 public class Creature : MonoBehaviour
 {
@@ -592,10 +592,7 @@ public class Creature : MonoBehaviour
         }
        // Debug.Log("x2");
         skill.CanBeUsed = false;
-        if (skill.onSkillUse != null)
-        {
-            skill.onSkillUse(skill);
-        }
+
         StartCoroutine(SkillCooldownReset(skill.Cooldown, skill));
         
         IntakeMP(skill.MPIntake);
@@ -605,6 +602,10 @@ public class Creature : MonoBehaviour
      //   Debug.Log("x3");
         CanAttack = false;
         Vector2 vector = targetPos - (Vector2)transform.position;
+        if (skill.onSkillUse != null)
+        {
+            skill.onSkillUse(skill);
+        }
         foreach (var item in skill.Bullets)
         {
             yield return new WaitForSeconds(item.ShootPeriod);
