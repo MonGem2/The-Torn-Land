@@ -18,6 +18,8 @@ public class Skill
     public float STIntake;
     public bool locked;
     public float Range;
+    public string ico;
+    public int spriteN=-1;
     public GeneralSkillType skillType;
     public SkillParameterType MPParameter;
     public SkillParameterType SPParameter;
@@ -44,6 +46,8 @@ public class Skill
         skill.SPParameter = SPParameter;
         skill.STParameter = STParameter;
         skill.SkillBehaviourType = SkillBehaviourType;
+        skill.ico = ico;
+        skill.spriteN = spriteN;
         return skill;
     }
 }

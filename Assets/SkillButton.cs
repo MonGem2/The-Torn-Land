@@ -11,21 +11,39 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
     public CallbackHendler stopOthers;
     //bool Active = false;
     bool Cooldown = false;
-    bool TurnOn = false;
+    public bool TurnOn = false;
     public Image ico;
+    Vector3 Pos;
     public void Start()
     {
+        // ico.enabled = false;
+        //GetComponent<MeshRenderer>().enabled = false;
+        Pos = transform.position;
+        transform.position = new Vector3(0, 0, -11);
         ico = GetComponent<Image>();
     }
     // Start is called before the first frame update
     public void Set(Skill Skill)
     {
+        //ico.enabled = true;
+       // GetComponent<MeshRenderer>().enabled = true;
         Remove();
         gameObject.GetComponent<Image>().color = Color.yellow;
         skill = Skill;
         skill.onSkillUse += OnUse;
         skill.OnCooldownEnded = OnCooldownEnded;
-
+        transform.position = Pos;
+        //ico.sprite = Resources.Load<Sprite>("CircleBorder");
+        if (skill.spriteN == -1)
+        {
+            Debug.Log("Pesda" + skill.ico);
+            ico.sprite = Resources.Load<Sprite>(skill.ico);
+        }
+        else
+        {
+            Debug.Log("Heey"+skill.ico);
+            ico.sprite = (Sprite)Resources.LoadAll(skill.ico)[skill.spriteN];
+        }
     }
     public void Stop()
     {
@@ -34,6 +52,7 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
     }
     public void Remove()
     {
+        transform.position = new Vector3(0, 0, -11);
         gameObject.GetComponent<Image>().color = Color.white;
         if (skill != null)
         {
@@ -50,6 +69,8 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
         Cooldown = false;
        // Active = false;
         TurnOn = false;
+        ico.sprite = Resources.Load<Sprite>("CircleBorder");
+        //ico.enabled = false;
     }
     public void OnUse(Skill skill)
     {
@@ -92,6 +113,7 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
             {
                 player.SetActiveSkill(skill);
                 ico.color = Color.white;
+                TurnOn = false;
             }
             else
             {

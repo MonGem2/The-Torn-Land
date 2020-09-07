@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using System.Linq;
+using System;
 
 public class Loader:MonoBehaviour
 {
@@ -445,6 +447,8 @@ public class Loader:MonoBehaviour
             skill.SPParameter = SkillParameterType.Litle;
             skill.STParameter = SkillParameterType.Litle;
             skill.MPParameter = SkillParameterType.Litle;
+            skill.ico = "56245112ff2decfca762c7e591ff898b";
+            skill.spriteN = 1;
             skill.Bullets = new List<BulletData>();
             {
                 {
@@ -575,6 +579,8 @@ public class Loader:MonoBehaviour
             skill.STIntake = 0;
             skill.SPIntake = 0;
             skill.Range = 15f;
+            skill.ico = "21ae3d0ffb602ef2035864c42cd9d7aa";
+            skill.spriteN = 68;
             skill.Bullets = new List<BulletData>();
             {
                 {
@@ -661,6 +667,8 @@ public class Loader:MonoBehaviour
             skill.STIntake = 15;
             skill.SPIntake = 0;
             skill.Range = 1;
+            skill.ico = "64faf27d4a83c39035a45e001e6d95a1";
+            skill.spriteN = 9;
             skill.Bullets = new List<BulletData>();
             {
                 {
@@ -703,6 +711,7 @@ public class Loader:MonoBehaviour
             skill.SPParameter = SkillParameterType.Litle;
             skill.STParameter = SkillParameterType.Litle;
             skill.MPParameter = SkillParameterType.Litle;
+            skill.ico = "9f39f4a735d044598164d3b63609c4eb";
             skill.Bullets = new List<BulletData>();
             {
                 {
@@ -745,4 +754,147 @@ public class Loader:MonoBehaviour
     }
 
 
+    public bool LoadPlayer(Player player)
+    {
+        Debug.Log("Loader:load player");
+        if (!File.Exists("player.save"))
+        {
+            Debug.Log("Loader:load player false");
+            return false;
+        }
+        List<object> Data;
+        BinaryFormatter formatter = new BinaryFormatter();
+        using (FileStream fs = new FileStream($"player.save", FileMode.Open))
+        {
+            Debug.Log("i'm here 2");
+            Data= (List<object>)formatter.Deserialize(fs);
+
+        }
+        player.transform.position = ((MyVector3)Data[0]).Get();
+        player.MaxHP = (float)Data[1];
+        player.HP = (float)Data[2];
+        player.RegSpeedHP = (float)Data[3];
+        player.MaxMP = (float)Data[4];
+        player.MP = (float)Data[5];
+        player.RegSpeedMP = (float)Data[6];
+        player.MagResist = (float)Data[7];
+        player.MaxSP = (float)Data[8];
+        player.SP = (float)Data[9];
+        player.RegSpeedSP = (float)Data[10];
+        player.SoulResist = (float)Data[11];
+        player.MaxST = (float)Data[12];
+        player.ST = (float)Data[13];
+        player.RegSpeedST = (float)Data[14];
+        player.PhysResist = (float)Data[15];
+        player.SumBaseDamage= (float)Data[16];
+        player.Speed = (float)Data[17];
+        if (!SkillsLoaded)
+        {
+            LoadSkills();
+        }
+        foreach (var item in (List<int>)Data[18])
+        {
+            player.Skills.Add(this.Skills[item].Clone());
+        }
+        player.MaxHungry = (float)Data[19];
+        player.Hungry = (float)Data[20];
+        player.RegSpeedH = (float)Data[21];
+        player.MaxThirst = (float)Data[22];
+        player.Thirst = (float)Data[23];
+        player.RegSpeedT = (float)Data[24];
+        player.MaxCorruption = (float)Data[25];
+        player.Corruption = (float)Data[26];
+        player.RegSpeedCP = (float)Data[27];
+        Debug.Log("Loader:load player true");
+        return true;
+    }
+    public void CreatePlayer(Player player)
+    {
+        Debug.Log("Loader:create player");
+        //player.transform.position = new Vector3();
+        player.MaxHP = 100;
+        player.HP = 100;
+        player.RegSpeedHP = 0.2f;
+        player.MaxMP = 100;
+        player.MP = 100;
+        player.RegSpeedMP = 0.2f;
+        player.MagResist = 1;
+        player.MaxSP = 100;
+        player.SP = 100;
+        player.RegSpeedSP = 0.2f;
+        player.SoulResist = 1;
+        player.MaxST = 100;
+        player.ST = 100;
+        player.RegSpeedST = 0.2f;
+        player.PhysResist = 1;
+        player.SumBaseDamage = 10;
+        player.Speed = 1;
+        player.MaxHungry = 100;
+        player.Hungry = 0;
+        player.RegSpeedH = 0.2f;
+        player.MaxThirst = 100;
+        player.Thirst = 0;
+        player.RegSpeedT = 0.2f;
+        player.MaxCorruption = 100;
+        player.Corruption = 0;
+        player.RegSpeedCP = 0.2f;
+        player.Skills = new List<Skill>();
+        if (!SkillsLoaded)
+        {
+            LoadSkills();
+        }
+        player.Skills.Add(Skills[0].Clone());
+        player.Skills.Add(Skills[1].Clone());
+        player.Skills.Add(Skills[2].Clone());
+
+    }
+    public void SavePlayer(Player player)
+    {
+        Debug.Log("Loader: player saved");
+        List<object> Data = new List<object>() {MyVector3.Set(player.transform.position),
+        player.GetMaxHP(), player.HP,  player.GetHPRegSpeed(),
+        player.GetMaxMP(), player.MP, player.GetMPRegSpeed(),player.GetMagReist(),
+        player.GetMaxSP(), player.SP, player.GetSPRegSpeed(),player.GetSoulResist(),
+        player.GetMaxST(), player.ST, player.GetSTRegSpeed(), player.GetPhyResist(),
+        player.GetMaxSumBaseDamage(),
+        player.GetSpeed(),
+        player.Skills.Select(x=>x.ID).ToList(),
+        player.MaxHungry, player.Hungry, player.RegSpeedH,
+        player.MaxThirst, player.Thirst, player.RegSpeedT,
+        player.MaxCorruption, player.Corruption, player.RegSpeedCP
+        };
+        BinaryFormatter formatter = new BinaryFormatter();
+        using (FileStream fs = new FileStream($"player.save", FileMode.OpenOrCreate))
+        {
+            Debug.Log("i'm here 2");
+            formatter.Serialize(fs, Data);
+
+        }
+        
+    }
+
+}
+
+[Serializable]
+public class MyVector3 {
+    
+    public float x;
+    public float y;
+    public float z;
+    public static MyVector3 Set(Vector3 vector3)
+    {
+        MyVector3 vec=new MyVector3();
+        vec.x = vector3.x;
+        vec.y = vector3.y;
+        vec.z = vector3.z;
+        return vec;
+    }
+    public Vector3 Get()
+    {
+        Vector3 vector3 = new Vector3();
+        vector3.x=x;
+        vector3.y=y;
+        vector3.z=z;
+        return vector3;
+    }
 }

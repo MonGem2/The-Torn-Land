@@ -439,6 +439,16 @@ public class Creature : MonoBehaviour
     protected float _speed=1f;
     public float Speed { get=> _speed; set=>_speed=value; }
     #endregion
+    #region Level
+    protected int _lvl = 1;
+    public OnChangeParameterTrigger OnLevelChange;
+    public int Lvl { get => _lvl; set {
+            if (OnLevelChange!=null)
+            {
+                OnLevelChange(value);
+            }           
+            _lvl = value; } }
+    #endregion
     public bool MoveLock = false;
     public bool AtackLock = false;
     public bool CanAttack = true;
@@ -838,6 +848,10 @@ public class Creature : MonoBehaviour
     public float GetSoulResist()
     {
         return _soulResist;
+    }
+    public float GetSpeed()
+    {
+        return _speed;
     }
     #endregion
     //public float CraftTalent;

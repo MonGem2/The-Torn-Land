@@ -262,49 +262,107 @@ public class Player : Creature
     }
 
     #endregion
+    #region XP
+    protected float _xP;
+    public OnChangeParameterTrigger XPChangeTrigger;
+    public virtual float XP
+    {
+        get
+        {
+
+            return _xP;
+        }
+        set
+        {
+            if (XPChangeTrigger != null)
+            {
+                XPChangeTrigger(value);
+            }
+            if (value > MaxXP)
+            {
+                _xP = MaxXP;
+            }
+            else
+            {
+                _xP = value;
+            }
+        }
+
+    }
+    #endregion
+    #region MaxXP
+    protected float _maxXP;
+    public OnChangeParameterTrigger MaxXPChangeTrigger;
+    public virtual float MaxXP
+    {
+        get
+        {
+
+            return _maxXP;
+        }
+        set
+        {
+            if (MaxXPChangeTrigger != null)
+            {
+                MaxXPChangeTrigger(value);
+            }
+            _maxXP = value;
+        }
+
+    }
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
-        this.MaxHP = 200;
-        this.MaxMP = 200;
-        this.MaxSP = 200;
-        this.MaxST = 200;
-        this.MaxHungry = 100;
-        this.MaxThirst = 100;
-        this.MaxCorruption = 100;
-        //StatsBar.SetMaxParams(this.MaxHP, 100, MaxST, 100, 100, MaxMP, MaxSP);
-        this.HP = MaxHP;
-        this.MP = MaxMP;
-        this.ST = MaxST;
-        this.SP = MaxSP;
-        this.Thirst = this.MaxThirst;
-        this.Hungry = this.MaxHungry;
-        this.Corruption = this.MaxCorruption;
-        this.RegSpeedHP = 3;
-        this.RegSpeedMP = 3;
-        this.RegSpeedSP = 3;
-        this.RegSpeedST = 3;
-        this.RegSpeedH = -1;
-        this.RegSpeedT = -1;
-        this.RegSpeedCP = -1;
-        this.SumBaseDamage = 5;
-        this.MagResist = 1;
-        this.PhysResist = 1;
-        this.SoulResist = 1;
-        this.Speed = 3;
-        
-        loader.LoadSkills();
+        //this.MaxHP = 200;
+        //this.MaxMP = 200;
+        //this.MaxSP = 200;
+        //this.MaxST = 200;
+        //this.MaxHungry = 100;
+        //this.MaxThirst = 100;
+        //this.MaxCorruption = 100;
+        ////StatsBar.SetMaxParams(this.MaxHP, 100, MaxST, 100, 100, MaxMP, MaxSP);
+        //this.HP = MaxHP;
+        //this.MP = MaxMP;
+        //this.ST = MaxST;
+        //this.SP = MaxSP;
+        //this.Thirst = this.MaxThirst;
+        //this.Hungry = this.MaxHungry;
+        //this.Corruption = this.MaxCorruption;
+        //this.RegSpeedHP = 3;
+        //this.RegSpeedMP = 3;
+        //this.RegSpeedSP = 3;
+        //this.RegSpeedST = 3;
+        //this.RegSpeedH = -1;
+        //this.RegSpeedT = -1;
+        //this.RegSpeedCP = -1;
+        //this.SumBaseDamage = 5;
+        //this.MagResist = 1;
+        //this.PhysResist = 1;
+        //this.SoulResist = 1;
+        //this.Speed = 3;
+        if (!loader.LoadPlayer(this))
+        {
+            loader.CreatePlayer(this);
+        }        
         StartCoroutine(Regeneration(1));
+        StartCoroutine(Save());
         //Debug.LogWarning(loader.Skils.Count);
-        Skills = new List<Skill>();
-        Skills.Add(loader.Skills[0].Clone());
-        Skills.Add(loader.Skills[1].Clone());
-        Skills.Add(loader.Skills[2].Clone());
+       // Skills = new List<Skill>();
+       // Skills.Add(loader.Skills[0].Clone());
+       // Skills.Add(loader.Skills[1].Clone());
+       // Skills.Add(loader.Skills[2].Clone());
         ActiveSkill = Skills[2];
         OnClickSkill = ActiveSkill;
         SkillBar.SetSkillOnButton(Skills[0], 0);
         SkillBar.SetSkillOnButton(Skills[1], 1);
         this.RegenerationTriggered += RegTrigger;
+    }
+    public IEnumerator Save()
+    {
+        yield return new WaitForSeconds(10);
+        loader.SavePlayer(this);
+    
     }
     void RegTrigger(object obj, object eventArgs)
     {
