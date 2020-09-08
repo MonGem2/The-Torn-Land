@@ -10,7 +10,7 @@ public delegate void BehaviourChanged(int value);
 public class AIForm : Creature
 {
     public List<Item> Loot;
-    public LootSkript LootPerhub;
+    public Loot LootPerhub;
     public List<Transform> Targets;
     public Transform ActiveTarget;
     public List<string> TargetTags;
@@ -510,7 +510,7 @@ public class AIForm : Creature
 
     protected override void Death()
     {
-        LootSkript loot = Instantiate(LootPerhub);
+        Loot loot = Instantiate(LootPerhub);
         loot.transform.position = transform.position;
         Destroy(gameObject);
     }

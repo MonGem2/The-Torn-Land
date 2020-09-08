@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LootSkript : MonoBehaviour
+public class Loot : MonoBehaviour
 {
     public Canvas LootView;
     // Start is called before the first frame update
@@ -19,6 +19,7 @@ public class LootSkript : MonoBehaviour
             Debug.Log("Heeey");
         }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.tag == "Player")
