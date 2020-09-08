@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class State
 {
+    public int ID;
     public float Duration;
     //public float Timeout;
     public StateType type;

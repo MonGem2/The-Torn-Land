@@ -8,7 +8,10 @@ public class SkillBarScript : MonoBehaviour
     public List<SkillButton> buttons;
     void Start()
     {
-            
+        foreach (var item in buttons)
+        {
+            item.stopOthers += StopOthers;
+        }
     }
     public void SetSkillOnButton(Skill Skill, int Button)
     {
@@ -17,6 +20,16 @@ public class SkillBarScript : MonoBehaviour
             return;
         }
         buttons[Button].Set( Skill);
+    }
+    public void StopOthers(object obj)
+    {
+        foreach (var item in buttons)
+        {
+            if (item != obj)
+            {
+                item.Stop();
+            }
+        }
     }
     //  public void Use(Skill skill)
     //  {

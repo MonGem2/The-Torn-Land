@@ -19,32 +19,32 @@ public class StatsBarScript : MonoBehaviour
         Debug.Log("#StatsBar:Start");
         HpBar.maxValue = player.MaxHP;
         HpBar.value = player.HP;
-        player.MaxHPChangeTrigger += (float value) => { HpBar.maxValue = value; };
-        player.HPChangeTrigger += (float value) => { HpBar.value = value; };
+        player.MaxHPChangeTrigger += ( value) => { HpBar.maxValue = (float)value; };
+        player.HPChangeTrigger += ( value) => { HpBar.value = (float)value; };
         MpBar.maxValue = player.MaxMP;
         MpBar.value = player.MP;
-        player.MaxMPChangeTrigger += (float value) => { MpBar.maxValue = value; };
-        player.MPChangeTrigger += (float value) => { MpBar.value = value; };
+        player.MaxMPChangeTrigger += ( value) => { MpBar.maxValue = (float)value; };
+        player.MPChangeTrigger += ( value) => { MpBar.value = (float)value; };
         SpBar.maxValue = player.MaxSP;
         SpBar.value = player.SP;
-        player.MaxSPChangeTrigger += (float value) => { SpBar.maxValue = value; };
-        player.SPChangeTrigger += (float value) => { SpBar.value = value; };
+        player.MaxSPChangeTrigger += ( value) => { SpBar.maxValue = (float)value; };
+        player.SPChangeTrigger += ( value) => { SpBar.value = (float)value; };
         StBar.maxValue = player.MaxST;
         StBar.value = player.ST;
-        player.MaxSTChangeTrigger += (float value) => { StBar.maxValue = value; };
-        player.STChangeTrigger += (float value) => { StBar.value = value; };
+        player.MaxSTChangeTrigger += ( value) => { StBar.maxValue = (float)value; };
+        player.STChangeTrigger += ( value) => { StBar.value = (float)value; };
         HBar.maxValue = player.MaxHungry;
         HBar.value = player.Hungry;
-        player.MaxHungryChangeTrigger += (float value) => { HBar.maxValue = value; };
-        player.HungryChangeTrigger += (float value) => { HBar.value = value; };
+        player.MaxHungryChangeTrigger += ( value) => { HBar.maxValue = (float)value; };
+        player.HungryChangeTrigger += ( value) => { HBar.value = (float)value; };
         TBar.maxValue = player.MaxThirst;
         TBar.value = player.Thirst;
-        player.MaxThirstChangeTrigger += (float value) => { TBar.maxValue = value; };
-        player.ThirstChangeTrigger += (float value) => { TBar.value = value; };
+        player.MaxThirstChangeTrigger += ( value) => { TBar.maxValue = (float)value; };
+        player.ThirstChangeTrigger += ( value) => { TBar.value = (float)value; };
         CpBar.maxValue = player.MaxCorruption;
         CpBar.value = player.Corruption;
-        player.MaxCorruptionChangeTrigger += (float value) => { CpBar.maxValue = value; };
-        player.CorruptionChangeTrigger += (float value) => { CpBar.value = value; };
+        player.MaxCorruptionChangeTrigger += ( value) => { CpBar.maxValue = (float)value; };
+        player.CorruptionChangeTrigger += ( value) => { CpBar.value = (float)value; };
 
     }
     // Update is called once per frame

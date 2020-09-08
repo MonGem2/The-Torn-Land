@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using Debug = UnityEngine.Debug;
-public delegate void OnChangeParameterTrigger(float value);
+public delegate void OnChangeParameterTrigger(object value);
 
 public class Creature : MonoBehaviour
 {
@@ -439,6 +439,16 @@ public class Creature : MonoBehaviour
     protected float _speed=1f;
     public float Speed { get=> _speed; set=>_speed=value; }
     #endregion
+    #region Level
+    protected int _lvl = 1;
+    public OnChangeParameterTrigger OnLevelChange;
+    public int Lvl { get => _lvl; set {
+            if (OnLevelChange!=null)
+            {
+                OnLevelChange(value);
+            }           
+            _lvl = value; } }
+    #endregion
     public bool MoveLock = false;
     public bool AtackLock = false;
     public bool CanAttack = true;
@@ -592,10 +602,7 @@ public class Creature : MonoBehaviour
         }
        // Debug.Log("x2");
         skill.CanBeUsed = false;
-        if (skill.onSkillUse != null)
-        {
-            skill.onSkillUse(skill);
-        }
+
         StartCoroutine(SkillCooldownReset(skill.Cooldown, skill));
         
         IntakeMP(skill.MPIntake);
@@ -605,6 +612,10 @@ public class Creature : MonoBehaviour
      //   Debug.Log("x3");
         CanAttack = false;
         Vector2 vector = targetPos - (Vector2)transform.position;
+        if (skill.onSkillUse != null)
+        {
+            skill.onSkillUse(skill);
+        }
         foreach (var item in skill.Bullets)
         {
             yield return new WaitForSeconds(item.ShootPeriod);
@@ -837,6 +848,10 @@ public class Creature : MonoBehaviour
     public float GetSoulResist()
     {
         return _soulResist;
+    }
+    public float GetSpeed()
+    {
+        return _speed;
     }
     #endregion
     //public float CraftTalent;
