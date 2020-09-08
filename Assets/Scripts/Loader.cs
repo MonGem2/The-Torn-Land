@@ -14,6 +14,7 @@ public class Loader:MonoBehaviour
     public List<State> States=new List<State>();
     public List<Skill> Skills=new List<Skill>();
     bool SkillsLoaded = false;
+    bool StatesLoaded = false;
     public void LoadMap()
     {
         //LoadSkills();
@@ -432,12 +433,14 @@ public class Loader:MonoBehaviour
         {
             return;
         }
-        
+        SkillsLoaded = true;
+        LoadStates();
         {
             Skill skill = new Skill();
             skill.ID = 0;
             skill.Cooldown = 3;
-            skill.EffectsIds = new List<int>();
+            skill.EffectsIds = new List<State>();
+            skill.EffectsIds.Add(States[0]);
             skill.MPIntake = 2;
             skill.STIntake = 2;
             skill.SPIntake = 2;
@@ -574,7 +577,7 @@ public class Loader:MonoBehaviour
             skill.SPParameter = SkillParameterType.None;
             skill.STParameter = SkillParameterType.None;
             skill.MPParameter = SkillParameterType.Avarage;
-            skill.EffectsIds = new List<int>();
+            skill.EffectsIds = new List<State>();
             skill.MPIntake = 15;
             skill.STIntake = 0;
             skill.SPIntake = 0;
@@ -662,7 +665,7 @@ public class Loader:MonoBehaviour
             skill.SPParameter = SkillParameterType.None;
             skill.STParameter = SkillParameterType.Avarage;
             skill.MPParameter = SkillParameterType.None;
-            skill.EffectsIds = new List<int>();
+            skill.EffectsIds = new List<State>();
             skill.MPIntake = 0;
             skill.STIntake = 15;
             skill.SPIntake = 0;
@@ -701,7 +704,8 @@ public class Loader:MonoBehaviour
             Skill skill = new Skill();
             skill.ID = 3;
             skill.Cooldown = 0.5f;
-            skill.EffectsIds = new List<int>();
+            skill.EffectsIds = new List<State>();
+            skill.EffectsIds.Add(States[0]);
             skill.MPIntake = 2;
             skill.STIntake = 2;
             skill.SPIntake = 2;
@@ -744,13 +748,98 @@ public class Loader:MonoBehaviour
     }
     public void LoadStates()
     {
+        if (StatesLoaded)
         {
-            State state = new State();
-            state.Duration = 10;
-            state.type = StateType.SkillHider;
-            state.Params = new List<int>();
-            States.Add(state);
+            return;
         }
+        StatesLoaded = true;
+        int index = 0;
+
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 0.5f;
+            state.ico = "qq";
+            state.spriteN = -1;
+            state.type = StateType.InfinityPower;
+            state.Params = new List<int>() { 1, 1, 1, 1, 1 };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 100;
+            state.ico = "2e19d99d5e16baa41d790c34a9e9d155";
+            state.spriteN = -1;
+            state.type = StateType.RegenerationStop;
+            state.Params = new List<int>() {1, 0, 1, 1 };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 2;
+            state.ico = "a6ca1c0c128e16cb796c712fd65bcc35";
+            state.spriteN = -1;
+            state.type = StateType.DazerAttack;
+            state.Params = new List<int>() { };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 2;
+            state.ico = "83f1bb86821f7a0a772a4d17109bb07f";
+            state.spriteN = -1;
+            state.type = StateType.DazerMovement;
+            state.Params = new List<int>() {};
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 10;
+            state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
+            state.spriteN = 28;
+            state.type = StateType.SkillAdder;
+            state.Params = new List<int>() { 3 };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 10;
+            state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
+            state.spriteN = 6;
+            state.type = StateType.SkillHider;
+            state.Params = new List<int>() { 2 };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 10;
+            state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
+            state.spriteN = 6;
+            state.type = StateType.ParameterAdder;
+            state.Params = new List<int>() {10, 10, 10, 10 };
+            States.Add(state);
+            index++;
+        }
+
     }
 
 
@@ -794,7 +883,7 @@ public class Loader:MonoBehaviour
         }
         foreach (var item in (List<int>)Data[18])
         {
-            player.Skills.Add(this.Skills[item].Clone());
+            player.AddSkill(this.Skills[item].Clone());
         }
         player.MaxHungry = (float)Data[19];
         player.Hungry = (float)Data[20];
@@ -814,18 +903,18 @@ public class Loader:MonoBehaviour
         //player.transform.position = new Vector3();
         player.MaxHP = 100;
         player.HP = 100;
-        player.RegSpeedHP = 0.2f;
+        player.RegSpeedHP = 1;
         player.MaxMP = 100;
         player.MP = 100;
-        player.RegSpeedMP = 0.2f;
+        player.RegSpeedMP = 1;
         player.MagResist = 1;
         player.MaxSP = 100;
         player.SP = 100;
-        player.RegSpeedSP = 0.2f;
+        player.RegSpeedSP = 1;
         player.SoulResist = 1;
         player.MaxST = 100;
         player.ST = 100;
-        player.RegSpeedST = 0.2f;
+        player.RegSpeedST = 1;
         player.PhysResist = 1;
         player.SumBaseDamage = 10;
         player.Speed = 1;

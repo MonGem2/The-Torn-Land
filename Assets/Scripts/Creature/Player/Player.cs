@@ -8,6 +8,7 @@ public class Player : Creature
 {
     public StatsBarScript StatsBar;
     public SkillBarScript SkillBar;
+    public Messanger messanger;
     public OnChangeParameterTrigger OnActiveSkillChanged;
     Skill _activeSkill;
     public Skill ActiveSkill { get { return _activeSkill; } set { _activeSkill = value;if (OnActiveSkillChanged != null) { OnActiveSkillChanged(value); } } }
@@ -15,6 +16,7 @@ public class Player : Creature
     public EventSystem eventSystem;
     public GameObject GUI;
     public GameObject DeadScreen;
+    public PlayerMovement movement;
     #region MaxHungry
     protected float _maxHungry;
     public OnChangeParameterTrigger MaxHungryChangeTrigger;
@@ -76,15 +78,15 @@ public class Player : Creature
     {
         get
         {
-            //int Aditional = 1;
-            //foreach (var item in States)
-            //{
-            //    if (item.type == StateType.ParameterChanger)
-            //    {
-            //        Aditional += item.Params[5];
-            //    }
-            //}
-            return _regSpeedH;// * Aditional;
+            int Aditional = 1;
+            foreach (var item in States)
+            {
+                if (item.type == StateType.ParameterChanger)
+                {
+                    Aditional += item.Params[(int)PlayerStatsChangeLD.HungryRegSpeed];
+                }
+            }
+            return _regSpeedH * Aditional;
         }
         set
         {
@@ -158,15 +160,15 @@ public class Player : Creature
     {
         get
         {
-            //int Aditional = 1;
-            //foreach (var item in States)
-            //{
-            //    if (item.type == StateType.ParameterChanger)
-            //    {
-            //        Aditional += item.Params[5];
-            //    }
-            //}
-            return _regSpeedT;// * Aditional;
+            int Aditional = 1;
+            foreach (var item in States)
+            {
+                if (item.type == StateType.PlayerParameterAdder)
+                {
+                    Aditional += item.Params[(int)PlayerStatsChangeLD.ThirstRegSpeed];
+                }
+            }
+            return _regSpeedT * Aditional;
         }
         set
         {
@@ -240,15 +242,15 @@ public class Player : Creature
     {
         get
         {
-            //int Aditional = 1;
-            //foreach (var item in States)
-            //{
-            //    if (item.type == StateType.ParameterChanger)
-            //    {
-            //        Aditional += item.Params[5];
-            //    }
-            //}
-            return _regSpeedCP;// * Aditional;
+            int Aditional = 1;
+            foreach (var item in States)
+            {
+                if (item.type == StateType.playerStatsChange)
+                {
+                    Aditional += item.Params[(int)PlayerStatsChangeLD.CorruptionRegSpeed];
+                }
+            }
+            return _regSpeedCP * Aditional;
         }
         set
         {
@@ -278,12 +280,25 @@ public class Player : Creature
             {
                 XPChangeTrigger(value);
             }
+            int Aditional = 1;
+            foreach (var item in States)
+            {
+                if (item.type == StateType.ParameterChanger)
+                {
+                    Aditional += item.Params[(int)PlayerStatsChangeLD.XPBonus];
+                }
+            }
             if (value > MaxXP)
             {
-                _xP = MaxXP;
+                Lvl++;
+                //_xP = MaxXP;
             }
             else
             {
+                if (value-_xP>0)
+                {
+                    value += (value - _xP)*Aditional;
+                }
                 _xP = value;
             }
         }
@@ -346,7 +361,7 @@ public class Player : Creature
             loader.CreatePlayer(this);
         }        
         StartCoroutine(Regeneration(1));
-        StartCoroutine(Save());
+       // StartCoroutine(Save());
         //Debug.LogWarning(loader.Skils.Count);
        // Skills = new List<Skill>();
        // Skills.Add(loader.Skills[0].Clone());
@@ -357,6 +372,25 @@ public class Player : Creature
         SkillBar.SetSkillOnButton(Skills[0], 0);
         SkillBar.SetSkillOnButton(Skills[1], 1);
         this.RegenerationTriggered += RegTrigger;
+        this.OnSkillAdded += (x) =>
+        {
+            if (SkillBar.CheckSpace())
+            {
+                SkillBar.SetSkillOnButton((Skill)x);
+            }
+        };
+    }
+    public void PlayerStateAdded(State state)
+    {
+        if (state.type == StateType.PlayerParameterAdder)
+        {
+            Debug.Log("Creature:ParameterAdder triggered");
+            this.Corruption += state.Params[(int)PlayerParameterAdderLD.Corruption];
+            this.Hungry += state.Params[(int)PlayerParameterAdderLD.Hungry];
+            this.Thirst += state.Params[(int)PlayerParameterAdderLD.Threat];
+            this.XP += state.Params[(int)PlayerParameterAdderLD.XP];
+            return;
+        }
     }
     public IEnumerator Save()
     {
@@ -411,15 +445,27 @@ public class Player : Creature
                     }
                 }
             }
-            if (!AtackLock&&CanShoot&&ActiveSkill.CanBeUsed&&CanAttack)
+            if (!AttackLock && CanShoot && ActiveSkill.CanBeUsed && CanAttack && !ActiveSkill.locked)
             {
-                Skill temp=ActiveSkill;
+                Skill temp = ActiveSkill;
                 if (ActiveSkill != OnClickSkill)
                 {
                     ActiveSkill = OnClickSkill;
                 }
                 StartCoroutine(this.UseSkill(temp, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
 
+            }
+            else if (!CanShoot)
+            { 
+            
+            }
+            else if (AttackLock)
+            {
+                messanger.SetMessage("Attack locked");
+            }
+            else if (ActiveSkill.locked)
+            {
+                messanger.SetMessage("Skill locked");
             }
             //GameObject bullet = Instantiate(loader.BulletsPerhubs[0]);
             //Bullet bl = bullet.GetComponent<Bullet>();

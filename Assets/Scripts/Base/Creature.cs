@@ -28,7 +28,7 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[0];
+                    Aditional += item.Params[(int)ParameterChangerLD.MaxHP];
                 }
             }
             return _maxHp * Aditional;
@@ -51,15 +51,15 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int AditionalHP = 1;
+            int AditionalMP = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    AditionalHP += item.Params[1];
+                    AditionalMP += item.Params[(int)ParameterChangerLD.MaxMP];
                 }
             }
-            return _maxMp * AditionalHP;
+            return _maxMp * AditionalMP;
         }
         set
         {
@@ -84,7 +84,7 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[2];
+                    Aditional += item.Params[(int)ParameterChangerLD.MaxST];
                 }
             }
             return _maxSt * Aditional;
@@ -110,7 +110,7 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[3];
+                    Aditional += item.Params[(int)ParameterChangerLD.MaxSP];
                 }
             }
             return _maxSp * Aditional;
@@ -129,7 +129,12 @@ public class Creature : MonoBehaviour
     public virtual float HP { get => hP; set {
             if (HPChangeTrigger != null)
             { HPChangeTrigger(value); }
-            
+            if (InfinityHP)
+            {
+                return;
+            }
+
+
             if (value > MaxHP)
             {
                 hP = MaxHP;
@@ -150,6 +155,7 @@ public class Creature : MonoBehaviour
     protected float mP = 100;
     public virtual float MP { get => mP; set {
             if (MPChangeTrigger != null) { MPChangeTrigger(value); }
+            if (InfinityMP) {return; }
             if (value > MaxMP)
             {
                 mP = MaxMP;
@@ -170,6 +176,7 @@ public class Creature : MonoBehaviour
     protected float sT = 100;
     public virtual float ST { get => sT; set {
             if (STChangeTrigger != null) { STChangeTrigger(value); }
+            if (InfinityST) { return; }
             sT = value;
             if (value > MaxST)
             {
@@ -189,6 +196,7 @@ public class Creature : MonoBehaviour
     public OnChangeParameterTrigger SPChangeTrigger;
     protected float sP = 100;
     public virtual float SP { get => sP; set { if (SPChangeTrigger != null) { SPChangeTrigger(value); }
+            if (InfinitySP) { return; }
             if (value > MaxSP)
             {
                 sP = MaxSP;
@@ -212,12 +220,16 @@ public class Creature : MonoBehaviour
     {
         get
         {
+            if (OneShot)
+            {
+                return 9999999;
+            }
             int Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[4];
+                    Aditional += item.Params[(int)ParameterChangerLD.SumBaseDamage];
                 }
             }
             return _sumBaseDamage * Aditional;
@@ -243,7 +255,7 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[5];
+                    Aditional += item.Params[(int)ParameterChangerLD.RegSpeedHP];
                 }
             }
             return _regSpeedHP * Aditional;
@@ -271,7 +283,7 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[6];
+                    Aditional += item.Params[(int)ParameterChangerLD.RegSpeedMP];
                 }
             }
             return _regSpeedMP * Aditional;
@@ -299,7 +311,7 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[7];
+                    Aditional += item.Params[(int)ParameterChangerLD.RegSpeedST];
                 }
             }
             return _regSpeedST * Aditional;
@@ -327,7 +339,7 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[8];
+                    Aditional += item.Params[(int)ParameterChangerLD.RegSpeedSP];
                 }
             }
             return _regSpeedSP * Aditional;
@@ -355,7 +367,7 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[9];
+                    Aditional += item.Params[(int)ParameterChangerLD.MagResist];
                 }
             }
             return _magResist * Aditional;
@@ -383,7 +395,7 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[10];
+                    Aditional += item.Params[(int)ParameterChangerLD.PhyResisst];
                 }
             }
             return _phyResist * Aditional;
@@ -411,7 +423,7 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.ParameterChanger)
                 {
-                    Aditional += item.Params[11];
+                    Aditional += item.Params[(int)ParameterChangerLD.SoulResist];
                 }
             }
             return _soulResist * Aditional;
@@ -437,7 +449,26 @@ public class Creature : MonoBehaviour
     #endregion
     #region Speed
     protected float _speed=1f;
-    public float Speed { get=> _speed; set=>_speed=value; }
+    public OnChangeParameterTrigger OnSpeedChanged;
+    public float Speed { get {
+
+            int Aditional = 1;
+            foreach (var item in States)
+            {
+                if (item.type == StateType.ParameterChanger)
+                {
+                    Aditional += item.Params[(int)ParameterChangerLD.Speed];
+                }
+            }
+            return _speed*Aditional;
+                
+          } set {
+            if (OnSpeedChanged != null)
+            {
+                OnSpeedChanged(value);
+            }
+            _speed = value;
+        } }
     #endregion
     #region Level
     protected int _lvl = 1;
@@ -450,8 +481,13 @@ public class Creature : MonoBehaviour
             _lvl = value; } }
     #endregion
     public bool MoveLock = false;
-    public bool AtackLock = false;
+    public bool AttackLock = false;
     public bool CanAttack = true;
+    public bool InfinityHP;
+    public bool InfinityMP;
+    public bool InfinityST;
+    public bool InfinitySP;
+    public bool OneShot;
     #endregion
     protected void Start()
     {
@@ -485,7 +521,7 @@ public class Creature : MonoBehaviour
             HP = MaxHP;
             if (MaxEffectSet)
             {
-                AddEffect(0);
+                //AddEffect(0);
             }
         }
        // Debug.Log("y6");
@@ -505,14 +541,14 @@ public class Creature : MonoBehaviour
         {
             MP = 0;
 
-            AddEffect(0); return false;
+            //AddEffect(0); return false;
         }
         if (MP > MaxMP)
         {
             MP = MaxMP;
             if (MaxEffectSet)
             {
-                AddEffect(0);
+                //AddEffect(0);
             }
             return false;
         }
@@ -533,14 +569,14 @@ public class Creature : MonoBehaviour
         {
             ST = 0;
 
-            AddEffect(0); return false;
+            //AddEffect(0); return false;
         }
         if (ST > MaxST)
         {
             ST = MaxST;
             if (MaxEffectSet)
             {
-                AddEffect(0);
+                //AddEffect(0);
             }
             return false;
         }
@@ -561,14 +597,14 @@ public class Creature : MonoBehaviour
         {
             SP = 0;
 
-            AddEffect(0); return false;
+            //AddEffect(0); return false;
         }
         if (SP > MaxSP)
         {
             SP = MaxSP;
             if (MaxEffectSet)
             {
-                AddEffect(0);
+                //AddEffect(0);
             }
             return false;
         }
@@ -577,18 +613,35 @@ public class Creature : MonoBehaviour
     }
     #endregion
     #region SkillsCode
-    protected void AddSkill(int SkillID)
+    public OnChangeParameterTrigger OnSkillAdded;
+    public OnChangeParameterTrigger OnSkillRemoved;
+    public void AddSkill(Skill Skill)
     {
-        Skills.Add(loader.Skills[SkillID].Clone());
+        foreach (var item in Skills)
+        {
+            if (item.ID == Skill.ID)
+            {
+                return;
+            }
+        }
+        if (OnSkillAdded != null)
+        {
+            OnSkillAdded(Skill);
+        }
+        Skills.Add(Skill);
     }
-    protected void RemoveSkill(int SkillID)
+    public void RemoveSkill(int SkillID)
     {
+        if (OnSkillRemoved!=null)
+        {
+            OnSkillRemoved(SkillID);
+        }
         Skills.Remove(Skills.Find(x => x.ID == SkillID));
     }
     private protected IEnumerator UseSkill(Skill skill, Vector2 targetPos)
     {
 
-        if (!CanAttack || AtackLock)
+        if (!CanAttack || AttackLock)
         {
             yield break;
         }
@@ -659,47 +712,182 @@ public class Creature : MonoBehaviour
     }
     #endregion
     #region StatesCode
-
-    public virtual void AddEffects(List<int> EffectIds)
-    {
-        Debug.LogWarning("//TODO:AddEffect");
+    public virtual void Move(State state)
+    { 
+        
     }
-    public virtual void AddEffect(int EffectId)
+    public virtual void AddEffects(List<State> Effects)
     {
-        Debug.LogWarning("//TODO:AddEffect");
+        foreach (var item in Effects)
+        {
+            StartCoroutine(StateAdder(item));
+        }
     }
-    protected IEnumerator StateAdder(State state)
+    public OnChangeParameterTrigger OnStateAdded;
+    public OnChangeParameterTrigger OnStateEnded;
+    public IEnumerator StateAdder(State state)
     {
+        foreach (var item in States)
+        {
+            if (item.ID == state.ID)
+            {
+                yield break;
+            }
+        }
+        Debug.Log("Creature:State adder:spell:"+state.ID);
+        if (state.type == StateType.ParameterAdder)
+        {
+            Debug.Log("Creature:ParameterAdder triggered");
+            this.HP += state.Params[(int)ParameterAdderLD.HP];
+            this.MP += state.Params[(int)ParameterAdderLD.MP];
+            this.SP += state.Params[(int)ParameterAdderLD.SP];
+            this.ST += state.Params[(int)ParameterAdderLD.ST];
+            yield break;
+        }
+        if (state.type == StateType.Move)
+        {
+            Debug.Log("Creature:Move triggered");
+            Move(state);
+            yield break;
+        }
+        if (state.type == StateType.PlayerParameterAdder)
+        {
+            yield break;
+        }
+        if (OnStateAdded != null)
+        {
+            OnStateAdded(state);
+        }       
         States.Add(state);
         if (state.type == StateType.SkillHider)
         {
             SkillHiderOn(state);
             yield return new WaitForSeconds(state.Duration);
+            if (OnStateEnded != null)
+            {
+                OnStateEnded(state);
+            }
             SkillHiderOff(state);
+            States.Remove(state);
             yield break;
         }
         if (state.type == StateType.SkillAdder)
         {
             SkillAdderOn(state);
             yield return new WaitForSeconds(state.Duration);
+            if (OnStateEnded != null)
+            {
+                OnStateEnded(state);
+            }
             SkillAdderOff(state);
+            States.Remove(state);
             yield break;
         }
         if (state.type == StateType.DazerMovement)
         {
+            Debug.Log("Dazer start");
             MoveLock = true;
             yield return new WaitForSeconds(state.Duration);
+            if (OnStateEnded != null)
+            {
+                OnStateEnded(state);
+            }
             MoveLock = false;
+            Debug.Log("Dazer end");
+            States.Remove(state);
+            yield break;
+        }
+        if (state.type == StateType.DazerAttack)
+        {
+            Debug.Log("Dazer attack start");
+            AttackLock = true;
+            yield return new WaitForSeconds(state.Duration);
+            if (OnStateEnded != null)
+            {
+                OnStateEnded(state);
+            }
+            AttackLock = false;
+            Debug.Log("Dazer attack end");
+            States.Remove(state);
+            yield break;
+        }
+        if (state.type == StateType.InfinityPower)
+        {
+            Debug.Log("infinity power start");
+            InfinityPowerON(state);
+            yield return new WaitForSeconds(state.Duration);
+            if (OnStateEnded != null)
+            {
+                OnStateEnded(state);
+            }
+
+            InfinityPowerOFF(state);
+            Debug.Log("infinity power end");
+            States.Remove(state);
             yield break;
         }
         yield return new WaitForSeconds(state.Duration);
+        if (OnStateEnded != null)
+        {
+            OnStateEnded(state);
+        }
         States.Remove(state);
+    }
+    protected void InfinityPowerON(State state)
+    {
+        if (state.Params[(int)InfinityPowerLD.InfinityHP] == 1)
+        {
+            InfinityHP = true;
+        }
+        if (state.Params[(int)InfinityPowerLD.InfinityMP] == 1)
+        {
+            InfinityMP = true;
+        }
+        if (state.Params[(int)InfinityPowerLD.InfinitySP] == 1)
+        {
+            InfinitySP = true;
+        }
+        if (state.Params[(int)InfinityPowerLD.InfinityST] == 1)
+        {
+            InfinityST = true;
+        }
+        if (state.Params[(int)InfinityPowerLD.OneShot] == 1)
+        {
+            OneShot = true;
+        }
+    }
+    protected void InfinityPowerOFF(State state)
+    {
+        if (state.Params[(int)InfinityPowerLD.InfinityHP] == 1)
+        {
+            InfinityHP = false;
+        }
+        if (state.Params[(int)InfinityPowerLD.InfinityMP] == 1)
+        {
+            InfinityMP = false;
+        }
+        if (state.Params[(int)InfinityPowerLD.InfinitySP] == 1)
+        {
+            InfinitySP = false;
+        }
+        if (state.Params[(int)InfinityPowerLD.InfinityST] == 1)
+        {
+            InfinityST = false;
+        }
+        if (state.Params[(int)InfinityPowerLD.OneShot] == 1)
+        {
+            OneShot = false;
+        }
+    }
+    protected void CycleState()
+    { 
+        
     }
     protected void SkillAdderOn(State state)
     {
         foreach (var item in state.Params)
         {
-            AddSkill(item);
+            AddSkill(loader.Skills[item].Clone());
 
         }
 
@@ -766,29 +954,29 @@ public class Creature : MonoBehaviour
             {
                 if (item.type == StateType.RegenerationStop)
                 {
-                    Magreg = item.Params[0] == 1 ? false : true;
-                    HPReg = item.Params[1] == 1 ? false : true;
-                    STReg = item.Params[2] == 1 ? false : true;
-                    SPReg = item.Params[3] == 1 ? false : true;
+                    Magreg = item.Params[(int)RegenerationStopLD.Magreg] ==1;
+                    HPReg = item.Params[(int)RegenerationStopLD.HPReg] == 1;
+                    STReg = item.Params[(int)RegenerationStopLD.STReg] == 1;
+                    SPReg = item.Params[(int)RegenerationStopLD.SPReg] == 1;
 
                 }
             }
-            if (Magreg && MP != MaxMP)
+            if (!Magreg && MP != MaxMP)
             {
                 IntakeMP(-RegSpeedMP * Timeout, false);
             }
-            if (HPReg && HP != MaxHP)
+            if (!HPReg && HP != MaxHP)
             {
                 
                 HP += RegSpeedHP * Timeout*3 / (MagResist + SoulResist + PhysResist);
                 if (HP > MaxHP)
                 { HP = MaxHP; }
             }
-            if (STReg && ST != MaxST)
+            if (!STReg && ST != MaxST)
             {
                 IntakeST(-RegSpeedST * Timeout, false);
             }
-            if (SPReg && SP != MaxSP)
+            if (!SPReg && SP != MaxSP)
             {
                 IntakeSP(-RegSpeedSP * Timeout, false);
             }
