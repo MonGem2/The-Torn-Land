@@ -5,7 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public GameObject Settings;   
+    public GameObject Settings;
+    public Player player;
+    public Loader loader;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,5 +37,10 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("1");
         Settings.SetActive(false);
+    }
+    public void OnMenuButtonClick()
+    {
+        Debug.Log("HHeeeyyy");
+        player.AddEffects(new List<State>() { loader.States[0] });
     }
 }

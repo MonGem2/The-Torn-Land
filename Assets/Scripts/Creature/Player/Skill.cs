@@ -10,7 +10,7 @@ public class Skill
     public OnSkillCooldownEnded OnCooldownEnded;
     public int ID;
     public List<BulletData> Bullets;
-    public List<int> EffectsIds;
+    public List<State> EffectsIds;
     public float Cooldown;
     public bool CanBeUsed = true;
     public float MPIntake;

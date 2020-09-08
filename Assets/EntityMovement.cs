@@ -40,11 +40,16 @@ public class EntityMovement : MonoBehaviour
 
     private void Update()
     {
+
         // Debug.Log(Sleep);
         if (entity.ActiveTarget == null && !Sleep)
         {
             //   Debug.LogWarning("zxcvb");
             entity.ChangeTarget();
+        }
+        if (entity.MoveLock)
+        {
+            return;
         }
         if (behavior == Behavior.MoveToTarget)
         {

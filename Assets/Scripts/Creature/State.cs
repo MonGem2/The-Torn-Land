@@ -8,19 +8,82 @@ public class State
     public float Duration;
     //public float Timeout;
     public StateType type;
-
+    public string ico;
+    public int spriteN=-1;
     public List<int> Params;
 }
 public enum StateType { 
-    ParameterChanger=0,//complete
-    SkillAdder,//complete
-    SkillHider,//complete
-    DazerMovement,
-    DazerAttack,
+    ParameterChanger=0,//complete/checked
+    SkillAdder,//complete/checked
+    SkillHider,//complete/checked
+    DazerMovement,//complete/checked
+    DazerAttack,//complete/checked
     DazerItems,
-    RegenerationChanger,//complete
-    Move,
-    InfinityPower, //complete
-    RegenerationStop//complete
+    Move,//need move method
+    InfinityPower, //complete/checked
+    RegenerationStop,//complete/checked
+    playerStatsChange,//complete/checked
+    ParameterAdder,//complete/checked
+    PlayerParameterAdder//complete/checked
 }
 
+//how it work?
+//you have a state: state
+//state.type == ParameterChanger
+//then state.params[(int)ParameterChangerListDescription.MaxHP] will return you maxhp modifier 
+//ParameterChanger list decription
+public enum ParameterChangerLD
+{
+    MaxHP=0,
+    MaxMP=1,
+    MaxST,
+    MaxSP,
+    SumBaseDamage,
+    RegSpeedHP,
+    RegSpeedMP,
+    RegSpeedST,
+    RegSpeedSP,
+    MagResist,
+    PhyResisst,
+    SoulResist,
+    Speed
+}
+public enum MoveLD { 
+    Direction_x,
+    Direction_y,
+    speed,
+    time,
+    Teleportation_bool
+}
+public enum PlayerStatsChangeLD { 
+    HungryRegSpeed,
+    ThirstRegSpeed,
+    CorruptionRegSpeed,
+    XPBonus
+}
+public enum ParameterAdderLD
+{
+    HP = 0,
+    MP = 1,
+    ST,
+    SP
+}
+public enum PlayerParameterAdderLD {
+    XP,
+    Corruption,
+    Hungry,
+    Threat
+}
+public enum RegenerationStopLD {
+    HPReg,
+    Magreg,
+    STReg,
+    SPReg
+}
+public enum InfinityPowerLD { 
+    InfinityHP,
+    InfinityMP,
+    InfinityST,
+    InfinitySP,
+    OneShot
+}

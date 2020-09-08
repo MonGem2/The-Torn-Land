@@ -16,14 +16,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        TakeInput();
+
+
+
+            TakeInput();
+       
     }
     // Update is called once per frame
     void FixedUpdate()
     {
-        
-        
-        Move();
+
+        if (!player.MoveLock)
+        {
+            Move();
+        }
     }
 
     private void Move()

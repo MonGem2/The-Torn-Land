@@ -13,14 +13,27 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
     bool Cooldown = false;
     public bool TurnOn = false;
     public Image ico;
-    Vector3 Pos;
+   // Vector3 Pos;
     public void Start()
     {
         // ico.enabled = false;
         //GetComponent<MeshRenderer>().enabled = false;
-        Pos = transform.position;
-        transform.position = new Vector3(0, 0, -11);
+       // Pos = transform.position;
+        transform.position =transform.position + new Vector3(0, 0, -11);
         ico = GetComponent<Image>();
+        player.OnSkillRemoved += OnSkillRemove;
+    }
+    public void OnSkillRemove(object value)
+    {
+        if (skill == null)
+        {
+            return;
+        }
+        if ((int)value == skill.ID)
+        {
+            Debug.Log("SkillButton:remove");
+            Remove();
+        }
     }
     // Start is called before the first frame update
     public void Set(Skill Skill)
@@ -32,7 +45,7 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
         skill = Skill;
         skill.onSkillUse += OnUse;
         skill.OnCooldownEnded = OnCooldownEnded;
-        transform.position = Pos;
+        transform.position = transform.position - new Vector3(0, 0, -22);
         //ico.sprite = Resources.Load<Sprite>("CircleBorder");
         if (skill.spriteN == -1)
         {
@@ -52,7 +65,7 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
     }
     public void Remove()
     {
-        transform.position = new Vector3(0, 0, -11);
+        transform.position =transform.position + new Vector3(0, 0, -11);
         gameObject.GetComponent<Image>().color = Color.white;
         if (skill != null)
         {
