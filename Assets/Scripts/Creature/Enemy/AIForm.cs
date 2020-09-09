@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 public delegate void BehaviourChanged(int value);
@@ -17,7 +18,7 @@ public class AIForm : Creature
     public EntityMovement movement;
     public float ChangeTargetTimeout;
     public float Exp;
-    
+    public Slider slider;
     public SkillParameterType ManaSkillFilter=SkillParameterType.Large;
     public SkillParameterType StaminaSkillFilter = SkillParameterType.Large;
     public SkillParameterType SoulSkillFilter = SkillParameterType.Large;
@@ -82,11 +83,23 @@ public class AIForm : Creature
     // Start is called before the first frame update
     void Start()
     {
+        slider = GetComponentInChildren<Slider>(true);
         behaviour = GeneralSkillType.TargetAttack;
         StartEntityType = SkillBehaviourType.Attack;
         CurrentEntityType = StartEntityType;
         SituationSkill = CurrentEntityType;
         MinBehaviour = SkillBehaviourType.RunAway;
+        slider.maxValue = MaxHP;
+        this.MaxHPChangeTrigger += (y) =>
+        {
+            float x = (float)y;
+            slider.maxValue = x;
+        };
+        this.HPChangeTrigger += (y) =>
+        {
+            float x = (float)y;
+            slider.value = x;
+        };
         this.MPChangeTrigger += (y) => {
             float x = (float)y;
             if (x / this.MaxMP >= 0.8)
@@ -225,6 +238,8 @@ public class AIForm : Creature
         Skills.Add(loader.Skills[1]);
         Skills.Add(loader.Skills[2]);
         Skills.Add(loader.Skills[3]);
+        
+        
         StartCoroutine(Regeneration(1));
         StartCoroutine(TargetChanger());
         //Debug.LogWarning(loader.Skils.Count);

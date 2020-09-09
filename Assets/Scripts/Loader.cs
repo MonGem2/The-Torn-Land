@@ -440,7 +440,7 @@ public class Loader:MonoBehaviour
             skill.ID = 0;
             skill.Cooldown = 3;
             skill.EffectsIds = new List<State>();
-            skill.EffectsIds.Add(States[0]);
+           // skill.EffectsIds.Add(States[0]);
             skill.MPIntake = 2;
             skill.STIntake = 2;
             skill.SPIntake = 2;
