@@ -398,9 +398,13 @@ public class AIForm : Creature
             SituationSkill = SkillBehaviourType.DeefDefend;
         }
     }
-    public void NewTarget(Creature target)
+    public void NewTarget(MyObject trgt)
     {
-
+        Creature target = trgt.GetComponent<Creature>();
+        if (target==null)
+        {
+            return;
+        }
         float Chance = UnityEngine.Random.Range(0, 100);
         Chance += (int)StartEntityType * 3;
         Debug.Log("My chance  " + Chance);

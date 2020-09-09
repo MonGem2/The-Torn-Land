@@ -12,8 +12,12 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        player.OnEffectMove += UpdatePosition;
     }
-
+    private void UpdatePosition(object value)
+    {
+        gameObject.transform.parent.GetComponent<WorldState>().LogicGeneration((Vector3)value);
+    }
     private void Update()
     {
 

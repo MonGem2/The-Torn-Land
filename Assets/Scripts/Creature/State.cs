@@ -10,7 +10,7 @@ public class State
     public StateType type;
     public string ico;
     public int spriteN=-1;
-    public List<int> Params;
+    public List<float> Params;
 }
 public enum StateType { 
     ParameterChanger=0,//complete/checked
@@ -49,11 +49,25 @@ public enum ParameterChangerLD
     Speed
 }
 public enum MoveLD { 
+    type,
+    directionType,
     Direction_x,
     Direction_y,
-    speed,
     time,
-    Teleportation_bool
+    distance_damagemodifier
+    
+}
+public enum MoveTypeLD { 
+    PhysicPower,
+    Impulse,
+    Teleportation
+}
+public enum MoveDirectionTypeLD { 
+    toMouse,
+    to,
+    InDirection,
+    InDirectionOfMouse,
+    staticPoint
 }
 public enum PlayerStatsChangeLD { 
     HungryRegSpeed,

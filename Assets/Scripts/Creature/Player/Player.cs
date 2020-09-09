@@ -12,8 +12,9 @@ public class Player : Creature
     public OnChangeParameterTrigger OnActiveSkillChanged;
     Skill _activeSkill;
     public Skill ActiveSkill { get { return _activeSkill; } set { _activeSkill = value;if (OnActiveSkillChanged != null) { OnActiveSkillChanged(value); } } }
-    public Skill OnClickSkill;
-    public EventSystem eventSystem;
+    public Skill OnLeftClickSkill;
+    public Skill OnRightClickSkill;
+    // public EventSystem eventSystem;
     public GameObject GUI;
     public GameObject DeadScreen;
     public PlayerMovement movement;
@@ -78,7 +79,7 @@ public class Player : Creature
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -160,7 +161,7 @@ public class Player : Creature
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.PlayerParameterAdder)
@@ -242,7 +243,7 @@ public class Player : Creature
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.playerStatsChange)
@@ -280,7 +281,7 @@ public class Player : Creature
             {
                 XPChangeTrigger(value);
             }
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -368,9 +369,12 @@ public class Player : Creature
        // Skills.Add(loader.Skills[1].Clone());
        // Skills.Add(loader.Skills[2].Clone());
         ActiveSkill = Skills[2];
-        OnClickSkill = ActiveSkill;
+        OnLeftClickSkill = ActiveSkill;
         SkillBar.SetSkillOnButton(Skills[0], 0);
         SkillBar.SetSkillOnButton(Skills[1], 1);
+       // SkillBar.SetSkillOnButton(Skills[3]);
+        OnRightClickSkill = Skills[3];
+        this.TeleporteInObject += (x) => { Debug.Log("Pidor"); };
         this.RegenerationTriggered += RegTrigger;
         this.OnSkillAdded += (x) =>
         {
@@ -412,14 +416,14 @@ public class Player : Creature
         if (ActiveSkill == skill)
         {
             Debug.Log("JJ");
-            ActiveSkill = OnClickSkill;
+            ActiveSkill = OnLeftClickSkill;
             return true;
         }
 
         ActiveSkill = skill;
         if (ActiveSkill == null)
         {
-            ActiveSkill = OnClickSkill;
+            ActiveSkill = OnLeftClickSkill;
             return false;
         }
         return true;
@@ -427,7 +431,7 @@ public class Player : Creature
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)|| Input.GetMouseButtonDown(1))
         {
             bool CanShoot=true;
             // Debug.Log(EventSystem.current.lastSelectedGameObject.tag);
@@ -445,119 +449,53 @@ public class Player : Creature
                     }
                 }
             }
-            if (!AttackLock && CanShoot && ActiveSkill.CanBeUsed && CanAttack && !ActiveSkill.locked)
+
+            if (Input.GetMouseButtonDown(0))
             {
-                Skill temp = ActiveSkill;
-                if (ActiveSkill != OnClickSkill)
+                if (!AttackLock && CanShoot && ActiveSkill.CanBeUsed && CanAttack && !ActiveSkill.locked)
                 {
-                    ActiveSkill = OnClickSkill;
+                    Skill temp = ActiveSkill;
+                    if (ActiveSkill != OnLeftClickSkill)
+                    {
+                        ActiveSkill = OnLeftClickSkill;
+                    }
+                    StartCoroutine(this.UseSkill(temp, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
+
                 }
-                StartCoroutine(this.UseSkill(temp, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
+                else if (!CanShoot)
+                {
 
+                }
+                else if (AttackLock)
+                {
+                    messanger.SetMessage("Attack locked");
+                }
+                else if (ActiveSkill.locked)
+                {
+                    messanger.SetMessage("Skill locked");
+                }
             }
-            else if (!CanShoot)
-            { 
-            
-            }
-            else if (AttackLock)
+            if (Input.GetMouseButtonDown(1))
             {
-                messanger.SetMessage("Attack locked");
+                if (!AttackLock && CanShoot && OnRightClickSkill.CanBeUsed && CanAttack && !OnRightClickSkill.locked)
+                {
+
+                    StartCoroutine(this.UseSkill(OnRightClickSkill, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
+
+                }
+                else if (!CanShoot)
+                {
+
+                }
+                else if (AttackLock)
+                {
+                    messanger.SetMessage("Attack locked");
+                }
+                else if (ActiveSkill.locked)
+                {
+                    messanger.SetMessage("Skill locked");
+                }
             }
-            else if (ActiveSkill.locked)
-            {
-                messanger.SetMessage("Skill locked");
-            }
-            //GameObject bullet = Instantiate(loader.BulletsPerhubs[0]);
-            //Bullet bl = bullet.GetComponent<Bullet>();
-            //BulletData data = new BulletData();
-            //data.AdditionalAngle = 0;
-            //data.DeltaAngle = 15;
-            //data.Distance = new Vector2(0.5f, 0.5f);
-            //data.DontAttack = new List<string>();
-            //data.DontAttack.Add("player");
-            //data.EffectsIDs = new List<int>();
-            //data.FlyTime = 5;
-            //data.ManaDamage = 0;
-            //data.PerhubID = 0;
-            //data.PhysicDamage = 5;
-            //data.Range = 10;
-            //data.SoulDamage = 0;
-            //data.Through = false;
-            //data.type = BulletType.Bullet;
-            //bl.data = data;
-            //bl.loader = loader;
-            //
-            //bl.Shoot(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-
-
-            //GameObject bullet = Instantiate(loader.BulletsPerhubs[1]);
-            //Bullet bl = bullet.GetComponent<Bullet>();
-            //BulletData data = new BulletData();
-            //data.AdditionalAngle = 0;
-            //data.DeltaAngle = 15;
-            //data.Distance = new Vector2(0.5f, 0.5f);
-            //data.DontAttack = new List<string>();
-            //data.DontAttack.Add("player");
-            //data.EffectsIDs = new List<int>();
-            //data.FlyTime = 0. 2f;
-            //data.ManaDamage = 0;
-            //data.PerhubID = 0;
-            //data.PhysicDamage = 5;
-            //data.Range = 10;
-            //data.SoulDamage = 0;
-            //data.Through = false;
-            //data.type = BulletType.Ray;
-            //data.AttackTimeout = 0.05f;
-            //bl.data = data;
-            //bl.loader = loader;
-            //bl.Shoot(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-
-            //{ 
-            //    GameObject bullet = Instantiate(loader.BulletsPerhubs[2]);
-            //    Bullet bl = bullet.GetComponent<Bullet>();
-            //    BulletData data = new BulletData();
-            //    data.AdditionalAngle = 0;
-            //    data.DeltaAngle = 15;
-            //    data.Distance = new Vector2(0.5f, 0.5f);
-            //    data.DontAttack = new List<string>();
-            //    //data.DontAttack.Add("player");
-            //    data.EffectsIDs = new List<int>();
-            //    data.FlyTime = 200;
-            //    data.ManaDamage = 0;
-            //    data.PerhubID = 0;
-            //    data.PhysicDamage = 5;
-            //    data.Range = 2;
-            //    data.SoulDamage = 0;
-            //    data.Through = true;
-            //    data.type = BulletType.Area;
-            //    data.AttackTimeout = 0.05f;
-            //    bl.data = data;
-            //    bl.loader = loader;
-            //    bl.Shoot(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            //}
-            //{
-            //    GameObject bullet = Instantiate(loader.BulletsPerhubs[3]);
-            //    Bullet bl = bullet.GetComponent<Bullet>();
-            //    BulletData data = new BulletData();
-            //    data.AdditionalAngle = 0;
-            //    data.DeltaAngle = 60;
-            //    data.Distance = new Vector2(0.5f, 0.5f);
-            //    data.DontAttack = new List<string>();
-            //    //data.DontAttack.Add("player");
-            //    data.EffectsIDs = new List<int>();
-            //    data.FlyTime = 0.3f;
-            //    data.ManaDamage = 0;
-            //    data.PerhubID = 0;
-            //    data.PhysicDamage = 5;
-            //    data.Range = 2;
-            //    data.SoulDamage = 0;
-            //    data.Through = true;
-            //    data.type = BulletType.Swing;
-            //    data.AttackTimeout = 0.1f;
-            //    bl.data = data;
-            //    bl.loader = loader;
-            //    bl.Shoot(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            //}
         }
     }
     protected override void Death()

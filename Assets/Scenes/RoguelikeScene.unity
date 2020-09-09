@@ -3213,6 +3213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loader: {fileID: 573169229}
   inventory: {fileID: 0}
+  eventSystem: {fileID: 0}
   MoveLock: 0
   AttackLock: 0
   CanAttack: 1
@@ -3692,7 +3693,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &578262711
 GameObject:
@@ -5484,7 +5485,7 @@ GameObject:
   - component: {fileID: 914320024}
   m_Layer: 5
   m_Name: GUI
-  m_TagString: EditorOnly
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8086,6 +8087,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loader: {fileID: 573169229}
   inventory: {fileID: 0}
+  eventSystem: {fileID: 823651539}
   MoveLock: 0
   AttackLock: 0
   CanAttack: 1
@@ -8097,7 +8099,6 @@ MonoBehaviour:
   StatsBar: {fileID: 1807863320}
   SkillBar: {fileID: 317556577}
   messanger: {fileID: 667021301}
-  eventSystem: {fileID: 823651539}
   GUI: {fileID: 914320023}
   DeadScreen: {fileID: 0}
   movement: {fileID: 1453720534}
@@ -8206,7 +8207,7 @@ Transform:
   - {fileID: 1453720537}
   - {fileID: 657328327}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1502138399
 MonoBehaviour:
@@ -10981,7 +10982,7 @@ PrefabInstance:
     - target: {fileID: 1983232707002068313, guid: 0249926607b539b48a950133e8577e56,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1983232707002068313, guid: 0249926607b539b48a950133e8577e56,
         type: 3}
