@@ -230,13 +230,15 @@ public class EntityMovement : MonoBehaviour
     public void DetectSomething(Transform transform)
     {
         //Debug.Log("1");
-        if (transform.GetComponent<Creature>() == null) {
+        if (transform.GetComponent<MyObject>() == null) {
             return;
         }
+        Debug.Log("EntityMovement:Go in");
         foreach (var item in entity.TargetTags)
         {
             if (transform.tag == item)
             {
+                Debug.Log("EntityMovement:step 2 "+transform.tag);
                 //Debug.Log("2");
                 if (behavior == Behavior.RunAway)
                 {
@@ -244,8 +246,9 @@ public class EntityMovement : MonoBehaviour
                 }
                 if (!entity.Targets.Contains(transform))
                 {
+                    Debug.Log("EntityMovement:adding target");
                     AddTarget(transform);
-                    entity.NewTarget(transform.GetComponent<Creature>());
+                    entity.NewTarget(transform.GetComponent<MyObject>());
                 }
                 else if (entity.ActiveTarget == null)
                 {

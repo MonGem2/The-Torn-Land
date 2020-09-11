@@ -4,18 +4,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using Debug = UnityEngine.Debug;
 public delegate void OnChangeParameterTrigger(object value);
 
-public class Creature : MonoBehaviour
+public class Creature : MyObject
 {
     // Races race { get; set; }
 
     #region Parameters
     public Loader loader;
     public Inventory inventory;
+    public EventSystem eventSystem;
     #region MaxHP
     protected float _maxHp;
     public OnChangeParameterTrigger MaxHPChangeTrigger;
@@ -23,7 +25,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -51,7 +53,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int AditionalMP = 1;
+            float AditionalMP = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -79,7 +81,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -105,7 +107,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -224,7 +226,7 @@ public class Creature : MonoBehaviour
             {
                 return 9999999;
             }
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -250,7 +252,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -278,7 +280,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -306,7 +308,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -334,7 +336,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -362,7 +364,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -390,7 +392,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -418,7 +420,7 @@ public class Creature : MonoBehaviour
     {
         get
         {
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -452,7 +454,7 @@ public class Creature : MonoBehaviour
     public OnChangeParameterTrigger OnSpeedChanged;
     public float Speed { get {
 
-            int Aditional = 1;
+            float Aditional = 1;
             foreach (var item in States)
             {
                 if (item.type == StateType.ParameterChanger)
@@ -494,7 +496,7 @@ public class Creature : MonoBehaviour
         StartCoroutine(Regeneration(5));
     }
     #region Intake
-    public virtual void Damage(BulletData bulletData, bool MaxEffectSet = true)
+    public override void Damage(BulletData bulletData, bool MaxEffectSet = true)
     {
       //  Debug.Log("y1");
         foreach (var item in States)
@@ -711,10 +713,166 @@ public class Creature : MonoBehaviour
         }
     }
     #endregion
+    protected bool PointerOnObject(string Tags)
+    {
+        bool CanShoot = true;
+        // Debug.Log(EventSystem.current.lastSelectedGameObject.tag);
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            
+            var pd = new PointerEventData(eventSystem) { position = Input.mousePosition };
+            var results = new List<RaycastResult>();
+            eventSystem.RaycastAll(pd, results);
+            foreach (var result in results)
+            {
+                if (Tags.Contains(result.gameObject.tag))
+                {
+                    //Debug.Log(result.gameObject.tag);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    protected bool PointerOnObject(string Tags, Vector3 point)
+    {
+        Debug.Log("PointerOnObject 1");
+        bool CanShoot = true;
+        // Debug.Log(EventSystem.current.lastSelectedGameObject.tag);
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            Debug.Log("PointerOnObject 2");
+            Debug.Log(point);
+            Debug.Log(Camera.main.WorldToScreenPoint(point));
+            Debug.Log(Camera.main.ScreenToWorldPoint(point));
+            Debug.Log("Pointer cursor "+ (Input.mousePosition));
+            Debug.Log("Pointer cursor " + Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            var pd = new PointerEventData(eventSystem) { position =Camera.main.WorldToScreenPoint(point) };
+            var results = new List<RaycastResult>();
+            eventSystem.RaycastAll(pd, results);
+            Debug.Log("PointerOnObject 3  "+results.Count);
+            foreach (var result in results)
+            {
+                Debug.Log("PointerOnObject  "+result.gameObject.tag);
+                if (Tags.Contains(result.gameObject.tag))
+                {
+                    //Debug.Log(result.gameObject.tag);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public OnChangeParameterTrigger TeleporteInObject;
+    public OnChangeParameterTrigger OnEffectMove;
     #region StatesCode
-    public virtual void Move(State state)
-    { 
-        
+    public virtual IEnumerator Move(State state)
+    {
+
+
+        Debug.Log("Creature:Move 1");
+        if (state.Params[(int)MoveLD.type] == (int)MoveTypeLD.Teleportation&&!MoveLock)
+        {
+            Debug.Log("Creature:Move 6");
+            bool MoveLocked = !MoveLock;
+            bool AttackLocked = !AttackLock;
+            MoveLock = true;
+            AttackLock = true;
+            Vector3 endPos=new Vector3(); //
+            if (state.Params[(int)MoveLD.directionType] == (int)MoveDirectionTypeLD.staticPoint)
+            {
+                endPos = new Vector3(state.Params[(int)MoveLD.Direction_x], state.Params[(int)MoveLD.Direction_y], transform.position.z);
+            }
+            
+            if (state.Params[(int)MoveLD.directionType] == (int)MoveDirectionTypeLD.InDirection)
+            {
+                endPos = transform.position + (new Vector3(state.Params[(int)MoveLD.Direction_x], state.Params[(int)MoveLD.Direction_y])).normalized * state.Params[(int)MoveLD.distance_damagemodifier];
+            }
+            if (state.Params[(int)MoveLD.directionType] == (int)MoveDirectionTypeLD.InDirectionOfMouse)
+            {
+                
+                if (PointerOnObject("undestruct"))
+                {
+                    if (TeleporteInObject != null)
+                    {
+                        TeleporteInObject(endPos);
+                    }
+                    if (MoveLocked)
+                    {
+                        MoveLock = false;
+                    }
+                    if (AttackLocked)
+                    {
+                        AttackLock = false;
+                    }
+                    yield break;
+                }
+                endPos = transform.position + (Camera.main.ScreenToWorldPoint(Input.mousePosition).normalized +(new Vector3(state.Params[(int)MoveLD.Direction_x], state.Params[(int)MoveLD.Direction_y])).normalized).normalized * state.Params[(int)MoveLD.distance_damagemodifier];
+
+            }
+            if (state.Params[(int)MoveLD.directionType] == (int)MoveDirectionTypeLD.to)
+            {
+                endPos = transform.position + new Vector3(state.Params[(int)MoveLD.Direction_x], state.Params[(int)MoveLD.Direction_y]);
+            }
+            if (state.Params[(int)MoveLD.directionType] == (int)MoveDirectionTypeLD.toMouse)
+            {
+                endPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                endPos.z = -1;
+            }
+            Debug.Log("087654321");
+            if ( PointerOnObject("undestruct", endPos))
+            {
+                if (TeleporteInObject!=null)
+                {
+                    TeleporteInObject(endPos);
+                }
+                if (MoveLocked)
+                {
+                    MoveLock = false;
+                }
+                if (AttackLocked)
+                {
+                    AttackLock = false;
+                }
+                yield break;
+            }
+
+
+            SpaceVortex spaceVortex1 = Instantiate(Resources.Load<GameObject>("SpaceVortexPerhub")).GetComponent<SpaceVortex>();
+            Debug.Log(spaceVortex1);
+            spaceVortex1.Set(this, state.Params[(int)MoveLD.time], state.Params[(int)MoveLD.distance_damagemodifier], transform.position);
+
+            SpaceVortex spaceVortex2 = Instantiate(Resources.Load<GameObject>("SpaceVortexPerhub")).GetComponent<SpaceVortex>();
+            Debug.Log(spaceVortex2);
+            spaceVortex2.Set(this, state.Params[(int)MoveLD.time], state.Params[(int)MoveLD.distance_damagemodifier], endPos);
+
+            if (OnEffectMove != null)
+            {
+                OnEffectMove(endPos);
+            }
+            gameObject.GetComponent<Renderer>().enabled = false;
+            yield return new WaitForSeconds(state.Params[(int)MoveLD.time]);
+
+
+
+            transform.position = endPos;
+            if (MoveLocked)
+            {
+                MoveLock = false;
+            }
+            if (AttackLocked)
+            {
+                AttackLock = false;
+            }
+            gameObject.GetComponent<Renderer>().enabled = true;
+        }
+        //if (state.Params[(int)MoveLD.type] == (int)MoveTypeLD.PhysicPower)
+        //{
+        //    GetComponent<Rigidbody>().AddForce(-transform.forward * 5, ForceMode.Force);
+        //
+        //}
+
+
     }
     public virtual void AddEffects(List<State> Effects)
     {
@@ -747,7 +905,7 @@ public class Creature : MonoBehaviour
         if (state.type == StateType.Move)
         {
             Debug.Log("Creature:Move triggered");
-            Move(state);
+            StartCoroutine(Move(state));
             yield break;
         }
         if (state.type == StateType.PlayerParameterAdder)
@@ -887,7 +1045,7 @@ public class Creature : MonoBehaviour
     {
         foreach (var item in state.Params)
         {
-            AddSkill(loader.Skills[item].Clone());
+            AddSkill(loader.Skills[(int)item].Clone());
 
         }
 
@@ -896,7 +1054,7 @@ public class Creature : MonoBehaviour
     {
         foreach (var item in state.Params)
         {
-            RemoveSkill(item);
+            RemoveSkill((int)item);
 
         }
 

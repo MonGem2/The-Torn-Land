@@ -440,7 +440,7 @@ public class Loader:MonoBehaviour
             skill.ID = 0;
             skill.Cooldown = 3;
             skill.EffectsIds = new List<State>();
-            skill.EffectsIds.Add(States[0]);
+           // skill.EffectsIds.Add(States[0]);
             skill.MPIntake = 2;
             skill.STIntake = 2;
             skill.SPIntake = 2;
@@ -705,7 +705,7 @@ public class Loader:MonoBehaviour
             skill.ID = 3;
             skill.Cooldown = 0.5f;
             skill.EffectsIds = new List<State>();
-            skill.EffectsIds.Add(States[0]);
+            //skill.EffectsIds.Add(States[0]);
             skill.MPIntake = 2;
             skill.STIntake = 2;
             skill.SPIntake = 2;
@@ -743,7 +743,26 @@ public class Loader:MonoBehaviour
             }
             Skills.Add(skill);
         }
-        
+        {
+            Skill skill = new Skill();
+            skill.ID = 3;            
+            skill.Cooldown = 2;
+            skill.EffectsIds = new List<State>();
+            skill.EffectsIds.Add(States[0]);
+            skill.MPIntake = 2;
+            skill.STIntake = 2;
+            skill.SPIntake = 2;
+            skill.Range = 10.5f;
+            skill.skillType = GeneralSkillType.Move;
+            skill.SkillBehaviourType = SkillBehaviourType.RunAway;
+            skill.SPParameter = SkillParameterType.Litle;
+            skill.STParameter = SkillParameterType.Litle;
+            skill.MPParameter = SkillParameterType.Litle;
+            skill.ico = "87087784c56e9b45bd9a3c63a35b2e93";
+            skill.spriteN = 45;
+            skill.Bullets = new List<BulletData>();
+            Skills.Add(skill);
+        }
 
     }
     public void LoadStates()
@@ -754,7 +773,30 @@ public class Loader:MonoBehaviour
         }
         StatesLoaded = true;
         int index = 0;
+        {
 
+            State state = new State();
+            state.ID = index;
+            state.Duration = 0.5f;
+            state.ico = "qq";
+            state.spriteN = -1;
+            state.type = StateType.Move;
+            state.Params = new List<float>() { (float)MoveTypeLD.Teleportation, (float)MoveDirectionTypeLD.toMouse, 0, 0, 1, 10 };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 0.5f;
+            state.ico = "qq";
+            state.spriteN = -1;
+            state.type = StateType.Move;
+            state.Params = new List<float>() { (float)MoveTypeLD.Teleportation, (float)MoveDirectionTypeLD.staticPoint, 1.15f, -9f, 5, 10 };
+            States.Add(state);
+            index++;
+        }
         {
 
             State state = new State();
@@ -763,7 +805,7 @@ public class Loader:MonoBehaviour
             state.ico = "qq";
             state.spriteN = -1;
             state.type = StateType.InfinityPower;
-            state.Params = new List<int>() { 1, 1, 1, 1, 1 };
+            state.Params = new List<float>() { 1, 1, 1, 1, 1 };
             States.Add(state);
             index++;
         }
@@ -775,7 +817,7 @@ public class Loader:MonoBehaviour
             state.ico = "2e19d99d5e16baa41d790c34a9e9d155";
             state.spriteN = -1;
             state.type = StateType.RegenerationStop;
-            state.Params = new List<int>() {1, 0, 1, 1 };
+            state.Params = new List<float>() {1, 0, 1, 1 };
             States.Add(state);
             index++;
         }
@@ -787,7 +829,7 @@ public class Loader:MonoBehaviour
             state.ico = "a6ca1c0c128e16cb796c712fd65bcc35";
             state.spriteN = -1;
             state.type = StateType.DazerAttack;
-            state.Params = new List<int>() { };
+            state.Params = new List<float>() { };
             States.Add(state);
             index++;
         }
@@ -799,7 +841,7 @@ public class Loader:MonoBehaviour
             state.ico = "83f1bb86821f7a0a772a4d17109bb07f";
             state.spriteN = -1;
             state.type = StateType.DazerMovement;
-            state.Params = new List<int>() {};
+            state.Params = new List<float>() {};
             States.Add(state);
             index++;
         }
@@ -811,7 +853,7 @@ public class Loader:MonoBehaviour
             state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
             state.spriteN = 28;
             state.type = StateType.SkillAdder;
-            state.Params = new List<int>() { 3 };
+            state.Params = new List<float>() { 3 };
             States.Add(state);
             index++;
         }
@@ -823,7 +865,7 @@ public class Loader:MonoBehaviour
             state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
             state.spriteN = 6;
             state.type = StateType.SkillHider;
-            state.Params = new List<int>() { 2 };
+            state.Params = new List<float>() { 2 };
             States.Add(state);
             index++;
         }
@@ -835,7 +877,7 @@ public class Loader:MonoBehaviour
             state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
             state.spriteN = 6;
             state.type = StateType.ParameterAdder;
-            state.Params = new List<int>() {10, 10, 10, 10 };
+            state.Params = new List<float>() {10, 10, 10, 10 };
             States.Add(state);
             index++;
         }
@@ -935,6 +977,7 @@ public class Loader:MonoBehaviour
         player.Skills.Add(Skills[0].Clone());
         player.Skills.Add(Skills[1].Clone());
         player.Skills.Add(Skills[2].Clone());
+        player.Skills.Add(Skills[4].Clone());
 
     }
     public void SavePlayer(Player player)

@@ -9,7 +9,7 @@ public class StatesBar : MonoBehaviour
     public StateIco IcoPerhub;
     void Start()
     {
-        Debug.Log(player);
+       // Debug.Log(player);
         player.OnStateAdded += NewState;
         
     }
