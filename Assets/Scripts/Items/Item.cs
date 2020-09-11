@@ -4,11 +4,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Item")]
 public class Item : ScriptableObject, IItem
 {
-
-    public int Count { get { return _count; } set { _count = value; } }
-
-    public int MaxCount { get { return _maxCount; } set { _maxCount = value; } }
-
     public string Name { get { return _name; } set { _name = value; } }
 
     public string Description { get { return _descr; } set { _descr = value; } }
@@ -19,8 +14,6 @@ public class Item : ScriptableObject, IItem
 
     public ItemData Data { get { return _data; } set { _data = value; } }
 
-    [SerializeField] private int _count;
-    [SerializeField] private int _maxCount;
     [SerializeField] private string _name;
     [SerializeField] private string _descr;
     [SerializeField] private Sprite _uiIcon;

@@ -515,6 +515,7 @@ public class AIForm : Creature
     protected override void Death()
     {
         Loot loot = Instantiate(LootPerhub);
+        loot.Items = Loot;
         loot.transform.position = transform.position;
         Destroy(gameObject);
     }

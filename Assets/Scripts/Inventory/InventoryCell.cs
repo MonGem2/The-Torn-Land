@@ -7,6 +7,7 @@ using System.Collections;
 
 public class InventoryCell : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerClickHandler,/* ISelectHandler,*/ IDeselectHandler
 {
+    public bool isIn = true;
     public event EventHandler Ejection;
     public event EventHandler Deselection;
     public event EventHandler Selection;
@@ -58,29 +59,36 @@ public class InventoryCell : MonoBehaviour, IDragHandler, IEndDragHandler, IBegi
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        isDrag = true;
-        transform.SetParent(_draggingParent, true);
+        if (isIn)
+        {
+            isDrag = true;
+            transform.SetParent(_draggingParent, true);
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        transform.position = Vector2.Lerp(transform.position, (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition), 1);
+        if (isIn)
+            transform.position = Vector2.Lerp(transform.position, (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition), 1);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (IsInRemover((RectTransform)_originalParent))
+        if (isIn)
         {
-            //Debug.LogError("IM IN");
-            InsertInGrid();
+            if (IsInRemover((RectTransform)_originalParent))
+            {
+                //Debug.LogError("IM IN");
+                InsertInGrid();
+            }
+            else
+            {
+                //Debug.LogError("Im not in");
+                Eject();
+                //Destroy(gameObject);
+            }
+            isDrag = false;
         }
-        else
-        {
-            //Debug.LogError("Im not in");
-            Eject();
-            //Destroy(gameObject);
-        }
-        isDrag = false;
     }
 
     private bool IsInRemover(RectTransform originalParent)
