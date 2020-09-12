@@ -17,7 +17,7 @@ public interface IItem
 
 public class ItemData
 {
-    public List<int> EffectsIDs;
+    public List<State> Effects;
     public ItemType type;
 
 }

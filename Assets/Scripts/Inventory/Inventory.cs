@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-    public List<Item> Items;
+    public static List<Item> Items = new List<Item>();
     public List<Item> Equips;
     [SerializeField] private InventoryCell _inventoryCellTemplate;
     [SerializeField] private Transform _container;
@@ -16,7 +16,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Transform _draggingParent;
     [SerializeField] private Transform _equipParent;
     [SerializeField] private Transform _infoPanel;
-    public int _capacity = 40;
+    public static int _capacity = 40;
 
     ///public Button InvButton;
 
@@ -25,7 +25,6 @@ public class Inventory : MonoBehaviour
     {
         //InvButton.onClick.AddListener(ClickBtn);
         //this._draggingParent.gameObject.SetActive(false);
-        Items = new List<Item>();
         Items.Capacity = _capacity;
 
         (_container as RectTransform).sizeDelta =  new Vector2 (0, (float)(107 + (_capacity / 10 - 1) * 105.3));
@@ -54,6 +53,9 @@ public class Inventory : MonoBehaviour
             cell.Selection += InfoSet;
             cell.Using += UseItem;
         }
+
+        transform.parent.parent.gameObject.SetActive(false);
+
     }
 
     //void ClickBtn()

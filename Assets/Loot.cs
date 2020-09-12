@@ -105,23 +105,14 @@ public class Loot : MonoBehaviour
         _infoPanel.gameObject.SetActive(false);
     }
 
-    private void ThrowItem(object sender, EventArgs e)
-    {
-
-        Debug.LogWarning("Qwerpop");
-
-    }
     private void TakeItem(object sender, EventArgs e)
     {
         _infoPanel.gameObject.SetActive(false);
-        if ((sender as InventoryCell)._item.Use())
+        if (Inventory.Items.Count < Inventory._capacity)
         {
-            if ((sender as InventoryCell)._item.Data.type == ItemType.Disposable)
-            {
-                Items.Remove((sender as InventoryCell)._item);
-                Destroyer(sender, e);
-            }
-
+            Inventory.Items.Add((sender as InventoryCell)._item);
+            Items.Remove((sender as InventoryCell)._item);
+            Destroyer(sender, e);
         }
         if (Items.Count <= 0)
             Destroy(this.gameObject);
@@ -141,6 +132,7 @@ public class Loot : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
+            _infoPanel.gameObject.SetActive(false);
             LootView.gameObject.SetActive(false);
             Debug.Log("Heeey11");
         }
