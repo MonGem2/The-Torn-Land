@@ -991,6 +991,22 @@ public class Creature : MyObject
         }
         States.Remove(state);
     }
+
+    public bool IsUsableItem(Item item)
+    {
+        foreach (var state in States)
+        {
+            if (state.type == StateType.DazerItems)
+            {
+                if (state.Params.Count == 0)
+                    return false;
+                if (state.Params.Any(x => (int)x == item.ID))
+                    return false;
+            }
+        }
+        return true;
+    }
+
     protected void InfinityPowerON(State state)
     {
         if (state.Params[(int)InfinityPowerLD.InfinityHP] == 1)

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
+    public Player _player;
     public static List<Item> Items = new List<Item>();
     public List<Item> Equips;
     [SerializeField] private InventoryCell _inventoryCellTemplate;
@@ -48,6 +49,7 @@ public class Inventory : MonoBehaviour
             cell.Init(_originalParent,_draggingParent, _equipParent);
             cell.Render(item);
 
+            cell._item.player = _player;
             cell.Ejection += Destroyer;
             cell.Deselection += InfoHide;
             cell.Selection += InfoSet;
@@ -81,6 +83,7 @@ public class Inventory : MonoBehaviour
             cell.Init(_originalParent, _draggingParent, _equipParent);
             cell.Render(item);
 
+            cell._item.player = _player;
             cell.Ejection += Destroyer;
             cell.Deselection += InfoHide;
             cell.Selection += InfoSet;
@@ -112,7 +115,20 @@ public class Inventory : MonoBehaviour
             GameObject.Find("ImageItem").GetComponent<Image>().sprite = (sender as InventoryCell)._item.UIIcon;
             GameObject.Find("TypeItem").GetComponent<Text>().text = (sender as InventoryCell)._item.Data.type.ToString();
             GameObject.Find("DescrItem").GetComponent<Text>().text = (sender as InventoryCell)._item.Description;
-            Debug.LogWarning("//TODO: Effects inventory");
+
+            foreach (Transform child in GameObject.Find("EffectsItem").GetComponent<GridLayoutGroup>().transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            foreach (var effect in (sender as InventoryCell)._item.Data.Effects)
+            {
+                GameObject NewObj = new GameObject();
+                Image NewImage = NewObj.AddComponent<Image>();
+                NewImage.sprite = Resources.Load<Sprite>(effect.ico);
+                NewObj.GetComponent<RectTransform>().SetParent(GameObject.Find("EffectsItem").GetComponent<GridLayoutGroup>().transform);
+                NewObj.SetActive(true);
+            }
         }
     }
 
