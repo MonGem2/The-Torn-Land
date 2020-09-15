@@ -1499,6 +1499,69 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 253436472}
   m_CullTransparentMesh: 0
+--- !u!1 &291781819
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 291781820}
+  - component: {fileID: 291781821}
+  m_Layer: 5
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &291781820
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291781819}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 657328327}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 25, y: 25}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!60 &291781821
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291781819}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0, y: 0}
+      - {x: 25, y: 0}
 --- !u!1 &296350389
 GameObject:
   m_ObjectHideFlags: 0
@@ -7869,7 +7932,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f9e003bb71b6b742ac27dc2595daf2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Items: []
   Equips: []
   _inventoryCellTemplate: {fileID: 5550451218124266884, guid: 330fbe6f49210aa4388464d3a74c5938,
     type: 3}
@@ -7878,7 +7940,6 @@ MonoBehaviour:
   _draggingParent: {fileID: 168040783}
   _equipParent: {fileID: 505269128}
   _infoPanel: {fileID: 1292214180}
-  _capacity: 60
 --- !u!114 &1284259269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8894,7 +8955,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453720532}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.88, y: -11.23, z: 0}
+  m_LocalPosition: {x: -2.88, y: -10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 869905579}
@@ -9078,6 +9139,7 @@ MonoBehaviour:
   WorldCellPerhub: {fileID: 1983232707002068309, guid: 0249926607b539b48a950133e8577e56,
     type: 3}
   ActiveMapCell: {fileID: 1983232707141500897}
+  cellcount: 1
   loader: {fileID: 573169229}
 --- !u!1 &1506077538
 GameObject:
@@ -10355,7 +10417,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1817844461}
   m_Direction: 2
   m_Value: 0.99999976
-  m_Size: 0.52401626
+  m_Size: 0.5240163
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

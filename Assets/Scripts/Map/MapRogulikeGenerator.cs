@@ -14,159 +14,186 @@ public class MapRogulikeGenerator : MonoBehaviour
     public GameObject CellPerhub;
     public GameObject EmptyPerhub;
     public int UnBorder = 5;
-    private Generator generator;
+    //private Generator generator;
     private bool Result;
     Task<int[,]> outer;
-
-    public void Setter(Loader loader, WorldMapCell thisscell, int UnBorder=5)
+    int[,] Map;
+    public void Setter(Loader loader, WorldMapCell thisscell, int UnBorder = 5)
     {
+        Debug.LogWarning("disablings");
+        GetComponent<BoxCollider2D>().enabled = false;
         //Debug.Log("asdfghjkl;:"+loader.IsMapGenered);
         this.loader = loader;
         ThisCell = thisscell;
         this.UnBorder = UnBorder;
-        if (!loader.IsMapGenered)
+        //if (!loader.IsMapGenered)
+        //{
+        //    Debug.Log("coo");
+        //    loader.LoadMap();
+        //    StaticData.ActiveCell = StaticData.MapData[10][10];
+        //    ThisCell = StaticData.ActiveCell;
+        //}
+        if (!ThisCell.Accesed)
         {
-            Debug.Log("coo");
-            loader.LoadMap();
-            StaticData.ActiveCell = StaticData.MapData[10][10];
-            ThisCell = StaticData.ActiveCell;
+            return;
         }
+        Map = loader.GetMap(ThisCell);
+        if (Map == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        MapSet();
         //Debug.Log(StaticData.MapData[9][10].Message);
         //ThisCell = StaticData.ActiveCell;
         //Debug.Log(ThisCell.Message);
 
-        generator = new Generator();
+        //generator = new Generator();
         //Debug.Log($"{this.transform.position}CoordinateInside:{ThisCell.PosY},{ThisCell.PosX}");
         //Debug.Log($"{this.transform.position}MessageInside:{ThisCell.Message}");
-        generator.ResultMap = loader.LoadFromFile(new Vector2(ThisCell.PosX, ThisCell.PosY));
 
-        if (generator.ResultMap == null)
-        {
-            generator.Map = loader.GetNeighborWorldMapCell();
-
-            outer = Task.Factory.StartNew(() =>
-            {
-                Debug.Log("Stage1");
-                generator.Build(UnBorder);
-                Debug.Log("Stage2");
-                generator.ConnectCaves();
-                Debug.Log("Stage3");
-                generator.ConnectCaves();
-                Debug.Log("Stage4");
-                generator.EmptyCellSet();
-                Debug.Log("Stage5");
-                generator.EndGeneration();
-                Debug.Log("Stage6");
-                return generator.ResultMap;
-            });
-            return;
-        }
-        else
-        {
-           // Debug.Log("MapSet");
-            MapSet();
-        }
+        //if (generator.ResultMap == null)
+        //{
+        //    generator.Map = loader.GetNeighborWorldMapCell();
+        //
+        //    outer = Task.Factory.StartNew(() =>
+        //    {
+        //        Debug.Log("Stage1");
+        //        generator.Build(UnBorder);
+        //        Debug.Log("Stage2");
+        //        generator.ConnectCaves();
+        //        Debug.Log("Stage3");
+        //        generator.ConnectCaves();
+        //        Debug.Log("Stage4");
+        //        generator.EmptyCellSet();
+        //        Debug.Log("Stage5");
+        //        generator.EndGeneration();
+        //        Debug.Log("Stage6");
+        //        return generator.ResultMap;
+        //    });
+        //    return;
+        //}
+        //else
+        //{
+        //    // Debug.Log("MapSet");
+        //    MapSet();
+        //}
     }
     public List<GameObject> MapCells = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
-        if(loader == null)
-        { return; }
-        if (!loader.IsMapGenered)
-        {
-            //Debug.Log("coo");
-            loader.LoadMap();
-            StaticData.ActiveCell = StaticData.MapData[10][10];
-            ThisCell = StaticData.ActiveCell;
-        }
+        //if (loader == null)
+        //{ return; }
+        //if (!loader.IsMapGenered)
+        //{
+        //    //Debug.Log("coo");
+        //    loader.LoadMap();
+        //    StaticData.ActiveCell = StaticData.MapData[10][10];
+        //    ThisCell = StaticData.ActiveCell;
+        //}
+        //if (!ThisCell.Accesed)
+        //{
+        //    Destroy(gameObject);
+        //}
+        //
+        //Map = loader.GetMap(ThisCell);
+        //if (Map==null)
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
         //Debug.Log(StaticData.MapData[9][10].Message);
         //ThisCell = StaticData.ActiveCell;
         //Debug.Log(ThisCell.Message);
-        
-        generator = new Generator();
+
+        //generator = new Generator();
         //Debug.Log($"{this.transform.position}CoordinateInside:{ThisCell.PosY},{ThisCell.PosX}");
         //Debug.Log($"{this.transform.position}MessageInside:{ThisCell.Message}");
-        generator.ResultMap = loader.LoadFromFile(new Vector2(ThisCell.PosX, ThisCell.PosY));
+        //if (ThisCell.Accesed)
+        //{
+        //    generator.ResultMap = loader.GetMap(ThisCell);
+        //}
 
-        if (generator.ResultMap == null)
-        {
-            generator.Map = loader.GetNeighborWorldMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY));
-
-            outer = Task.Factory.StartNew(() =>
-            {
-                //Debug.Log("Stage1");
-                generator.Build(UnBorder);
-                //Debug.Log("Stage2");
-                generator.ConnectCaves();
-                //Debug.Log("Stage3");
-                generator.ConnectCaves();
-                //Debug.Log("Stage4");
-                generator.EmptyCellSet();
-                //Debug.Log("Stage5");
-                generator.EndGeneration();
-                //Debug.Log("Stage6");
-                return generator.ResultMap;
-            });
-            return;
-        }
-        else
-        {
-            //Debug.Log("MapSet");
-            MapSet();
-        }
+        //MapSet();
+        //if (generator.ResultMap == null)
+        //{
+        //    generator.Map = loader.GetNeighborWorldMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY));
+        //
+        //    outer = Task.Factory.StartNew(() =>
+        //    {
+        //        //Debug.Log("Stage1");
+        //        generator.Build(UnBorder);
+        //        //Debug.Log("Stage2");
+        //        generator.ConnectCaves();
+        //        //Debug.Log("Stage3");
+        //        generator.ConnectCaves();
+        //        //Debug.Log("Stage4");
+        //        generator.EmptyCellSet();
+        //        //Debug.Log("Stage5");
+        //        generator.EndGeneration();
+        //        //Debug.Log("Stage6");
+        //        return generator.ResultMap;
+        //    });
+        //    return;
+        //}
+        //else
+        //{
+        //    //Debug.Log("MapSet");
+        //    MapSet();
+        //}
     }
 
     void MapSet()
     {
-
+       
         for (int i = 0; i < ThisCell.MapWidth; i++)
         {
             for (int k = 0; k < ThisCell.MapHeight; k++)
             {
                 //Debug.Log($"Loading cell:{i},{k} and it's :{generator.ResultMap[i, k]}");
-                if (generator.ResultMap[i, k] == (int)MapCell.CellType.Wall)
+                if (Map[i, k] == (int)MapCell.CellType.Wall)
                 {
-                   // Debug.Log($"it's wall");
+                    // Debug.Log($"it's wall");
                     GameObject cell = Instantiate(CellPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     MapCells.Add(cell);
                     int temp = GetCountRightNeighbours(k, i, MapCell.CellType.Wall, true);
                     if (temp > 1)
                     {
-                       // Debug.Log("GG:1");
+                        // Debug.Log("GG:1");
                         cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.gray, MapCell.CellType.Wall, temp, 1);
                         continue;
                     }
-                    generator.ResultMap[i, k] = (int)MapCell.CellType.Wall;
+                    Map[i, k] = (int)MapCell.CellType.Wall;
                     temp = GetCountUpNeighbours(k, i, MapCell.CellType.Wall, true);
                     if (temp > 1)
                     {
-                       // Debug.Log("GG:2");
+                        // Debug.Log("GG:2");
                         cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.gray, MapCell.CellType.Wall, 1, temp);
                         continue;
                     }
                     cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.gray, MapCell.CellType.Wall, 1, 1);
 
                 }
-                if (generator.ResultMap[i, k] == (int)MapCell.CellType.Empty)
+                if (Map[i, k] == (int)MapCell.CellType.Empty)
                 {
-                  //  Debug.Log($"it's empty");
+                    //  Debug.Log($"it's empty");
                     GameObject cell = Instantiate(EmptyPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     MapCells.Add(cell);
                     int temp = GetCountRightNeighbours(k, i, MapCell.CellType.Empty, true);
                     if (temp > 1)
                     {
-                      //  Debug.Log("GG:1");
+                        //  Debug.Log("GG:1");
                         cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.black, MapCell.CellType.Empty, temp, 1);
                         continue;
                     }
-                    generator.ResultMap[i, k] = (int)MapCell.CellType.Empty;
+                    Map[i, k] = (int)MapCell.CellType.Empty;
                     temp = GetCountUpNeighbours(k, i, MapCell.CellType.Empty, true);
                     if (temp > 1)
                     {
-                      //  Debug.Log("GG:2");
+                        //  Debug.Log("GG:2");
                         cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.black, MapCell.CellType.Empty, 1, temp);
                         continue;
                     }
@@ -182,11 +209,11 @@ public class MapRogulikeGenerator : MonoBehaviour
         {
             return 0;
         }
-        if (generator.ResultMap[y, x] == (int)cellType)
+        if (Map[y, x] == (int)cellType)
         {
             if (SetChecked)
             {
-                generator.ResultMap[y, x] = (int)MapCell.CellType.Checked;
+                Map[y, x] = (int)MapCell.CellType.Checked;
             }
             return 1 + GetCountRightNeighbours(x + 1, y, cellType, SetChecked);
         }
@@ -198,11 +225,11 @@ public class MapRogulikeGenerator : MonoBehaviour
         {
             return 0;
         }
-        if (generator.ResultMap[y, x] == (int)cellType)
+        if (Map[y, x] == (int)cellType)
         {
             if (SetChecked)
             {
-                generator.ResultMap[y, x] = (int)MapCell.CellType.Checked;
+                Map[y, x] = (int)MapCell.CellType.Checked;
             }
             return 1 + GetCountUpNeighbours(x, y + 1, cellType, SetChecked);
         }
@@ -214,19 +241,20 @@ public class MapRogulikeGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (outer!=null && outer.IsCompleted)
-        {
-            
-            
-            loader.SaveInFileMapCell(new Vector2(ThisCell.PosX, ThisCell.PosY), generator.ResultMap);
-            MapSet();
-            outer = null;
-        }
+        //if (outer != null && outer.IsCompleted)
+        //{
+        //
+        //
+        //    loader.MapGenered(ThisCell, generator.ResultMap);
+        //    loader.MapAccess(ThisCell);
+        //    MapSet();
+        //    outer = null;
+        //}
     }
 
 
 
-
+}
 
 
     /*
@@ -277,7 +305,7 @@ Interesting Patterns
     /// 
     /// For more info on it's use see http://www.evilscience.co.uk/?p=624
     /// </summary>
-    class Generator
+    public class Generator
     {
         //public System.Random rnd = new System.Random();
 
@@ -1012,4 +1040,3 @@ Interesting Patterns
 
 
 
-}
