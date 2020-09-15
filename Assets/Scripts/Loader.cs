@@ -15,9 +15,19 @@ public class Loader:MonoBehaviour
     public List<Skill> Skills=new List<Skill>();
     bool SkillsLoaded = false;
     bool StatesLoaded = false;
+    bool MapLoaded = false;
+    string MapAccesed = "Map/Accesed/";
+    string MapGenerated = "Map/Generated/";
     public void LoadMap()
     {
         //LoadSkills();
+        if (MapLoaded)
+        {
+            return;
+        }
+        MapLoaded = true;
+
+        Debug.LogError("Pidr 1");
         for (int i = 0; i < WorldSize; i++)
         {
             StaticData.MapData.Add(new List<WorldMapCell>());
@@ -25,6 +35,18 @@ public class Loader:MonoBehaviour
             for (int k = 0; k < WorldSize; k++)
             {
                 WorldMapCell gg = new WorldMapCell(k, i);
+                if (File.Exists(MapGenerated+$"{k}_{i}.mapcell"))
+                {
+                    gg.Generated = true;
+                    gg.Accesed = false;
+                    Debug.LogWarning("map generated");
+                }
+                if (File.Exists(MapAccesed+$"{k}_{i}.mapcell"))
+                {
+                    gg.Generated = true;
+                    gg.Accesed = true;
+                    Debug.LogWarning("map accesed");
+                }
                 gg.MapHeight = StaticData.WorldCellSize;
                 gg.MapWidth = StaticData.WorldCellSize;
                 gg.Message = i.ToString() + "HI" + k.ToString();
@@ -33,41 +55,115 @@ public class Loader:MonoBehaviour
             }
         }
         
-        IsMapGenered = true;
+        //IsMapGenered = true;
     }
-    public void SaveInFileMapCell(Vector2 position,int[,] map)
+
+    public void MapGenered(WorldMapCell position,int[,] map)
     {
+        try
+        {
+
         BinaryFormatter formatter = new BinaryFormatter();
         // получаем поток, куда будем записывать сериализованный объект
-        Debug.Log("i'm here 0");
+        Debug.Log("saving "+ MapGenerated + $"{position.PosX}_{position.PosY}.mapcell");
         //File.Create($"{position.x}_{position.y}.mapcell");
         Debug.Log("i'm here 1");
-        using (FileStream fs = new FileStream($"{position.x}_{position.y}.mapcell", FileMode.OpenOrCreate))
+            position.Generated = true;
+        using (FileStream fs = new FileStream(MapGenerated+$"{position.PosX}_{position.PosY}.mapcell", FileMode.OpenOrCreate))
         {
             Debug.Log("i'm here 2");
             formatter.Serialize(fs, map);
             
-        }                                                                                   
-        Debug.Log("i'm here 3");                                                            
-        // десериализация из файла people.dat                                               
-                                                                                            
-    }                                                                                       
-    public int[,] LoadFromFile(Vector2 position)
+        }
+        Debug.Log("i'm here 3");
+            // десериализация из файла people.dat                                               
+
+        }
+        catch (Exception ex)
+        {
+
+            Debug.Log(ex.Message);
+            throw;
+        }
+    }
+    public void MapAccess(WorldMapCell position)
     {
         
-        if (File.Exists($"{position.x}_{position.y}.mapcell"))
+        try
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            int[,] result;
-            using (FileStream fs = new FileStream($"{position.x}_{position.y}.mapcell", FileMode.Open, FileAccess.Read))
+
+        if (!File.Exists(MapGenerated + $"{position.PosX}_{position.PosY}.mapcell"))
+        {
+            return;
+        }
+            Debug.Log("Moving "+ MapAccesed + $"{position.PosX}_{position.PosY}.mapcell");
+        File.Move(MapGenerated + $"{position.PosX}_{position.PosY}.mapcell", MapAccesed + $"{position.PosX}_{position.PosY}.mapcell");
+        position.Accesed = true;
+
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex.Message);
+            Debug.Log($"{ position.PosX}_{ position.PosY}.mapcell");
+            throw;
+        }
+    }
+    public int[,] GetMap(WorldMapCell position)
+    {
+        if (position.Accesed)
+        {
+
+
+            if (File.Exists(MapAccesed +$"{position.PosX}_{position.PosY}.mapcell"))
             {
-                result = (int[,])formatter.Deserialize(fs);
+                BinaryFormatter formatter = new BinaryFormatter();
+                int[,] result;
+                using (FileStream fs = new FileStream(MapAccesed+ $"{position.PosX}_{position.PosY}.mapcell", FileMode.Open, FileAccess.Read))
+                {
+                    result = (int[,])formatter.Deserialize(fs);
+                }
+                //Debug.Log("Loading from file");
+                return result;
             }
-            //Debug.Log("Loading from file");
-            return result;
         }
         return null;
-    }                                  
+    }
+    int[,] GetMapAll(WorldMapCell position)
+    {
+        if (position.Accesed)
+        {
+
+
+            if (File.Exists(MapAccesed + $"{position.PosX}_{position.PosY}.mapcell"))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                int[,] result;
+                using (FileStream fs = new FileStream(MapAccesed + $"{position.PosX}_{position.PosY}.mapcell", FileMode.Open, FileAccess.Read))
+                {
+                    result = (int[,])formatter.Deserialize(fs);
+                }
+                //Debug.Log("Loading from file");
+                return result;
+            }
+        }
+        else if (position.Generated)
+        {
+
+
+            if (File.Exists(MapAccesed + $"{position.PosX}_{position.PosY}.mapcell"))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                int[,] result;
+                using (FileStream fs = new FileStream(MapAccesed + $"{position.PosX}_{position.PosY}.mapcell", FileMode.Open, FileAccess.Read))
+                {
+                    result = (int[,])formatter.Deserialize(fs);
+                }
+                //Debug.Log("Loading from file");
+                return result;
+            }
+        }
+        return null;
+    }
     public int[,] GetNeighborWorldMapCell(Vector2 position)
     {
         bool Cell0_0 = false;
@@ -130,7 +226,7 @@ public class Loader:MonoBehaviour
         int[,] array;
         if (!Cell0_0)
         {
-            array = LoadFromFile(position + new Vector2(-1, -1));
+            array = GetMapAll(StaticData.MapData[(int)position.x-1][(int)position.y-1]);// position + new Vector2(-1, -1));
             if (array == null)
             {
                 Result = FillArrayRange(Result, new Vector2(0, 0), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize), 1);
@@ -146,7 +242,7 @@ public class Loader:MonoBehaviour
         //000
         if (!Cell1_0)
         {
-            array = LoadFromFile(position + new Vector2(0, -1));
+            array = GetMapAll(StaticData.MapData[(int)position.x ][(int)position.y - 1]);// LoadFromFile(position + new Vector2(0, -1));
             if (array == null)
             {
                 Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize, 0), new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize), 1);
@@ -162,7 +258,7 @@ public class Loader:MonoBehaviour
         //000
         if (!Cell2_0)
         {
-            array = LoadFromFile(position + new Vector2(1, -1));
+            array = GetMapAll(StaticData.MapData[(int)position.x + 1][(int)position.y - 1]);// LoadFromFile(position + new Vector2(1, -1));
             if (array == null)
             {
                 Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, 0), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize), 1);
@@ -178,7 +274,7 @@ public class Loader:MonoBehaviour
         //000
         if (!Cell0_1)
         {
-            array = LoadFromFile(position + new Vector2(-1, 0));
+            array = GetMapAll(StaticData.MapData[(int)position.x - 1][(int)position.y ]);// LoadFromFile(position + new Vector2(-1, 0));
             if (array == null)
             {
                 Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 2), 1);
@@ -194,7 +290,7 @@ public class Loader:MonoBehaviour
         //000
         if (!Cell2_1)
         {
-            array = LoadFromFile(position + new Vector2(+1, 0));
+            array = GetMapAll(StaticData.MapData[(int)position.x + 1][(int)position.y ]);// LoadFromFile(position + new Vector2(+1, 0));
             if (array == null)
             {
                 Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize * 2), 1);
@@ -210,7 +306,7 @@ public class Loader:MonoBehaviour
         //100
         if (!Cell0_2)
         {
-            array = LoadFromFile(position + new Vector2(-1, 1));
+            array = GetMapAll(StaticData.MapData[(int)position.x - 1][(int)position.y + 1]);// LoadFromFile(position + new Vector2(-1, 1));
             if (array == null)
             {
                 Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 3), 1);
@@ -226,7 +322,7 @@ public class Loader:MonoBehaviour
         //010
         if (!Cell1_2)
         {
-            array = LoadFromFile(position + new Vector2(0, 1));
+            array = GetMapAll(StaticData.MapData[(int)position.x ][(int)position.y + 1]);// LoadFromFile(position + new Vector2(0, 1));
             if (array == null)
             {
                 Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize * 3), 1);
@@ -242,7 +338,7 @@ public class Loader:MonoBehaviour
         //001
         if (!Cell2_2)
         {
-            array = LoadFromFile(position + new Vector2(+1, 1));
+            array = GetMapAll(StaticData.MapData[(int)position.x + 1][(int)position.y + 1]);// LoadFromFile(position + new Vector2(+1, 1));
             if (array == null)
             {
                 Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize * 3), 1);

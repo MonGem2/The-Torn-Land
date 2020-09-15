@@ -19,8 +19,17 @@ public class WorldMapCell
     public string Message { get => message; set => message = value; }
     public int DangerousLvl { get => dangerousLvl; set => dangerousLvl = value; }
     public EnvironType Environ { get => environ; set => environ = value; }
-
-
+    public bool Generated;
+    bool _accesed;
+    public bool Accesed { get => _accesed; set
+        {
+            if (OnMapCellAccesed != null)
+            {
+                OnMapCellAccesed(this);
+            }
+            _accesed = value;
+        } }
+    public OnChangeParameterTrigger OnMapCellAccesed;
 
 
 
@@ -42,13 +51,6 @@ public class WorldMapCell
     {
         PosX = posx;
         PosY = posy;
-    }
-
-    public WorldMapCell(string message, int height, int width)
-    {
-        Message = message;
-        MapHeight = height;
-        MapWidth = width;
     }
 
 }
