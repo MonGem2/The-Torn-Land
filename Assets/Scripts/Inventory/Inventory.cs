@@ -147,6 +147,18 @@ public class Inventory : MonoBehaviour
     private void UseItem(object sender, EventArgs e)
     {
         _infoPanel.gameObject.SetActive(false);
+
+        if ((sender as InventoryCell).transform.parent == _equipParent
+                .Find((sender as InventoryCell)._item.Data.type.ToString() + "BackCell") && Items.Count <= _capacity && (sender as InventoryCell)._item.UnUse())
+        {
+            (sender as InventoryCell).transform.SetParent(_originalParent);
+            (sender as InventoryCell).transform.localPosition = new Vector3(0, 0, 0);
+            Items.Add((sender as InventoryCell)._item);
+            Equips.Remove((sender as InventoryCell)._item);
+            return;
+        }
+
+
         if ((sender as InventoryCell)._item.Use())
         {
             if ((sender as InventoryCell)._item.Data.type > (ItemType)1
@@ -176,14 +188,6 @@ public class Inventory : MonoBehaviour
                     Items.Add(_equipParent.Find((sender as InventoryCell)
                         ._item.Data.type.ToString() + "BackCell").GetChild(0).GetComponent<InventoryCell>()._item);
                 }
-            }
-            else if ((sender as InventoryCell).transform.parent == _equipParent
-                .Find((sender as InventoryCell)._item.Data.type.ToString() + "BackCell"))
-            {
-                (sender as InventoryCell).transform.SetParent(_originalParent);
-                (sender as InventoryCell).transform.localPosition = new Vector3(0, 0, 0);
-                Items.Add((sender as InventoryCell)._item);
-                Equips.Remove((sender as InventoryCell)._item);
             }
             else if ((sender as InventoryCell)._item.Data.type == ItemType.Disposable)
             {

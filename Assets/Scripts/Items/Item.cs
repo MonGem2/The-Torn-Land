@@ -35,6 +35,16 @@ public class Item : ScriptableObject, IItem
         return false;
     }
 
+    public bool UnUse()
+    {
+        if (player.IsUsableItem(this))
+        {
+            Debug.LogError("CHAIOKЗУЯВФ");
+            return true;
+        }
+        return false;
+    }
+
 
     public IItem Clone()
     {

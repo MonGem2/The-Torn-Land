@@ -13,6 +13,7 @@ public class MapRogulikeGenerator : MonoBehaviour
     public WorldMapCell ThisCell;//StaticData.MapData[0][0];//ActiveCell;
     public GameObject CellPerhub;
     public GameObject EmptyPerhub;
+    public GameObject KeyPerhub;
     public int UnBorder = 5;
     //private Generator generator;
     private bool Result;
@@ -198,6 +199,14 @@ public class MapRogulikeGenerator : MonoBehaviour
                         continue;
                     }
                     cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.gray, MapCell.CellType.Empty, 1, 1);
+                }
+                if (Map[i, k] == (int)MapCell.CellType.Key)
+                {
+                    GameObject cell = Instantiate(KeyPerhub);
+                    cell.transform.SetParent(gameObject.transform);
+                    MapCells.Add(cell);
+                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.Empty, 1, 1);
+                    ThisCell.KeyPoints.Add(new Vector2(k, i));
                 }
             }
         }
@@ -473,117 +482,126 @@ Interesting Patterns
         }
 
 
-        #endregion
+    #endregion
 
 
-        #region cave related
+    #region cave related
 
-        #region make caves
-
-
+    #region make caves
 
 
-        /// <summary>
-        /// Calling this method will build caves, smooth them off and fill in any holes
-        /// </summary>
-        private void BuildCaves(int unBorderLimits)
+
+
+    /// <summary>
+    /// Calling this method will build caves, smooth them off and fill in any holes
+    /// </summary>
+    private void BuildCaves(int unBorderLimits)
+    {
+
+        //Map = new int[MapSize.Width, MapSize.Height];
+
+
+        //go through each map cell and randomly determine whether to close it
+        //the +5 offsets are to leave an empty border round the edge of the map
+        for (int x = StaticData.WorldCellSize; x < MapSize.Width * 2; x++)
+            for (int y = StaticData.WorldCellSize; y < MapSize.Height * 2; y++)
+            {
+                Map[x, y] = 0;
+                if (RandomNumber(0, 100) < CloseCellProb)
+                    Map[x, y] = 1;
+            }
+
+        //for (int x = 0; x < unBorderLimits; x++)
+        //    for (int y = 0; y < MapSize.Height; y++)
+        //    {
+        //        if (RandomNumber(0, 100) < 50)
+        //            Map[x, y] = 1;
+        //    }
+        //for (int x = MapSize.Width - unBorderLimits; x < MapSize.Width; x++)
+        //    for (int y = 0; y < MapSize.Height; y++)
+        //    {
+        //        if (RandomNumber(0, 100) < 50)
+        //            Map[x, y] = 1;
+        //    }
+        //for (int x = 0; x < MapSize.Width; x++)
+        //    for (int y = 0; y < unBorderLimits; y++)
+        //    {
+        //        if (RandomNumber(0, 100) < 50)
+        //            Map[x, y] = 1;
+        //    }
+        //for (int x = 0; x < MapSize.Width; x++)
+        //    for (int y = MapSize.Height - unBorderLimits; y < MapSize.Height; y++)
+        //    {
+        //        if (RandomNumber(0, 100) < 50)
+        //            Map[x, y] = 1;
+        //    }
+
+        Point cell;
+
+        //Pick cells at random
+        for (int x = 0; x <= Iterations; x++)
         {
+            cell = new Point(RandomNumber(MapSize.Width, MapSize.Width * 2), RandomNumber(MapSize.Height, MapSize.Height * 2));
 
-            //Map = new int[MapSize.Width, MapSize.Height];
+            //if the randomly selected cell has more closed neighbours than the property Neighbours
+            //set it closed, else open it
+            if (Neighbours_Get1(cell).Where(n => Point_Get(n) == 1).Count() > Neighbours)
+                Point_Set(cell, 1);
+            else
+                Point_Set(cell, 0);
+        }
 
 
-            //go through each map cell and randomly determine whether to close it
-            //the +5 offsets are to leave an empty border round the edge of the map
-            for (int x = StaticData.WorldCellSize; x < MapSize.Width*2; x++)
-                for (int y = StaticData.WorldCellSize; y < MapSize.Height*2; y++)
-                {
-                    Map[x, y] = 0;
-                    if (RandomNumber(0, 100) < CloseCellProb)
-                        Map[x, y] = 1;
-                }
 
-            //for (int x = 0; x < unBorderLimits; x++)
-            //    for (int y = 0; y < MapSize.Height; y++)
-            //    {
-            //        if (RandomNumber(0, 100) < 50)
-            //            Map[x, y] = 1;
-            //    }
-            //for (int x = MapSize.Width - unBorderLimits; x < MapSize.Width; x++)
-            //    for (int y = 0; y < MapSize.Height; y++)
-            //    {
-            //        if (RandomNumber(0, 100) < 50)
-            //            Map[x, y] = 1;
-            //    }
-            //for (int x = 0; x < MapSize.Width; x++)
-            //    for (int y = 0; y < unBorderLimits; y++)
-            //    {
-            //        if (RandomNumber(0, 100) < 50)
-            //            Map[x, y] = 1;
-            //    }
-            //for (int x = 0; x < MapSize.Width; x++)
-            //    for (int y = MapSize.Height - unBorderLimits; y < MapSize.Height; y++)
-            //    {
-            //        if (RandomNumber(0, 100) < 50)
-            //            Map[x, y] = 1;
-            //    }
-
-            Point cell;
-
-            //Pick cells at random
-            for (int x = 0; x <= Iterations; x++)
-            {
-                cell = new Point(RandomNumber(MapSize.Width, MapSize.Width*2), RandomNumber(MapSize.Height, MapSize.Height*2));
-
-                //if the randomly selected cell has more closed neighbours than the property Neighbours
-                //set it closed, else open it
-                if (Neighbours_Get1(cell).Where(n => Point_Get(n) == 1).Count() > Neighbours)
-                    Point_Set(cell, 1);
-                else
-                    Point_Set(cell, 0);
-            }
-
-            
-
-            //
-            //  Smooth of the rough cave edges and any single blocks by making several 
-            //  passes on the map and removing any cells with 3 or more empty neighbours
-            //
-            for (int ctr = 0; ctr < 5; ctr++)
-            {
-                //examine each cell individually
-                for (int x = MapSize.Width; x < MapSize.Width*2; x++)
-                    for (int y = MapSize.Height; y < MapSize.Height*2; y++)
-                    {
-                        cell = new Point(x, y);
-
-                        if (
-                                Point_Get(cell) > 0
-                                && Neighbours_Get(cell).Where(n => Point_Get(n) == 0).Count() >= EmptyNeighbours
-                            )
-                            Point_Set(cell, 0);
-                    }
-            }
-
-           
-            //
-            //  fill in any empty cells that have 4 full neighbours
-            //  to get rid of any holes in an cave
-            //
-            for (int x = MapSize.Width; x < MapSize.Width*2; x++)
-                for (int y = MapSize.Height; y < MapSize.Height*2; y++)
+        //
+        //  Smooth of the rough cave edges and any single blocks by making several 
+        //  passes on the map and removing any cells with 3 or more empty neighbours
+        //
+        for (int ctr = 0; ctr < 5; ctr++)
+        {
+            //examine each cell individually
+            for (int x = MapSize.Width; x < MapSize.Width * 2; x++)
+                for (int y = MapSize.Height; y < MapSize.Height * 2; y++)
                 {
                     cell = new Point(x, y);
 
                     if (
-                            Point_Get(cell) == 0
-                            && Neighbours_Get(cell).Where(n => Point_Get(n) == 1).Count() >= EmptyCellNeighbours
+                            Point_Get(cell) > 0
+                            && Neighbours_Get(cell).Where(n => Point_Get(n) == 0).Count() >= EmptyNeighbours
                         )
-                        Point_Set(cell, 1);
+                        Point_Set(cell, 0);
                 }
-
-            
-
         }
+
+
+        //
+        //  fill in any empty cells that have 4 full neighbours
+        //  to get rid of any holes in an cave
+        //
+        for (int x = MapSize.Width; x < MapSize.Width * 2; x++)
+            for (int y = MapSize.Height; y < MapSize.Height * 2; y++)
+            {
+                cell = new Point(x, y);
+
+                if (
+                        Point_Get(cell) == 0
+                        && Neighbours_Get(cell).Where(n => Point_Get(n) == 1).Count() >= EmptyCellNeighbours
+                    )
+                    Point_Set(cell, 1);
+            }
+        int countKeys = 4;
+        while (countKeys > 0)
+        {
+            cell = new Point(RandomNumber(MapSize.Width, MapSize.Width * 2), RandomNumber(MapSize.Height, MapSize.Height * 2));
+
+            if (Point_Get(cell) == 1)
+            {
+                Point_Set(cell, 2);
+                countKeys--;
+            }
+        }
+
+    }
 
         
 

@@ -25,7 +25,8 @@ public class MapCell : MonoBehaviour
         Empty = -1,
         Wall,
         Floar,
-        Door,
+        Key,
+        SpawnP,
         Checked = -100
     };
 

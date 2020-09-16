@@ -19,7 +19,7 @@ public interface IItem
 public class ItemData
 {
     public List<State> Effects = new List<State>();
-    public ItemType type;
+    public ItemType type = ItemType.Unused;
 
 }
 
