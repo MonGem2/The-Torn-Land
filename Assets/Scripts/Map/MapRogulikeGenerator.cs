@@ -579,6 +579,7 @@ Interesting Patterns
         //  to get rid of any holes in an cave
         //
         for (int x = MapSize.Width; x < MapSize.Width * 2; x++)
+        {
             for (int y = MapSize.Height; y < MapSize.Height * 2; y++)
             {
                 cell = new Point(x, y);
@@ -589,6 +590,7 @@ Interesting Patterns
                     )
                     Point_Set(cell, 1);
             }
+        }
         int countKeys = 4;
         while (countKeys > 0)
         {
