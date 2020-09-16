@@ -491,10 +491,7 @@ public class Creature : MyObject
     public bool InfinitySP;
     public bool OneShot;
     #endregion
-    protected void Start()
-    {
-        StartCoroutine(Regeneration(5));
-    }
+
     #region Intake
     public override void Damage(BulletData bulletData, bool MaxEffectSet = true)
     {

@@ -330,6 +330,7 @@ public class Player : Creature
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("QAZWSXEDCRFV.mapcell");
         //this.MaxHP = 200;
         //this.MaxMP = 200;
         //this.MaxSP = 200;
@@ -362,12 +363,13 @@ public class Player : Creature
             loader.CreatePlayer(this);
         }        
         StartCoroutine(Regeneration(1));
-       // StartCoroutine(Save());
+        // StartCoroutine(Save());
         //Debug.LogWarning(loader.Skils.Count);
-       // Skills = new List<Skill>();
-       // Skills.Add(loader.Skills[0].Clone());
-       // Skills.Add(loader.Skills[1].Clone());
-       // Skills.Add(loader.Skills[2].Clone());
+        // Skills = new List<Skill>();
+        // Skills.Add(loader.Skills[0].Clone());
+        // Skills.Add(loader.Skills[1].Clone());
+        // Skills.Add(loader.Skills[2].Clone());
+        Debug.Log(Skills.Count+"  .mapcell");
         ActiveSkill = Skills[2];
         OnLeftClickSkill = ActiveSkill;
         SkillBar.SetSkillOnButton(Skills[0], 0);
