@@ -53,14 +53,17 @@ public class WorldState : MonoBehaviour
             MapCell.Setter(loader, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX]);
         }
         else if(!StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX].Generated) {
-            StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX].OnMapCellAccesed += (x) => {
-                lock (GeneratorQuery)
-                {
-                    MapCell.Setter(loader, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX]);
-                }
-            };
-            Debug.LogWarning("Adding to list "+tmpCell.PosY+DY+"  "+ tmpCell.PosX+DX);
+            Debug.LogWarning("Adding to list " + tmpCell.PosY + DY + "  " + tmpCell.PosX + DX);
             GeneratorQuery.Add(StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX]);
+            OnGenerationEnded += (x) => {
+               GenerationCallback callback=(GenerationCallback)x;
+                if (callback.mapCell== StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX])
+                {
+                    MapCell.Setter(loader, callback.mapCell);
+                }
+                
+            };
+
         }
         //Debug.Log($"Coordinate:{DY}, DX:{DX}");
         //Debug.Log($"ResultCoordinate:{tmpCell.PosY + DY},:{tmpCell.PosX + DX}");
@@ -257,79 +260,7 @@ public class WorldState : MonoBehaviour
         }
         try
         {
-            Task.Factory.StartNew(() =>
-            {
-                try
-                {
-
-                Debug.Log("Task");
-                while (true)
-                {
-                    
-                    Debug.Log("Stage-1");
-                    WorldMapCell worldMapCell = null;
-                    Debug.Log("Stage-0.5");
-                    try
-                    {
-
-                    lock (GeneratorQuery)
-                    {
-                        worldMapCell = GeneratorQuery[0];
-                    }
-
-                    }
-                    catch (System.Exception ex)
-                    {
-                        Debug.Log(ex.Message);
-                        
-                    }
-                    Debug.Log("Stage-0.1");
-                    Generator generator1 = new Generator();
-                    Debug.Log("Stage0");
-                    generator1.Map = loader.GetNeighborWorldMapCell(new Vector2(worldMapCell.PosX, worldMapCell.PosY));
-                    Debug.Log("Stage1");
-                    generator1.Build(5);
-                    Debug.Log("Stage2");
-                    generator1.ConnectCaves();
-                    Debug.Log("Stage3");
-                    generator1.ConnectCaves();
-                    Debug.Log("Stage4");
-                    generator1.EmptyCellSet();
-                    Debug.Log("Stage5");
-                    generator1.EndGeneration();
-
-                    loader.MapGenered(worldMapCell, generator1.ResultMap);
-                    loader.MapAccess(worldMapCell);
-                    lock (GeneratorQuery)
-                    {
-                        GeneratorQuery.Remove(worldMapCell);
-                        if (GeneratorQuery.Count == 0)
-                        {
-                            GeneratorQuery.Add(GetCell());
-                        }
-                        if (GeneratorQuery[0] == null)
-                        {
-                            Debug.Log("QWERTYUIOP");
-                            return;
-                        }
-                        cellcount = GeneratorQuery.Count;
-                    }
-
-                    Debug.Log("Stage6");
-
-                }
-
-                }
-                catch (System.Exception ex)
-                {
-
-                    Debug.Log(ex.Message);
-                    
-                }
-            });
-
-
-            Debug.Log(StaticData.MapData[10][10].Message);
+            MapBackgroundGenerator();
         }
         catch (System.Exception)
         {
@@ -354,5 +285,93 @@ public class WorldState : MonoBehaviour
         //    //Debug.Log("Stage6");
         //    return generator.ResultMap;
         //});
+    }
+    async void MapBackgroundGenerator()
+    {
+        try
+        {
+
+            Debug.Log("Task");
+            while (true)
+            {
+
+                Debug.Log("Stage-1");
+                WorldMapCell worldMapCell = null;
+                Debug.Log("Stage-0.5");
+                try
+                {
+                    worldMapCell = GeneratorQuery[0];
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.Log(ex.Message);
+
+                }
+                Debug.Log("Stage-0.1");
+                Generator generator1 = new Generator();
+                Debug.Log("Stage0");
+                await Task.Run(()=> { 
+                    generator1.Map = loader.GetNeighborWorldMapCell(new Vector2(worldMapCell.PosX, worldMapCell.PosY));
+                    Debug.Log("Stage1");
+                    generator1.Build(5);
+                    Debug.Log("Stage2");
+                    generator1.ConnectCaves();
+                    Debug.Log("Stage3");
+                    generator1.ConnectCaves();
+                    Debug.Log("Stage4");
+                    generator1.EmptyCellSet();
+                    Debug.Log("Stage5");
+                    generator1.EndGeneration();
+                    loader.MapGenered(worldMapCell, generator1.ResultMap);
+                    loader.MapAccess(worldMapCell);
+                });
+                GeneratorQuery.Remove(worldMapCell);
+                if (GeneratorQuery.Count == 0)
+                {
+                    GeneratorQuery.Add(GetCell());
+                }
+                if (GeneratorQuery[0] == null)
+                {
+                    Debug.Log("QWERTYUIOP");
+                    return;
+                }
+                if (OnGenerationEnded != null)
+                {
+                    GenerationCallback callback = new GenerationCallback();
+                    callback.Map = generator1.ResultMap;
+                    callback.mapCell = worldMapCell;
+                    OnGenerationEnded(callback);
+                }
+                cellcount = GeneratorQuery.Count;
+                
+
+                Debug.Log("Stage6");
+
+            }
+
+        }
+        catch (System.Exception ex)
+        {
+
+            Debug.Log(ex.Message);
+
+        }
+    }
+    public void StartGeneration(MyVector3 value)
+    {
+        Debug.Log("ZXCVBNM<");
+        MapRogulikeGenerator MapCell = Instantiate(WorldCellPerhub);
+        MapCell.transform.SetParent(gameObject.transform);
+        MapCell.transform.position = new Vector3(-StaticData.WorldCellSize/2, -StaticData.WorldCellSize/2);// myCanvas.transform.position + new Vector3(DX * StaticData.WorldCellSize, DY * -StaticData.WorldCellSize);
+        loader.LoadMap();
+        if (StaticData.MapData[(int)value.y][(int)value.x ].Accesed)
+        {
+            MapCell.Setter(loader, StaticData.MapData[(int)value.y][(int)value.x]);
+        }
+        AddMapCell(MapCell, new Vector3(0,0));
+    }
+    public Vector3 localPosition(Vector3 position)
+    { 
+        return position - ActiveMapCell.transform.position;
     }
 }

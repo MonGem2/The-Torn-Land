@@ -18,6 +18,7 @@ public class Loader:MonoBehaviour
     bool MapLoaded = false;
     string MapAccesed = "Map/Accesed/";
     string MapGenerated = "Map/Generated/";
+    public WorldState world;
     public void LoadMap()
     {
         //LoadSkills();
@@ -39,13 +40,13 @@ public class Loader:MonoBehaviour
                 {
                     gg.Generated = true;
                     gg.Accesed = false;
-                    Debug.LogWarning("map generated");
+                  //  Debug.LogWarning("map generated");
                 }
                 if (File.Exists(MapAccesed+$"{k}_{i}.mapcell"))
                 {
                     gg.Generated = true;
                     gg.Accesed = true;
-                    Debug.LogWarning("map accesed");
+                   // Debug.LogWarning("map accesed");
                 }
                 gg.MapHeight = StaticData.WorldCellSize;
                 gg.MapWidth = StaticData.WorldCellSize;
@@ -57,7 +58,6 @@ public class Loader:MonoBehaviour
         
         //IsMapGenered = true;
     }
-
     public void MapGenered(WorldMapCell position,int[,] map)
     {
         try
@@ -1032,6 +1032,7 @@ public class Loader:MonoBehaviour
         player.MaxCorruption = (float)Data[25];
         player.Corruption = (float)Data[26];
         player.RegSpeedCP = (float)Data[27];
+        world.StartGeneration((MyVector3)Data[28]);
         Debug.Log("Loader:load player true");
         return true;
     }
@@ -1074,12 +1075,13 @@ public class Loader:MonoBehaviour
         player.Skills.Add(Skills[1].Clone());
         player.Skills.Add(Skills[2].Clone());
         player.Skills.Add(Skills[4].Clone());
-
+        Debug.Log(".mapcell");
+        world.StartGeneration(new MyVector3(10, 10));
     }
     public void SavePlayer(Player player)
     {
         Debug.Log("Loader: player saved");
-        List<object> Data = new List<object>() {MyVector3.Set(player.transform.position),
+        List<object> Data = new List<object>() {MyVector3.Set(world.localPosition(player.transform.position)),
         player.GetMaxHP(), player.HP,  player.GetHPRegSpeed(),
         player.GetMaxMP(), player.MP, player.GetMPRegSpeed(),player.GetMagReist(),
         player.GetMaxSP(), player.SP, player.GetSPRegSpeed(),player.GetSoulResist(),
@@ -1089,14 +1091,14 @@ public class Loader:MonoBehaviour
         player.Skills.Select(x=>x.ID).ToList(),
         player.MaxHungry, player.Hungry, player.RegSpeedH,
         player.MaxThirst, player.Thirst, player.RegSpeedT,
-        player.MaxCorruption, player.Corruption, player.RegSpeedCP
+        player.MaxCorruption, player.Corruption, player.RegSpeedCP,
+        new MyVector3(world.ActiveMapCell.ThisCell.PosX, world.ActiveMapCell.ThisCell.PosY)
         };
         BinaryFormatter formatter = new BinaryFormatter();
         using (FileStream fs = new FileStream($"player.save", FileMode.OpenOrCreate))
         {
             Debug.Log("i'm here 2");
             formatter.Serialize(fs, Data);
-
         }
         
     }
@@ -1109,11 +1111,14 @@ public class MyVector3 {
     public float x;
     public float y;
     public float z;
+    public MyVector3(float X, float Y)
+    {
+        x = X;
+        y = Y;
+    }
     public static MyVector3 Set(Vector3 vector3)
     {
-        MyVector3 vec=new MyVector3();
-        vec.x = vector3.x;
-        vec.y = vector3.y;
+        MyVector3 vec=new MyVector3(vector3.x, vector3.y);        
         vec.z = vector3.z;
         return vec;
     }
