@@ -95,7 +95,21 @@ public class Loot : MonoBehaviour
             ImageItemW.sprite = (sender as InventoryCell)._item.UIIcon;
             TypeItemW.text = (sender as InventoryCell)._item.Data.type.ToString();
             DescrItemW.text = (sender as InventoryCell)._item.Description;
-            Debug.LogWarning("//TODO: Effects inventory");
+
+
+            foreach (Transform child in EffectsItemW.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            foreach (var effect in (sender as InventoryCell)._item.Data.Effects)
+            {
+                GameObject NewObj = new GameObject();
+                Image NewImage = NewObj.AddComponent<Image>();
+                NewImage.sprite = Resources.Load<Sprite>(effect.ico);
+                NewObj.GetComponent<RectTransform>().SetParent(EffectsItemW.transform);
+                NewObj.SetActive(true);
+            }
         }
     }
 

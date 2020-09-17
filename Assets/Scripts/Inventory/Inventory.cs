@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
+    public Player _player;
     public static List<Item> Items = new List<Item>();
     public List<Item> Equips;
     [SerializeField] private InventoryCell _inventoryCellTemplate;
@@ -48,6 +49,7 @@ public class Inventory : MonoBehaviour
             cell.Init(_originalParent,_draggingParent, _equipParent);
             cell.Render(item);
 
+            cell._item.player = _player;
             cell.Ejection += Destroyer;
             cell.Deselection += InfoHide;
             cell.Selection += InfoSet;
@@ -81,6 +83,7 @@ public class Inventory : MonoBehaviour
             cell.Init(_originalParent, _draggingParent, _equipParent);
             cell.Render(item);
 
+            cell._item.player = _player;
             cell.Ejection += Destroyer;
             cell.Deselection += InfoHide;
             cell.Selection += InfoSet;
@@ -112,7 +115,20 @@ public class Inventory : MonoBehaviour
             GameObject.Find("ImageItem").GetComponent<Image>().sprite = (sender as InventoryCell)._item.UIIcon;
             GameObject.Find("TypeItem").GetComponent<Text>().text = (sender as InventoryCell)._item.Data.type.ToString();
             GameObject.Find("DescrItem").GetComponent<Text>().text = (sender as InventoryCell)._item.Description;
-            Debug.LogWarning("//TODO: Effects inventory");
+
+            foreach (Transform child in GameObject.Find("EffectsItem").GetComponent<GridLayoutGroup>().transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            foreach (var effect in (sender as InventoryCell)._item.Data.Effects)
+            {
+                GameObject NewObj = new GameObject();
+                Image NewImage = NewObj.AddComponent<Image>();
+                NewImage.sprite = Resources.Load<Sprite>(effect.ico);
+                NewObj.GetComponent<RectTransform>().SetParent(GameObject.Find("EffectsItem").GetComponent<GridLayoutGroup>().transform);
+                NewObj.SetActive(true);
+            }
         }
     }
 
@@ -131,6 +147,18 @@ public class Inventory : MonoBehaviour
     private void UseItem(object sender, EventArgs e)
     {
         _infoPanel.gameObject.SetActive(false);
+
+        if ((sender as InventoryCell).transform.parent == _equipParent
+                .Find((sender as InventoryCell)._item.Data.type.ToString() + "BackCell") && Items.Count <= _capacity && (sender as InventoryCell)._item.UnUse())
+        {
+            (sender as InventoryCell).transform.SetParent(_originalParent);
+            (sender as InventoryCell).transform.localPosition = new Vector3(0, 0, 0);
+            Items.Add((sender as InventoryCell)._item);
+            Equips.Remove((sender as InventoryCell)._item);
+            return;
+        }
+
+
         if ((sender as InventoryCell)._item.Use())
         {
             if ((sender as InventoryCell)._item.Data.type > (ItemType)1
@@ -160,14 +188,6 @@ public class Inventory : MonoBehaviour
                     Items.Add(_equipParent.Find((sender as InventoryCell)
                         ._item.Data.type.ToString() + "BackCell").GetChild(0).GetComponent<InventoryCell>()._item);
                 }
-            }
-            else if ((sender as InventoryCell).transform.parent == _equipParent
-                .Find((sender as InventoryCell)._item.Data.type.ToString() + "BackCell"))
-            {
-                (sender as InventoryCell).transform.SetParent(_originalParent);
-                (sender as InventoryCell).transform.localPosition = new Vector3(0, 0, 0);
-                Items.Add((sender as InventoryCell)._item);
-                Equips.Remove((sender as InventoryCell)._item);
             }
             else if ((sender as InventoryCell)._item.Data.type == ItemType.Disposable)
             {

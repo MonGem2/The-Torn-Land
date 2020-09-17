@@ -20,7 +20,7 @@ public class Creature : MyObject
     public EventSystem eventSystem;
     #region MaxHP
     protected float _maxHp;
-    public OnChangeParameterTrigger MaxHPChangeTrigger;
+    public OnChangeParameterTrigger MaxHPChangeTrigger { get; set; }
     public virtual float MaxHP
     {
         get
@@ -37,11 +37,12 @@ public class Creature : MyObject
         }
         set
         {
+            _maxHp = value;
             if (MaxHPChangeTrigger != null)
             {
                 MaxHPChangeTrigger(value);
             }
-            _maxHp = value;
+            
         }
 
     }
@@ -65,11 +66,12 @@ public class Creature : MyObject
         }
         set
         {
+            _maxMp = value;
             if (MaxMPChangeTrigger != null)
             {
                 MaxMPChangeTrigger(value);
             }
-            _maxMp = value;
+            
         }
 
     }
@@ -93,15 +95,16 @@ public class Creature : MyObject
         }
         set
         {
+            _maxSt = value;
             if (MaxSTChangeTrigger != null)
             { MaxSTChangeTrigger(value); }
-            _maxSt = value;
+            
         }
 
     }
     #endregion
     #region MaxSP
-    public OnChangeParameterTrigger MaxSPChangeTrigger;
+    public OnChangeParameterTrigger MaxSPChangeTrigger { get; set; }
     protected float _maxSp;
     public virtual float MaxSP
     {
@@ -119,8 +122,9 @@ public class Creature : MyObject
         }
         set
         {
-            if (MaxSPChangeTrigger != null) { MaxSPChangeTrigger(value); }
             _maxSp = value;
+            if (MaxSPChangeTrigger != null) { MaxSPChangeTrigger(value); }
+            
         }
 
     }
@@ -129,8 +133,7 @@ public class Creature : MyObject
     public OnChangeParameterTrigger HPChangeTrigger;
     protected float hP = 100;
     public virtual float HP { get => hP; set {
-            if (HPChangeTrigger != null)
-            { HPChangeTrigger(value); }
+            
             if (InfinityHP)
             {
                 return;
@@ -139,6 +142,7 @@ public class Creature : MyObject
 
             if (value > MaxHP)
             {
+                Debug.LogError(GetMaxHP());
                 hP = MaxHP;
             }
             else if (value < 0)
@@ -149,14 +153,15 @@ public class Creature : MyObject
             else
             {
                 hP = value;
-            }
+            }if (HPChangeTrigger != null)
+            { HPChangeTrigger(value); }
         } }
     #endregion
     #region MP
     public OnChangeParameterTrigger MPChangeTrigger;
     protected float mP = 100;
     public virtual float MP { get => mP; set {
-            if (MPChangeTrigger != null) { MPChangeTrigger(value); }
+            
             if (InfinityMP) {return; }
             if (value > MaxMP)
             {
@@ -170,14 +175,14 @@ public class Creature : MyObject
             {
                 mP = value;
             }
-        
+        if (MPChangeTrigger != null) { MPChangeTrigger(value); }
         } }
     #endregion
     #region ST
     public OnChangeParameterTrigger STChangeTrigger;
     protected float sT = 100;
     public virtual float ST { get => sT; set {
-            if (STChangeTrigger != null) { STChangeTrigger(value); }
+            
             if (InfinityST) { return; }
             sT = value;
             if (value > MaxST)
@@ -191,13 +196,13 @@ public class Creature : MyObject
             else
             {
                 sT = value;
-            }
+            }if (STChangeTrigger != null) { STChangeTrigger(value); }
         } }
     #endregion
     #region SP
     public OnChangeParameterTrigger SPChangeTrigger;
     protected float sP = 100;
-    public virtual float SP { get => sP; set { if (SPChangeTrigger != null) { SPChangeTrigger(value); }
+    public virtual float SP { get => sP; set { 
             if (InfinitySP) { return; }
             if (value > MaxSP)
             {
@@ -212,7 +217,7 @@ public class Creature : MyObject
             {
                 sP = value;
             }
-
+if (SPChangeTrigger != null) { SPChangeTrigger(value); }
         } }
     #endregion
     #region SumBaseDamage
@@ -238,9 +243,10 @@ public class Creature : MyObject
         }
         set
         {
+            _sumBaseDamage = value;
             if (SumBaseDamageChangeTrigger != null)
             { SumBaseDamageChangeTrigger(value); }
-            _sumBaseDamage = value;
+            
         }
 
     }
@@ -263,12 +269,12 @@ public class Creature : MyObject
             return _regSpeedHP * Aditional;
         }
         set
-        {
+        {_regSpeedHP = value;
             if (RegSpeedHPChangeTrigger != null)
             {
                 RegSpeedHPChangeTrigger(value);
             }
-            _regSpeedHP = value;
+            
         }
 
     }
@@ -291,12 +297,12 @@ public class Creature : MyObject
             return _regSpeedMP * Aditional;
         }
         set
-        {
+        {_regSpeedMP = value;
             if (RegSpeedMPChangeTrigger!=null)
             {
                 RegSpeedMPChangeTrigger(value);
             }
-            _regSpeedMP = value;
+            
         }
 
     }
@@ -319,12 +325,12 @@ public class Creature : MyObject
             return _regSpeedST * Aditional;
         }
         set
-        {
+        {_regSpeedST = value;
             if (RegSpeedSTChangeTrigger != null)
             {
                 RegSpeedSTChangeTrigger(value);
             }
-            _regSpeedST = value;
+            
         }
 
     }
@@ -347,12 +353,12 @@ public class Creature : MyObject
             return _regSpeedSP * Aditional;
         }
         set
-        {
+        {_regSpeedSP = value;
             if (RegSpeedSPChangeTrigger != null)
             {
                 RegSpeedSPChangeTrigger(value);
             }
-            _regSpeedSP = value;
+            
         }
 
     }
@@ -375,12 +381,12 @@ public class Creature : MyObject
             return _magResist * Aditional;
         }
         set
-        {
+        {_magResist = value;
             if (MagResistChangeTrigger != null)
             {
                 MagResistChangeTrigger(value);
             }
-            _magResist = value;
+            
         }
 
     }
@@ -403,12 +409,12 @@ public class Creature : MyObject
             return _phyResist * Aditional;
         }
         set
-        {
+        {_phyResist = value;
             if (PhyResistChangeTrigger != null)
             {
                 PhyResistChangeTrigger(value);
             }
-            _phyResist = value;
+            
         }
 
     }
@@ -431,12 +437,12 @@ public class Creature : MyObject
             return _soulResist * Aditional;
         }
         set
-        {
+        { _soulResist = value;
             if (SoulResistChangeTrigger != null)
             {
                 SoulResistChangeTrigger(value);
             }
-            _soulResist = value;
+           
         }
 
     }
@@ -475,12 +481,12 @@ public class Creature : MyObject
     #region Level
     protected int _lvl = 1;
     public OnChangeParameterTrigger OnLevelChange;
-    public int Lvl { get => _lvl; set {
+    public int Lvl { get => _lvl; set {_lvl = value; 
             if (OnLevelChange!=null)
             {
                 OnLevelChange(value);
             }           
-            _lvl = value; } }
+            } }
     #endregion
     public bool MoveLock = false;
     public bool AttackLock = false;
@@ -988,6 +994,22 @@ public class Creature : MyObject
         }
         States.Remove(state);
     }
+
+    public bool IsUsableItem(Item item)
+    {
+        foreach (var state in States)
+        {
+            if (state.type == StateType.DazerItems)
+            {
+                if (state.Params.Count == 0)
+                    return false;
+                if (state.Params.Any(x => (int)x == item.ID))
+                    return false;
+            }
+        }
+        return true;
+    }
+
     protected void InfinityPowerON(State state)
     {
         if (state.Params[(int)InfinityPowerLD.InfinityHP] == 1)

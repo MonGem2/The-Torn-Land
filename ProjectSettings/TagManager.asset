@@ -12,6 +12,7 @@ TagManager:
   - detector
   - item
   - UI
+  - inventory
   layers:
   - Default
   - TransparentFX

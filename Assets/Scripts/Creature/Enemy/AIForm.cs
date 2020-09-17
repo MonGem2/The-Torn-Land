@@ -92,8 +92,17 @@ public class AIForm : Creature
         slider.maxValue = MaxHP;
         this.MaxHPChangeTrigger += (y) =>
         {
-            float x = (float)y;
-            slider.maxValue = x;
+            try
+            {
+                float x = (float)y;
+                slider.maxValue = x;
+            }
+            catch (Exception)
+            {
+                throw;
+                
+            }
+            
         };
         this.HPChangeTrigger += (y) =>
         {
