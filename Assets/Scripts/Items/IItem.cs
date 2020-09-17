@@ -3,8 +3,7 @@ using UnityEngine;
 
 public interface IItem
 {
-    Player player { get; set; }
-    int ID { get; set; }
+    string ID { get; set; }
     string Name { get; set; }
     string Description { get; set; }
     Sprite UIIcon { get; set; }
@@ -18,8 +17,8 @@ public interface IItem
 
 public class ItemData
 {
-    public List<State> Effects = new List<State>();
-    public ItemType type = ItemType.Unused;
+    public List<State> Effects;
+    public ItemType type;
 
 }
 

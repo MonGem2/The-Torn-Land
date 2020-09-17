@@ -1040,10 +1040,10 @@ public class Loader:MonoBehaviour
     {
         Debug.Log("Loader:create player");
         //player.transform.position = new Vector3();
-        player.MaxHP = 200;
-        player.HP = 200;
+        player.MaxHP = 100;
+        player.HP = 100;
         player.RegSpeedHP = 1;
-        player.MaxMP = 200;
+        player.MaxMP = 100;
         player.MP = 100;
         player.RegSpeedMP = 1;
         player.MagResist = 1;
