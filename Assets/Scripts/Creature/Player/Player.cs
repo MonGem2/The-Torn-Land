@@ -408,7 +408,7 @@ public class Player : Creature
     public IEnumerator Save()
     {
         yield return new WaitForSeconds(10);
-        loader.SavePlayer(this);
+        loader.SavePlayer();
     
     }
     void RegTrigger(object obj, object eventArgs)

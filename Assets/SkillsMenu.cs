@@ -42,7 +42,7 @@ public class SkillsMenu : MonoBehaviour
         foreach (var item in skillBar.buttons)
         {
             item.OnClick += OnSetButtonClick;
-            item.OnRightClick += RemoveSkill;
+            
         //    Debug.Log(item.OnClick.Method.Name);
         }
         
@@ -202,7 +202,11 @@ public class SkillsMenu : MonoBehaviour
         //}
         skillBar.SetUsableFalse();
         skillBar.ShowAll();
-        
+        foreach (var item in skillBar.buttons)
+        {
+            item.OnRightClick += RemoveSkill;
+            //    Debug.Log(item.OnClick.Method.Name);
+        }
         //UpdateContent();
     }
     private void OnDisable()
@@ -217,6 +221,11 @@ public class SkillsMenu : MonoBehaviour
         //DestroyGrid();
         skillBar.SetUsableTrue();
         skillBar.HideAll();
+        foreach (var item in skillBar.buttons)
+        {
+            item.OnRightClick -= RemoveSkill;
+            //    Debug.Log(item.OnClick.Method.Name);
+        }
         if (skill != null)
         {
             skillBar.OffGreen();

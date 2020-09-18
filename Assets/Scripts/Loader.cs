@@ -8,8 +8,11 @@ using System;
 
 public class Loader:MonoBehaviour
 {
+    public Player player;
     public int WorldSize = 100;
     public bool IsMapGenered=false;
+    public WorldState world;
+
     public List<GameObject> BulletsPerhubs;
     public List<State> States=new List<State>();
     public List<Skill> Skills=new List<Skill>();
@@ -18,7 +21,7 @@ public class Loader:MonoBehaviour
     bool MapLoaded = false;
     string MapAccesed = "Map/Accesed/";
     string MapGenerated = "Map/Generated/";
-    public WorldState world;
+
     public void LoadMap()
     {
         //LoadSkills();
@@ -1078,7 +1081,7 @@ public class Loader:MonoBehaviour
         Debug.Log(".mapcell");
         world.StartGeneration(new MyVector3(10, 10));
     }
-    public void SavePlayer(Player player)
+    public void SavePlayer()
     {
         Debug.Log("Loader: player saved");
         List<object> Data = new List<object>() {MyVector3.Set(world.localPosition(player.transform.position)),
