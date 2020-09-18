@@ -14,16 +14,38 @@ public class SkillsMenu : MonoBehaviour
     public List<SkillButton> skills;
     public Player player;
     public SkillButton skill;
+    public void RemoveSkill(object x)
+    {
+        SkillButton skillButton = (SkillButton)x;
+        if (skillButton == LeftButtonSkill)
+        {
+            player.OnLeftClickSkill = null;
+        }
+        if (skillButton == RightButtonSkill)
+        {
+            player.OnRightClickSkill = null;
+        }
+        skillButton.Remove();
+        skillButton.Show();
+    }
+    //public SkillButton skill1;
     void Start()
     {
+        RightButtonSkill.SetPlayer(player);
+        LeftButtonSkill.SetPlayer(player);
         RightButtonSkill.OnClick += OnSetButtonClick;
         LeftButtonSkill.OnClick += OnSetButtonClick;
+        RightButtonSkill.OnRightClick += RemoveSkill;
+        LeftButtonSkill.OnRightClick += RemoveSkill;
         RightButtonSkill.Usable = false;
         LeftButtonSkill.Usable = false;
         foreach (var item in skillBar.buttons)
         {
             item.OnClick += OnSetButtonClick;
+            item.OnRightClick += RemoveSkill;
+        //    Debug.Log(item.OnClick.Method.Name);
         }
+        
         skills = new List<SkillButton>();
         RightButtonSkill.transform.localPosition = new Vector3(RightButtonSkill.transform.localPosition.x, RightButtonSkill.transform.localPosition.y, 0);
         LeftButtonSkill.transform.localPosition = new Vector3(LeftButtonSkill.transform.localPosition.x, LeftButtonSkill.transform.localPosition.y, 0);
@@ -41,15 +63,19 @@ public class SkillsMenu : MonoBehaviour
         {
             LeftButtonSkill.SetPlayer(player);
         }
+        if (RightButtonSkill.player == null)
+        {
+            RightButtonSkill.SetPlayer(player);
+        }
         if (player.OnLeftClickSkill != null)
         {
-            LeftButtonSkill.Set(player.OnLeftClickSkill);
+            LeftButtonSkill.Set(player.OnLeftClickSkill, false);
             LeftButtonSkill.transform.localPosition = new Vector3(LeftButtonSkill.transform.localPosition.x, LeftButtonSkill.transform.localPosition.y, 0);
         }
         if (player.OnRightClickSkill != null)
         {
             RightButtonSkill.Show();
-            RightButtonSkill.Set(player.OnRightClickSkill);
+            RightButtonSkill.Set(player.OnRightClickSkill, false);
             RightButtonSkill.transform.localPosition = new Vector3(RightButtonSkill.transform.localPosition.x, RightButtonSkill.transform.localPosition.y, 0);
             
         }
@@ -83,10 +109,16 @@ public class SkillsMenu : MonoBehaviour
     }
     public void OnSkillClick(object x)
     {
+        if (skill != null)
+        {
+            skill.OffGreen();
+        }
+      //  DeactivateMoving = true;
         Debug.LogWarning("PSDA");
         SkillButton button = (SkillButton)x;
         button.OnGreen();
         Debug.LogWarning("PSDA1");
+      //  skill1 = button;
         skill = button;
         skillBar.OnAllGreen();
         Debug.LogWarning("PSDA2");
@@ -96,52 +128,67 @@ public class SkillsMenu : MonoBehaviour
     }
     public void OnSetButtonClick(object x)
     {
-        Debug.Log("Co to za noher"+skill.Hiden);
+       // Debug.Log(skill1 == null);
+       // Debug.Log("Co to za noher"+skill1.Hiden);
         if (skill != null)
         {
-            Debug.Log("Pizdec");
+            
             SkillButton button = (SkillButton)x;
-            Debug.Log(button.skill.skillType);   
-            button.Set(button.skill);
+            //Debug.Log("Pizdec  " + (skill == button));
+            //Debug.Log(button.skill.skillType);
+
             if (button == RightButtonSkill)
             {
+                button.Set(skill.skill, false);
                 player.OnRightClickSkill = button.skill;
             }
-            if (button == LeftButtonSkill)
+            else if (button == LeftButtonSkill)
             {
+                button.Set(skill.skill, false);
                 player.OnLeftClickSkill = button.skill;
             }
+            else
+            {
+                button.Set(skill.skill, false);
+            }
+            skillBar.OffGreen();
+            RightButtonSkill.OffGreen();
+            LeftButtonSkill.OffGreen();
+            skill.OffGreen();
+            //        skill1 = null;
             skill = null;
+
+            Debug.Log("Da blyat");
+            //    DeactivateMoving = false;
+
+        //    skill1.OffGreen();
+          //  skill1 = null;
+            
         }
 
     }
-    public  int updateskip = 0;
+    //public bool DeactivateMoving = false;
+   // public  int updateskip = 0;
     // Update is called once per frame
     void Update()
     {
-        if (updateskip != 0) { updateskip++; }
-        if (updateskip>40)
+
+        if (RightButtonSkill.Hiden)
+        {
+            RightButtonSkill.Show();
+        }
+        if(Input.GetMouseButtonDown(1))
         {
             if (skill != null)
             {
                 Debug.Log("Da blyat");
+            //    DeactivateMoving = false;
                 skillBar.OffGreen();
                 RightButtonSkill.OffGreen();
                 LeftButtonSkill.OffGreen();
                 skill.OffGreen();
                 skill = null;
             }
-            updateskip = 0;
- 
-        }
-        if (RightButtonSkill.Hiden)
-        {
-            RightButtonSkill.Show();
-        }
-        if(Input.GetMouseButtonDown(0)||Input.GetMouseButtonDown(1))
-        {
-            Debug.Log("Fuck");
-            updateskip++;
         }
     }
     private void OnEnable()

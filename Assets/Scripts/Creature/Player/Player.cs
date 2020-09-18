@@ -459,7 +459,7 @@ public class Player : Creature
                 }
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0)&&OnLeftClickSkill!=null)
             {
                 if (!AttackLock && CanShoot && ActiveSkill.CanBeUsed && CanAttack && !ActiveSkill.locked)
                 {
@@ -471,6 +471,7 @@ public class Player : Creature
                     StartCoroutine(this.UseSkill(temp, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
 
                 }
+
                 else if (!CanShoot)
                 {
 
@@ -484,7 +485,11 @@ public class Player : Creature
                     messanger.SetMessage("Skill locked");
                 }
             }
-            if (Input.GetMouseButtonDown(1))
+            else if (OnLeftClickSkill == null)
+            {
+                messanger.SetMessage("You have no skill");
+            }
+            if (Input.GetMouseButtonDown(1)&&OnRightClickSkill!=null)
             {
                 if (!AttackLock && CanShoot && OnRightClickSkill.CanBeUsed && CanAttack && !OnRightClickSkill.locked)
                 {
@@ -504,6 +509,10 @@ public class Player : Creature
                 {
                     messanger.SetMessage("Skill locked");
                 }
+            }
+            else if (OnRightClickSkill == null)
+            {
+                messanger.SetMessage("You have no skill");
             }
         }
     }

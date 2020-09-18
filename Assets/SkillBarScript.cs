@@ -79,6 +79,7 @@ public class SkillBarScript : MonoBehaviour
     }
     public void OffGreen()
     {
+        Debug.Log("sho s toboy ne tak");
         foreach (var item in buttons)
         {
             item.OffGreen();
@@ -95,7 +96,7 @@ public class SkillBarScript : MonoBehaviour
     {
         foreach (var item in buttons)
         {
-            item.Usable = true ;
+            item.Usable = true;
         }
     }
     //  public void Use(Skill skill)

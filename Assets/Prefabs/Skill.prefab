@@ -120,7 +120,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1471150423073293574}
-        m_MethodName: OnClick
+        m_MethodName: OnButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -145,3 +145,5 @@ MonoBehaviour:
   player: {fileID: 0}
   TurnOn: 0
   ico: {fileID: 0}
+  Usable: 1
+  Hiden: 0

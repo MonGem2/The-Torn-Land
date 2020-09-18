@@ -159,6 +159,14 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
     }
     public OnChangeParameterTrigger OnClick;
     public OnChangeParameterTrigger OnRightClick;
+    public void OnButtonClick()
+    {
+        Debug.Log("Pizdec");
+        if (OnClick != null)
+        {
+            OnClick(this);
+        }
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log("Pezd");
@@ -170,10 +178,6 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
             }
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                if (OnClick != null)
-                {
-                    OnClick(this);
-                }
                 if (player.ActiveSkill == skill)
                 {
                     player.SetActiveSkill(skill);
@@ -184,10 +188,6 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
                 {
                     player.SetActiveSkill(skill);
                     ico.color = Color.black;
-                }
-                if (OnClick != null)
-                {
-                    OnClick(this);
                 }
             }
             if (eventData.button == PointerEventData.InputButton.Right)
@@ -223,14 +223,6 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                if (OnClick != null)
-                {
-                    OnClick(this);
-                }
-            }
             if (eventData.button == PointerEventData.InputButton.Right)
             {
                 if (OnRightClick != null)
@@ -243,11 +235,15 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
     Color color;
     public void OnGreen()
     {
-        color = ico.color;
-        ico.color = Color.green;
+        if (ico.color != Color.green)
+        {
+            color = ico.color;
+            ico.color = Color.green;
+        }
     }
     public void OffGreen()
     {
+        Debug.Log("blat "+(color==Color.green));
         ico.color = color;
     }
 }
