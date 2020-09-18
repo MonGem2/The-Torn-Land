@@ -119,10 +119,6 @@ MonoBehaviour:
     type: 3}
   EmptyPerhub: {fileID: 433937569189849185, guid: 9cf8ae4cc32d82c4eaf9c9914247a578,
     type: 3}
-  KeyPerhub: {fileID: 5096288635909938564, guid: 0a504d2b954bb5445b9e3b8d1061c0d5,
-    type: 3}
-  SpawnPerhub: {fileID: 4820265793106903246, guid: 1e0fc41fdc95a4b48bec94e0ae5db35c,
-    type: 3}
   UnBorder: 2
   MapCells: []
 --- !u!222 &-4820273710582962737

@@ -18,7 +18,7 @@ public class EntityMovement : MonoBehaviour
     public Behavior behavior=Behavior.None;
     //bool PointSeted = true;    
     public AIForm entity;
-
+    public DetectorScript detector;
    // public GameObject gm;
     bool CheckMovement = false;
     private void OnCollisionStay2D(Collision2D collision)
@@ -35,7 +35,9 @@ public class EntityMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        detector.ColisionEnter += (x) => {
+            DetectSomething((Transform)x);
+        };
     }
 
     private void Update()

@@ -261,7 +261,7 @@ public class WorldState : MonoBehaviour
         }
         try
         {
-            MapBackgroundGenerator();
+            //MapBackgroundGenerator();
         }
         catch (System.Exception)
         {
@@ -365,7 +365,7 @@ public class WorldState : MonoBehaviour
         Debug.Log("ZXCVBNM<");
         MapRogulikeGenerator MapCell = Instantiate(WorldCellPerhub);
         MapCell.transform.SetParent(gameObject.transform);
-        MapCell.transform.position = new Vector3(-StaticData.WorldCellSize/2, -StaticData.WorldCellSize/2);// myCanvas.transform.position + new Vector3(DX * StaticData.WorldCellSize, DY * -StaticData.WorldCellSize);
+        MapCell.transform.position = new Vector3(-StaticData.WorldCellSize/2, -StaticData.WorldCellSize/2, 1);// myCanvas.transform.position + new Vector3(DX * StaticData.WorldCellSize, DY * -StaticData.WorldCellSize);
         loader.LoadMap();
         if (StaticData.MapData[(int)value.y][(int)value.x ].Accesed)
         {

@@ -16,7 +16,6 @@ public class WorldMapCell
     public int MapWidth { get => mapWidth; set => mapWidth = value; }
     public int PosX;
     public int PosY;
-    public List<Vector2> KeyPoints = new List<Vector2>();
     public string Message { get => message; set => message = value; }
     public int DangerousLvl { get => dangerousLvl; set => dangerousLvl = value; }
     public EnvironType Environ { get => environ; set => environ = value; }

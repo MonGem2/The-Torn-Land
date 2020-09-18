@@ -386,6 +386,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Settings: {fileID: 1128370031}
+  player: {fileID: 0}
+  loader: {fileID: 0}
+  Continue: {fileID: 1417555426}
 --- !u!114 &716906100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,7 +546,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Settings
+  m_Text: Continue
 --- !u!222 &948074281
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -670,7 +673,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 90.38231}
+  m_AnchoredPosition: {x: -0.87628, y: 0}
   m_SizeDelta: {x: 224.84375, y: 77.329124}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1411108965
@@ -718,7 +721,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 716906099}
-        m_MethodName: OnStartGameClick
+        m_MethodName: OnStartNewGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -805,7 +808,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -7}
+  m_AnchoredPosition: {x: -0.87628, y: 88}
   m_SizeDelta: {x: 224.84378, y: 61.552734}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1417555428
@@ -853,7 +856,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 716906099}
-        m_MethodName: OnSettingsClick
+        m_MethodName: OnStartGameClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1514,7 +1517,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Start Game
+  m_Text: 'New Game
 
 '
 --- !u!222 &2071276342

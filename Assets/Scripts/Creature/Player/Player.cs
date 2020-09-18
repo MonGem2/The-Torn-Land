@@ -30,11 +30,11 @@ public class Player : Creature
         }
         set
         {
+            _maxHungry = value;
             if (MaxHungryChangeTrigger != null)
             {
                 MaxHungryChangeTrigger(value);
             }
-            _maxHungry = value;
         }
 
     }
@@ -51,10 +51,6 @@ public class Player : Creature
         }
         set
         {
-            if (HungryChangeTrigger != null)
-            {
-                HungryChangeTrigger(value);
-            }
             if (value > MaxHungry)
             {
                 _hungry = MaxHungry;
@@ -68,6 +64,10 @@ public class Player : Creature
                 _hungry = value;
             }
 
+            if (HungryChangeTrigger != null)
+            {
+                HungryChangeTrigger(value);
+            }
         }
 
     }
@@ -91,11 +91,11 @@ public class Player : Creature
         }
         set
         {
+            _regSpeedH = value;
             if (RegSpeedHChangeTrigger != null)
             {
                 RegSpeedHChangeTrigger(value);
             }
-            _regSpeedH = value;
         }
 
     }
@@ -113,11 +113,11 @@ public class Player : Creature
         }
         set
         {
+            _maxThirst = value;
             if (MaxThirstChangeTrigger != null)
             {
                 MaxThirstChangeTrigger(value);
             }
-            _maxThirst = value;
         }
 
     }
@@ -134,10 +134,6 @@ public class Player : Creature
         }
         set
         {
-            if (ThirstChangeTrigger != null)
-            {
-                ThirstChangeTrigger(value);
-            }
             if (value > MaxThirst)
             {
                 _thirst = MaxThirst;
@@ -149,6 +145,10 @@ public class Player : Creature
             else
             {
                 _thirst = value;
+            }
+            if (ThirstChangeTrigger != null)
+            {
+                ThirstChangeTrigger(value);
             }
         }
 
@@ -173,11 +173,11 @@ public class Player : Creature
         }
         set
         {
+            _regSpeedT = value;
             if (RegSpeedTChangeTrigger != null)
             {
                 RegSpeedTChangeTrigger(value);
             }
-            _regSpeedT = value;
         }
 
     }
@@ -195,11 +195,11 @@ public class Player : Creature
         }
         set
         {
+            _maxCorruption = value;
             if (MaxCorruptionChangeTrigger != null)
             {
                 MaxCorruptionChangeTrigger(value);
             }
-            _maxCorruption = value;
         }
 
     }
@@ -216,10 +216,6 @@ public class Player : Creature
         }
         set
         {
-            if (CorruptionChangeTrigger != null)
-            {
-                CorruptionChangeTrigger(value);
-            }
             if (value > MaxCorruption)
             {
                 _corruption = MaxCorruption;
@@ -231,6 +227,10 @@ public class Player : Creature
             else
             {
                 _corruption = value;
+            }
+            if (CorruptionChangeTrigger != null)
+            {
+                CorruptionChangeTrigger(value);
             }
         }
 
@@ -255,11 +255,11 @@ public class Player : Creature
         }
         set
         {
+            _regSpeedCP = value;
             if (RegSpeedCPChangeTrigger != null)
             {
                 RegSpeedCPChangeTrigger(value);
             }
-            _regSpeedCP = value;
         }
 
     }
@@ -277,10 +277,6 @@ public class Player : Creature
         }
         set
         {
-            if (XPChangeTrigger != null)
-            {
-                XPChangeTrigger(value);
-            }
             float Aditional = 1;
             foreach (var item in States)
             {
@@ -302,6 +298,10 @@ public class Player : Creature
                 }
                 _xP = value;
             }
+            if (XPChangeTrigger != null)
+            {
+                XPChangeTrigger(value);
+            }
         }
 
     }
@@ -318,15 +318,17 @@ public class Player : Creature
         }
         set
         {
+            _maxXP = value;
             if (MaxXPChangeTrigger != null)
             {
                 MaxXPChangeTrigger(value);
             }
-            _maxXP = value;
         }
 
     }
     #endregion
+    public OnChangeParameterTrigger OnLoaded;
+    public bool Loaded = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -385,6 +387,11 @@ public class Player : Creature
                 SkillBar.SetSkillOnButton((Skill)x);
             }
         };
+        Loaded = true;
+        if (OnLoaded != null)
+        {
+            OnLoaded(this);
+        }
     }
     public void PlayerStateAdded(State state)
     {
@@ -401,7 +408,7 @@ public class Player : Creature
     public IEnumerator Save()
     {
         yield return new WaitForSeconds(10);
-        loader.SavePlayer(this);
+        loader.SavePlayer();
     
     }
     void RegTrigger(object obj, object eventArgs)
@@ -452,7 +459,7 @@ public class Player : Creature
                 }
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0)&&OnLeftClickSkill!=null)
             {
                 if (!AttackLock && CanShoot && ActiveSkill.CanBeUsed && CanAttack && !ActiveSkill.locked)
                 {
@@ -464,6 +471,7 @@ public class Player : Creature
                     StartCoroutine(this.UseSkill(temp, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
 
                 }
+
                 else if (!CanShoot)
                 {
 
@@ -477,7 +485,11 @@ public class Player : Creature
                     messanger.SetMessage("Skill locked");
                 }
             }
-            if (Input.GetMouseButtonDown(1))
+            else if (OnLeftClickSkill == null)
+            {
+                messanger.SetMessage("You have no skill");
+            }
+            if (Input.GetMouseButtonDown(1)&&OnRightClickSkill!=null)
             {
                 if (!AttackLock && CanShoot && OnRightClickSkill.CanBeUsed && CanAttack && !OnRightClickSkill.locked)
                 {
@@ -497,6 +509,10 @@ public class Player : Creature
                 {
                     messanger.SetMessage("Skill locked");
                 }
+            }
+            else if (OnRightClickSkill == null)
+            {
+                messanger.SetMessage("You have no skill");
             }
         }
     }
