@@ -14,6 +14,7 @@ public class MapRogulikeGenerator : MonoBehaviour
     public GameObject CellPerhub;
     public GameObject EmptyPerhub;
     public GameObject KeyPerhub;
+    public GameObject SpawnPerhub;
     public int UnBorder = 5;
     //private Generator generator;
     private bool Result;
@@ -205,8 +206,17 @@ public class MapRogulikeGenerator : MonoBehaviour
                     GameObject cell = Instantiate(KeyPerhub);
                     cell.transform.SetParent(gameObject.transform);
                     MapCells.Add(cell);
-                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.Empty, 1, 1);
+                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.Key, 1, 1);
                     ThisCell.KeyPoints.Add(new Vector2(k, i));
+                }
+                if (Map[i, k] == (int)MapCell.CellType.SpawnP)
+                {
+                    GameObject cell = Instantiate(SpawnPerhub);
+                    cell.transform.SetParent(gameObject.transform);
+                    MapCells.Add(cell);
+                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.SpawnP, 1, 1);
+                    cell.GetComponent<SpawnerCell>().Setter(GameObject.Find("Player").GetComponent<Player>(), loader);
+
                 }
             }
         }
@@ -378,7 +388,7 @@ Interesting Patterns
         /// <summary>
         /// Caves within the map are stored here
         /// </summary>
-        private List<List<Point>> Caves;
+        public List<List<Point>> Caves;
 
         /// <summary>
         /// Corridors within the map stored here
@@ -447,12 +457,12 @@ Interesting Patterns
         }
 
 
-        public int Build(int unBorderLim)
-        {
-            BuildCaves(unBorderLim);
-            GetCaves();
-            return Caves.Count();
-        }
+    public int Build(int unBorderLim)
+    {
+        BuildCaves(unBorderLim);
+        GetCaves();
+        return Caves.Count();
+    }
 
         public void EmptyCellSet()
         {
@@ -470,15 +480,42 @@ Interesting Patterns
                 }
         }
 
-        public void SetTreasures()
+        public void SetSpawnMobs()
         {
-            for (int x = 0; x < MapSize.Width; x++)
-                for (int y = 0; y < MapSize.Height; y++)
+        for (int x = MapSize.Width; x < MapSize.Width * 2; x++)
+        {
+            for (int y = MapSize.Height; y < MapSize.Height * 2; y++)
+            {
+                if (Map[x, y] == 1 && Neighbours_Get(new Point(x, y)).Where(n => Point_Get(n) == 0).Count() == 3)
                 {
-                    if (Map[x, y] == 1 && Neighbours_Get1(new Point(x, y)).Where(n => Point_Get(n) == 0).Count() >= 3)
-                        if (RandomNumber(0, 100) < 3)
-                            Map[x, y] = 5;
+                    if (RandomNumber(0, 1000) < 100)
+                    {
+                        Map[x, y] = 3;
+                    }
                 }
+                if (Map[x, y] == 1 && Neighbours_Get(new Point(x, y)).Where(n => Point_Get(n) == 0).Count() == 2)
+                {
+                    if (RandomNumber(0, 1000) < 33)
+                    {
+                        Map[x, y] = 3;
+                    }
+                }
+                if (Map[x, y] == 1 && Neighbours_Get(new Point(x, y)).Where(n => Point_Get(n) == 0).Count() == 1)
+                {
+                    if (RandomNumber(0, 1000) < 18)
+                    {
+                        Map[x, y] = 3;
+                    }
+                }
+                if (Map[x, y] == 1 && Neighbours_Get(new Point(x, y)).Where(n => Point_Get(n) == 0).Count() == 0)
+                {
+                    if (RandomNumber(0, 1000) < 5)
+                    {
+                        Map[x, y] = 3;
+                    }
+                }
+            }
+        }
         }
 
 
@@ -602,6 +639,7 @@ Interesting Patterns
                 countKeys--;
             }
         }
+        SetSpawnMobs();
 
     }
 
