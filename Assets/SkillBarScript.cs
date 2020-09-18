@@ -53,6 +53,51 @@ public class SkillBarScript : MonoBehaviour
             }
         }
     }
+    public void ShowAll()
+    {
+        foreach (var item in buttons)
+        {
+            item.Show();
+        }
+    }
+    public void HideAll()
+    {
+        foreach (var item in buttons)
+        {
+            if (item.skill == null)
+            {
+                item.Hide();
+            }
+        }
+    }
+    public void OnAllGreen()
+    {
+        foreach (var item in buttons)
+        {
+            item.OnGreen();
+        }
+    }
+    public void OffGreen()
+    {
+        foreach (var item in buttons)
+        {
+            item.OffGreen();
+        }
+    }
+    public void SetUsableFalse()
+    {
+        foreach (var item in buttons)
+        {
+            item.Usable = false;
+        }
+    }
+    public void SetUsableTrue()
+    {
+        foreach (var item in buttons)
+        {
+            item.Usable = true ;
+        }
+    }
     //  public void Use(Skill skill)
     //  {
     //      foreach (var item in buttons)
