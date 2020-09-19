@@ -37,7 +37,12 @@ public class WorldKey : MonoBehaviour
 
     public void OnClick() 
     {
-        generator.Setter(loader, mapcell);
+        loader.MapAccess(mapcell);
+        if (generator!=null)
+        {
+            generator.Setter(loader, mapcell);
+        }
+        
         Setted = true;
         button.SetActive(false);
     }

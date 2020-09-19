@@ -17,8 +17,10 @@ public class MapRogulikeGenerator : MonoBehaviour
     public GameObject SpawnPerhub;
     public GameObject SavePerhub;
     public int UnBorder = 5;
+    public bool Setted=false;
     //private Generator generator;
     private bool Result;
+    
     Task<int[,]> outer;
     int[,] Map;
     public void Setter(Loader loader, WorldMapCell thisscell, int UnBorder = 5)
@@ -47,6 +49,7 @@ public class MapRogulikeGenerator : MonoBehaviour
             return;
         }
         MapSet();
+        Setted = true;
         //Debug.Log(StaticData.MapData[9][10].Message);
         //ThisCell = StaticData.ActiveCell;
         //Debug.Log(ThisCell.Message);
@@ -154,7 +157,7 @@ public class MapRogulikeGenerator : MonoBehaviour
         {
             for (int k = 0; k < ThisCell.MapHeight; k++)
             {
-                //Debug.Log($"Loading cell:{i},{k} and it's :{generator.ResultMap[i, k]}");
+                Debug.Log($"Loading cell:{i},{k} and it's :{Map[i, k]}");
                 if (Map[i, k] == (int)MapCell.CellType.Wall)
                 {
                     // Debug.Log($"it's wall");
@@ -204,29 +207,39 @@ public class MapRogulikeGenerator : MonoBehaviour
                 }
                 if (Map[i, k] == (int)MapCell.CellType.Key)
                 {
-                    GameObject cell = Instantiate(KeyPerhub);
+                    WorldKey cell =Instantiate( Resources.Load<WorldKey>("WorldKey"));
                     cell.transform.SetParent(gameObject.transform);
-                    MapCells.Add(cell);
-                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.Key, 1, 1);
+                    for (int blat = 0; blat < ThisCell.keys.Count(); blat++)
+                    {
+                        if (ThisCell.keys[blat] == null)
+                        {
+                            ThisCell.keys[blat] = cell;
+                        }
+                    }
+                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.white, MapCell.CellType.Key, 0.5f, 0.5f);
+                //    cell.transform.position = new Vector3(k, i, -1);
+                    cell.gameObject.SetActive(false);
+                    MapCells.Add(cell.gameObject);
                     //ThisCell.KeyPoints.Add(new Vector2(k, i));
                 }
-                if (Map[i, k] == (int)MapCell.CellType.SpawnP)
-                {
-                    GameObject cell = Instantiate(SpawnPerhub);
-                    cell.transform.SetParent(gameObject.transform);
-                    MapCells.Add(cell);
-                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.SpawnP, 1, 1);
-                    cell.GetComponent<SpawnerCell>().Setter(GameObject.Find("Player").GetComponent<Player>(), loader);
-
-                }
+               // if (Map[i, k] == (int)MapCell.CellType.SpawnP)
+               // {
+               //     GameObject cell = Instantiate(SpawnPerhub);
+               //     cell.transform.SetParent(gameObject.transform);
+               //     MapCells.Add(cell);
+               //     cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.SpawnP, 1, 1);
+               //     cell.GetComponent<SpawnerCell>().Setter(GameObject.Find("Player").GetComponent<Player>(), loader);
+               //
+               // }
                 if (Map[i, k] == (int)MapCell.CellType.SaveP)
                 {
-                    GameObject cell = Instantiate(SavePerhub);
+                    SafePoint cell =Instantiate(Resources.Load<SafePoint>("SafePoint"));
                     cell.transform.SetParent(gameObject.transform);
-                    MapCells.Add(cell);
-                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.SaveP, 1, 1);
-                    cell.GetComponent<SpawnerCell>().Setter(GameObject.Find("Player").GetComponent<Player>(), loader);
-
+                    cell.loader = loader;
+                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.white, MapCell.CellType.Key, 0.5f, 0.5f);
+                 //   cell.transform.position = new Vector3(k, i, -1);
+                    MapCells.Add(cell.gameObject);
+              
                 }
             }
         }

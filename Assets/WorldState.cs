@@ -32,6 +32,8 @@ public class WorldState : MonoBehaviour
         //    return;
         //}        
         WorldMapCell tmpCell = myCanvas.ThisCell;
+        WorldMapCell targetCell = StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX];
+        
         for (int i = 0; i < MapCells.Length; i++)
         {
             if (MapCells[i] == null)
@@ -40,6 +42,18 @@ public class WorldState : MonoBehaviour
             }
             if (MapCells[i].transform.position == myCanvas.transform.position + new Vector3(DX * StaticData.WorldCellSize, DY * -StaticData.WorldCellSize))
             {
+                if (!MapCells[i].Setted)
+                {
+                    return;
+                }
+                if (!MapCells[i].Setted&&targetCell.Accesed)
+                {
+                    MapCells[i].Setter(loader, targetCell);
+                }else if (!MapCells[i]&&targetCell.Generated&&!tmpCell.GetKey(DX, DY).gameObject.active)
+                {
+                    tmpCell.GetKey(DX, DY).gameObject.SetActive(true);
+                    tmpCell.GetKey(DX, DY).Set(MapCells[i], targetCell, loader);
+                }
                 return;
             }
         }
@@ -54,22 +68,32 @@ public class WorldState : MonoBehaviour
         }
         else if (StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX].Generated)
         {
-            tmpCell.GetKey(DX, DY).gameObject.SetActive(true);
-            tmpCell.GetKey(DX, DY).Set(MapCell, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX], loader);
+            Debug.Log("yy .gg");
+            if (tmpCell.GetKey(DX, DY) != null)
+            {
+                Debug.Log("pesda1 .gg");
+                tmpCell.GetKey(DX, DY).gameObject.SetActive(true);
+                tmpCell.GetKey(DX, DY).Set(MapCell, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX], loader);
+            }
             
         }
         else if (!StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX].Generated)
         {
-            Debug.LogWarning("Adding to list " + tmpCell.PosY + DY + "  " + tmpCell.PosX + DX);
+            //Debug.LogWarning("Adding to list " + tmpCell.PosY + DY + "  " + tmpCell.PosX + DX);
             GeneratorQuery.Add(StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX]);
             OnGenerationEnded += (x) =>
             {
-                
+                Debug.Log("genered .gg");
                 GenerationCallback callback = (GenerationCallback)x;
                 if (callback.mapCell == StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX])
                 {
-                    tmpCell.GetKey(DX, DY).gameObject.SetActive(true);
-                    tmpCell.GetKey(DX, DY).Set(MapCell, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX], loader);
+                    //MapCell.Setter(loader, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX]);
+                    if (tmpCell.GetKey(DX, DY) != null)
+                    {
+                        Debug.Log("pesda2 .gg");
+                        tmpCell.GetKey(DX, DY).gameObject.SetActive(true);
+                        tmpCell.GetKey(DX, DY).Set(MapCell, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX], loader);
+                    }
                 }
 
             };
@@ -132,9 +156,9 @@ public class WorldState : MonoBehaviour
                 MapCells[i] = mapCell;
                 return;
             }
-            if ((MapCells[i].transform.position + new Vector3(StaticData.WorldCellSize/2, StaticData.WorldCellSize/2) - pos).magnitude > Far)
+            if ((MapCells[i].transform.position + new Vector3((float)StaticData.WorldCellSize/2, (float)StaticData.WorldCellSize/2) - pos).magnitude > Far)
             {
-                Far = (MapCells[i].transform.position - pos + new Vector3(StaticData.WorldCellSize/2, StaticData.WorldCellSize/2)).magnitude;
+                Far = (MapCells[i].transform.position - pos + new Vector3((float)StaticData.WorldCellSize/2, (float)StaticData.WorldCellSize/2)).magnitude;
                 k = i;
                 
             }
@@ -266,10 +290,8 @@ public class WorldState : MonoBehaviour
 
         GeneratorQuery.Add(GetCell());
         if (MapCells[0] != null)
-        {
-            
-            ZeroPosition = new Vector2(10, 10);
-            MapCells[0].Setter(loader, StaticData.MapData[10][10]);
+        {                     
+        //    MapCells[0].Setter(loader, StaticData.MapData[10][10]);
         }
         try
         {
@@ -338,7 +360,7 @@ public class WorldState : MonoBehaviour
                     Debug.Log("Stage5");
                     generator1.EndGeneration();
                     loader.MapGenered(worldMapCell, generator1.ResultMap);
-                    loader.MapAccess(worldMapCell);
+             //       loader.MapAccess(worldMapCell);
                 });
                 GeneratorQuery.Remove(worldMapCell);
                 if (GeneratorQuery.Count == 0)
@@ -377,13 +399,15 @@ public class WorldState : MonoBehaviour
     }
     public void StartGeneration(MyVector3 value)
     {
-        Debug.Log("ZXCVBNM<");
+        //Debug.Log("ZXCVBNM<");
         MapRogulikeGenerator MapCell = Instantiate(WorldCellPerhub);
         MapCell.transform.SetParent(gameObject.transform);
-        MapCell.transform.position = new Vector3(-StaticData.WorldCellSize/2, -StaticData.WorldCellSize/2, 1);// myCanvas.transform.position + new Vector3(DX * StaticData.WorldCellSize, DY * -StaticData.WorldCellSize);
+        MapCell.transform.position = new Vector3(-(float)StaticData.WorldCellSize/2, -(float)StaticData.WorldCellSize/2, 1);// myCanvas.transform.position + new Vector3(DX * StaticData.WorldCellSize, DY * -StaticData.WorldCellSize);
         loader.LoadMap();
+        ZeroPosition = new Vector2(value.x, value.y);
         if (StaticData.MapData[(int)value.y][(int)value.x ].Accesed)
         {
+          //  Debug.Log("Pezda");
             MapCell.Setter(loader, StaticData.MapData[(int)value.y][(int)value.x]);
         }
         AddMapCell(MapCell, new Vector3(0,0));

@@ -55,9 +55,15 @@ public class MapCell : MonoBehaviour
         //SizeX = 1;
        // Debug.Log(mySizeX + "   ggg  " + mySizeY);
         gameObject.transform.localPosition = new Vector3(X, Y, -1);
-        gameObject.GetComponent<Image>().material = new Material(gameObject.GetComponent<Image>().material);
-        gameObject.GetComponent<Image>().material.color = this.color;
-        GetComponent<RectTransform>().sizeDelta = new Vector2(mySizeX, mySizeY);
+        if (gameObject.GetComponent<Image>() != null)
+        {
+            gameObject.GetComponent<Image>().material = new Material(gameObject.GetComponent<Image>().material);
+            gameObject.GetComponent<Image>().material.color = this.color;
+        }
+        if (GetComponent<RectTransform>() != null)
+        {
+            GetComponent<RectTransform>().sizeDelta = new Vector2(mySizeX, mySizeY);
+        }
         if (type == CellType.Wall)
         {
             GetComponent<BoxCollider2D>().size = new Vector2(mySizeX, mySizeY);

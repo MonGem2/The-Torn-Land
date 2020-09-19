@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7181680728689087862}
   - component: {fileID: 7181680728689087863}
   - component: {fileID: 7181680728689087860}
+  - component: {fileID: 8254208050960548839}
   m_Layer: 0
   m_Name: SafePoint
   m_TagString: Untagged
@@ -126,6 +127,23 @@ MonoBehaviour:
   detector: {fileID: 7181680729087725858}
   Button: {fileID: 7181680729484811539}
   loader: {fileID: 0}
+--- !u!114 &8254208050960548839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7181680728689087861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c5751d27af7f69469fbbb19db4cf321, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
+  color: {r: 0, g: 0, b: 0, a: 0}
+  mySizeX: 1
+  mySizeY: 1
 --- !u!1 &7181680729087725859
 GameObject:
   m_ObjectHideFlags: 0
