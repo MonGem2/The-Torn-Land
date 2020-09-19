@@ -35,10 +35,9 @@ public class SpawnerCell : MonoBehaviour
                 yield return null;
             }
 
-            if (Vector2.Distance(transform.position, _player.transform.position) < 25)
+            if (Vector2.Distance(transform.position, _player.transform.position) < 10)
             {
                 Debug.LogError("Start spawn");
-                yield return new WaitForSeconds(20);
                 foreach (var item in Mobs)
                 {
                     item.gameObject.SetActive(true);
@@ -47,6 +46,7 @@ public class SpawnerCell : MonoBehaviour
                 mob.transform.position = transform.position;
                 mob.loader = _loader;
                 Mobs.Add(mob);
+                yield return new WaitForSeconds(20);
                 Debug.LogError("End spawn");
             }
             else

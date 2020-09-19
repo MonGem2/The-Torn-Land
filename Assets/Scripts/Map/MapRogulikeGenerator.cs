@@ -15,6 +15,7 @@ public class MapRogulikeGenerator : MonoBehaviour
     public GameObject EmptyPerhub;
     public GameObject KeyPerhub;
     public GameObject SpawnPerhub;
+    public GameObject SavePerhub;
     public int UnBorder = 5;
     //private Generator generator;
     private bool Result;
@@ -207,7 +208,7 @@ public class MapRogulikeGenerator : MonoBehaviour
                     cell.transform.SetParent(gameObject.transform);
                     MapCells.Add(cell);
                     cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.Key, 1, 1);
-                    ThisCell.KeyPoints.Add(new Vector2(k, i));
+                    //ThisCell.KeyPoints.Add(new Vector2(k, i));
                 }
                 if (Map[i, k] == (int)MapCell.CellType.SpawnP)
                 {
@@ -215,6 +216,15 @@ public class MapRogulikeGenerator : MonoBehaviour
                     cell.transform.SetParent(gameObject.transform);
                     MapCells.Add(cell);
                     cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.SpawnP, 1, 1);
+                    cell.GetComponent<SpawnerCell>().Setter(GameObject.Find("Player").GetComponent<Player>(), loader);
+
+                }
+                if (Map[i, k] == (int)MapCell.CellType.SaveP)
+                {
+                    GameObject cell = Instantiate(SavePerhub);
+                    cell.transform.SetParent(gameObject.transform);
+                    MapCells.Add(cell);
+                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.SaveP, 1, 1);
                     cell.GetComponent<SpawnerCell>().Setter(GameObject.Find("Player").GetComponent<Player>(), loader);
 
                 }
@@ -637,6 +647,18 @@ Interesting Patterns
             {
                 Point_Set(cell, 2);
                 countKeys--;
+            }
+        }
+        SetSpawnMobs();
+        int countSpawns = 1;
+        while (countSpawns> 0)
+        {
+            cell = new Point(RandomNumber(MapSize.Width, MapSize.Width * 2), RandomNumber(MapSize.Height, MapSize.Height * 2));
+
+            if (Point_Get(cell) == 1)
+            {
+                Point_Set(cell, 4);
+                countSpawns--;
             }
         }
         SetSpawnMobs();

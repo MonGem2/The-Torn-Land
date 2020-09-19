@@ -247,9 +247,12 @@ public class WorldState : MonoBehaviour
             }
         return null;
     }
+
+    public bool Stop = false;
+
     public void Start()
     {
-
+        Application.wantsToQuit += () =>  Stop = true; 
         loader.LoadMap();
 
         GeneratorQuery.Add(GetCell());
@@ -261,7 +264,7 @@ public class WorldState : MonoBehaviour
         }
         try
         {
-            //MapBackgroundGenerator();
+            MapBackgroundGenerator();
         }
         catch (System.Exception)
         {
@@ -349,7 +352,10 @@ public class WorldState : MonoBehaviour
                 
 
                 Debug.Log("Stage6");
-
+                if (Stop)
+                {
+                    return;
+                }
             }
 
         }
