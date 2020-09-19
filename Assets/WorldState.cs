@@ -6,7 +6,7 @@ using UnityEngine;
 public class WorldState : MonoBehaviour
 {
     // Start is called before the first frame update
-    public MapRogulikeGenerator[] MapCells = new MapRogulikeGenerator[4];
+    public MapRogulikeGenerator[] MapCells = new MapRogulikeGenerator[9];
     public MapRogulikeGenerator WorldCellPerhub;
     public MapRogulikeGenerator ActiveMapCell;
     public List<WorldMapCell> GeneratorQuery = new List<WorldMapCell>();
@@ -23,7 +23,6 @@ public class WorldState : MonoBehaviour
     public void CreateWorldMapCell(int DX, int DY, MapRogulikeGenerator myCanvas, Vector3 position)
     {
 
-
         //Debug.Log("HOLHELL");
 
         //if (X < 0 || Y < 0 || X > 100 || Y > 100)
@@ -32,7 +31,7 @@ public class WorldState : MonoBehaviour
         //    return;
         //}        
         WorldMapCell tmpCell = myCanvas.ThisCell;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < MapCells.Length; i++)
         {
             if (MapCells[i] == null)
             {
@@ -52,16 +51,26 @@ public class WorldState : MonoBehaviour
         {
             MapCell.Setter(loader, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX]);
         }
-        else if(!StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX].Generated) {
+        else if (StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX].Generated)
+        {
+            tmpCell.GetKey(DX, DY).gameObject.SetActive(true);
+            tmpCell.GetKey(DX, DY).Set(MapCell, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX], loader);
+            
+        }
+        else if (!StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX].Generated)
+        {
             Debug.LogWarning("Adding to list " + tmpCell.PosY + DY + "  " + tmpCell.PosX + DX);
             GeneratorQuery.Add(StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX]);
-            OnGenerationEnded += (x) => {
-               GenerationCallback callback=(GenerationCallback)x;
-                if (callback.mapCell== StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX])
-                {
-                    MapCell.Setter(loader, callback.mapCell);
-                }
+            OnGenerationEnded += (x) =>
+            {
                 
+                GenerationCallback callback = (GenerationCallback)x;
+                if (callback.mapCell == StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX])
+                {
+                    tmpCell.GetKey(DX, DY).gameObject.SetActive(true);
+                    tmpCell.GetKey(DX, DY).Set(MapCell, StaticData.MapData[tmpCell.PosY + DY][tmpCell.PosX + DX], loader);
+                }
+
             };
 
         }
@@ -85,7 +94,7 @@ public class WorldState : MonoBehaviour
         Debug.Log((int)-0.1);
         WorldMapCell worldMapCell = StaticData.MapData[(int)position.x+(int)ZeroPosition.x][(int)position.y+(int)ZeroPosition.y];
         Debug.Log(worldMapCell.PosX+"  "+worldMapCell.PosY);
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < MapCells.Length; i++)
         {
             if (MapCells[i] == null)
             {
@@ -114,7 +123,7 @@ public class WorldState : MonoBehaviour
         //Debug.Log("POEZD_SHIZY");
         float Far=0;
         int k=0;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < MapCells.Length; i++)
         {
             if (MapCells[i] == null)
             {

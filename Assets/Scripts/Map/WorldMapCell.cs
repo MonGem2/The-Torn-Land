@@ -10,8 +10,37 @@ public class WorldMapCell
     private int dangerousLvl = 0;
     private EnvironType environ = EnvironType.Plain;
 
+    public enum WorldSides { 
+        N=0,
+    W,      E,
+        S
 
-
+    }
+    public WorldKey[] keys = new WorldKey[4];
+    public WorldKey GetKey(int DX, int DY)
+    {
+        if (DX != 0 && DY != 0)
+        {
+            return null;
+        }
+        if (DX==1)
+        {
+            return keys[(int)WorldSides.E];
+        }
+        if (DX == -1)
+        {
+            return keys[(int)WorldSides.W];
+        }
+        if (DY == 1)
+        {
+            return keys[(int)WorldSides.W];
+        }
+        if (DY == -1)
+        {
+            return keys[(int)WorldSides.S];
+        }
+        return null;
+    }
     public int MapHeight { get => mapHeight; set => mapHeight = value; }
     public int MapWidth { get => mapWidth; set => mapWidth = value; }
     public int PosX;
