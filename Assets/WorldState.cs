@@ -332,9 +332,9 @@ public class WorldState : MonoBehaviour
             while (true)
             {
 
-                Debug.Log("Stage-1");
+                //Debug.Log("Stage-1");
                 WorldMapCell worldMapCell = null;
-                Debug.Log("Stage-0.5");
+              //  Debug.Log("Stage-0.5");
                 try
                 {
                     worldMapCell = GeneratorQuery[0];
@@ -344,20 +344,20 @@ public class WorldState : MonoBehaviour
                     Debug.Log(ex.Message);
 
                 }
-                Debug.Log("Stage-0.1");
+                //Debug.Log("Stage-0.1");
                 Generator generator1 = new Generator();
-                Debug.Log("Stage0");
+                //Debug.Log("Stage0");
                 await Task.Run(()=> { 
                     generator1.Map = loader.GetNeighborWorldMapCell(new Vector2(worldMapCell.PosX, worldMapCell.PosY));
-                    Debug.Log("Stage1");
+                  //  Debug.Log("Stage1");
                     generator1.Build(5);
-                    Debug.Log("Stage2");
+                    //Debug.Log("Stage2");
                     generator1.ConnectCaves();
-                    Debug.Log("Stage3");
+                    //Debug.Log("Stage3");
                     generator1.ConnectCaves();
-                    Debug.Log("Stage4");
+                    //Debug.Log("Stage4");
                     generator1.EmptyCellSet();
-                    Debug.Log("Stage5");
+                    //Debug.Log("Stage5");
                     generator1.EndGeneration();
                     loader.MapGenered(worldMapCell, generator1.ResultMap);
              //       loader.MapAccess(worldMapCell);
@@ -369,7 +369,7 @@ public class WorldState : MonoBehaviour
                 }
                 if (GeneratorQuery[0] == null)
                 {
-                    Debug.Log("QWERTYUIOP");
+                    //Debug.Log("QWERTYUIOP");
                     return;
                 }
                 if (OnGenerationEnded != null)
@@ -382,7 +382,7 @@ public class WorldState : MonoBehaviour
                 cellcount = GeneratorQuery.Count;
                 
 
-                Debug.Log("Stage6");
+             //   Debug.Log("Stage6");
                 if (Stop)
                 {
                     return;
@@ -412,8 +412,14 @@ public class WorldState : MonoBehaviour
         }
         AddMapCell(MapCell, new Vector3(0,0));
     }
-    public Vector3 localPosition(Vector3 position)
-    { 
-        return position - ActiveMapCell.transform.position;
+    public Vector2 localPosition(Vector2 position)
+    {
+        Vector2 result = position - ((Vector2)ActiveMapCell.transform.position + new Vector2((float)StaticData.WorldCellSize / 2, (float)StaticData.WorldCellSize / 2));
+        
+     //   Debug.LogError(position);
+     //   Debug.LogError(ActiveMapCell.transform.position);
+     //   Debug.LogError(new Vector3((float)StaticData.WorldCellSize / 2, (float)StaticData.WorldCellSize / 2));
+     //   Debug.LogError(result);
+        return result;
     }
 }

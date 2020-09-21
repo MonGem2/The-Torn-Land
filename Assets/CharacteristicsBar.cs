@@ -6,15 +6,21 @@ using UnityEngine.UI;
 public class CharacteristicsBar : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float XpIntake = 10;
+    public float StartIntake = 10;
     public float Increase = 1.1f;
+    public float Count;
+    public XPBar xp;
     public Text text;
     public Player player;
     public Characteristics param;
     public string StartText;
+    public Button Up;
+    public Button Down;
     void Start()
     {
         StartText = text.text;
+        Up.gameObject.SetActive(false);
+        Down.gameObject.SetActive(false);
         if (param == Characteristics.HpRegSpeed)
         {
             text.text = StartText + player.GetHPRegSpeed() + ";" + player.RegSpeedHP;
@@ -112,13 +118,195 @@ public class CharacteristicsBar : MonoBehaviour
             };
         }
     }
-    public void OnLevelUpStart()
-    {
 
+    public float GetPlayerParameter()
+    {
+        if (param == Characteristics.HpRegSpeed)
+        {
+            return player.RegSpeedHP;
+        }
+        if (param == Characteristics.MagResist)
+        {
+            return player.MagResist;
+        }
+        if (param == Characteristics.MaxHp)
+        {
+
+            return player.MaxHP;
+        }
+        if (param == Characteristics.MaxMp)
+        {
+            return player.MaxMP;
+        }
+        if (param == Characteristics.MaxSp)
+        {
+            return player.MaxSP;
+        }
+        if (param == Characteristics.MaxSt)
+        {
+            return player.MaxST;
+        }
+        if (param == Characteristics.MpRegSpeed)
+        {
+            return player.RegSpeedMP;
+        }
+        if (param == Characteristics.PhysResist)
+        {
+            return player.PhysResist;
+        }
+        if (param == Characteristics.SoulResist)
+        {
+            return player.SoulResist;
+        }
+        if (param == Characteristics.Speed)
+        {
+            return player.Speed;
+        }
+        if (param == Characteristics.SpRegSpeed)
+        {
+            return player.RegSpeedSP;
+        }
+        if (param == Characteristics.StRegSpeed)
+        {
+            return player.RegSpeedST;
+        }
+        if (param == Characteristics.SumBaseDamage)
+        {
+            return player.SumBaseDamage;
+        }
+        return 0;
     }
-    public void OnLevelUpEnded()
+    public void SetPlayerParameter(float Param)
     {
+        if (param == Characteristics.HpRegSpeed)
+        {
+            player.RegSpeedHP=Param;
+        }
+        if (param == Characteristics.MagResist)
+        {
+            player.MagResist=Param;
+        }
+        if (param == Characteristics.MaxHp)
+        {
 
+            player.MaxHP=Param;
+        }
+        if (param == Characteristics.MaxMp)
+        {
+            player.MaxMP=Param;
+        }
+        if (param == Characteristics.MaxSp)
+        {
+            player.MaxSP=Param;
+        }
+        if (param == Characteristics.MaxSt)
+        {
+            player.MaxST=Param;
+        }
+        if (param == Characteristics.MpRegSpeed)
+        {
+            player.RegSpeedMP=Param;
+        }
+        if (param == Characteristics.PhysResist)
+        {
+            player.PhysResist=Param;
+        }
+        if (param == Characteristics.SoulResist)
+        {
+            player.SoulResist=Param;
+        }
+        if (param == Characteristics.Speed)
+        {
+            player.Speed=Param;
+        }
+        if (param == Characteristics.SpRegSpeed)
+        {
+            player.RegSpeedSP=Param;
+        }
+        if (param == Characteristics.StRegSpeed)
+        {
+            player.RegSpeedST=Param;
+        }
+        if (param == Characteristics.SumBaseDamage)
+        {
+            player.SumBaseDamage=Param;
+        }
+        
+    }
+    public float GetPlayerParameterNoBonus()
+    {
+        if (param == Characteristics.HpRegSpeed)
+        {
+            return player.GetHPRegSpeed();
+        }
+        if (param == Characteristics.MagResist)
+        {
+            return player.GetMagReist();
+        }
+        if (param == Characteristics.MaxHp)
+        {
+
+            return player.GetMaxHP();
+        }
+        if (param == Characteristics.MaxMp)
+        {
+            return player.GetMaxMP();
+        }
+        if (param == Characteristics.MaxSp)
+        {
+            return player.GetMaxSP();
+        }
+        if (param == Characteristics.MaxSt)
+        {
+            return player.GetMaxST();
+        }
+        if (param == Characteristics.MpRegSpeed)
+        {
+            return player.GetMPRegSpeed();
+        }
+        if (param == Characteristics.PhysResist)
+        {
+            return player.GetPhyResist();
+        }
+        if (param == Characteristics.SoulResist)
+        {
+            return player.GetSoulResist();
+        }
+        if (param == Characteristics.Speed)
+        {
+            return player.GetSpeed();
+        }
+        if (param == Characteristics.SpRegSpeed)
+        {
+            return player.GetSPRegSpeed();
+        }
+        if (param == Characteristics.StRegSpeed)
+        {
+            return player.GetSTRegSpeed();
+        }
+        if (param == Characteristics.SumBaseDamage)
+        {
+            return player.GetMaxSumBaseDamage();
+        }
+        return 0;
+    }
+    public void SetTextBox(string Text)
+    {
+        text.text = StartText + Text;
+     
+    }
+
+    public void LevelUP()
+    {
+        Count = GetPlayerParameterNoBonus();
+        SetTextBox(Count.ToString());
+        Up.gameObject.SetActive(true);
+        Down.gameObject.SetActive(true);
+    }
+    public void EndLevelUP()
+    {
+        Up.gameObject.SetActive(true);
+        Down.gameObject.SetActive(true);
     }
     // Update is called once per frame
     void Update()
@@ -127,7 +315,7 @@ public class CharacteristicsBar : MonoBehaviour
     }
     public void OnButtonUp()
     {
-
+        
     }
     public void OnButtonDown()
     {

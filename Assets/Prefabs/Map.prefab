@@ -126,6 +126,7 @@ MonoBehaviour:
   SavePerhub: {fileID: 7181680728689087861, guid: dc24bf54f3e81ef4e9b2109d197eb66a,
     type: 3}
   UnBorder: 2
+  Setted: 0
   MapCells: []
 --- !u!222 &-4820273710582962737
 CanvasRenderer:
@@ -154,7 +155,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 60fdfa47a4e492b4f8fba1fd4d8f3a4b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1db5953415c49ab4d881f31fd182c3db, type: 3}
   m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1

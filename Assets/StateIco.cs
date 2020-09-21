@@ -30,8 +30,11 @@ public class StateIco : MonoBehaviour
     // Update is called once per frame
     public void OnRemove(object value)
     {
-        player.OnStateEnded -= OnRemove;
-        Debug.LogWarning("zxcvbnm,.");
-        Destroy(this.gameObject);
+        if (((State)value).ID == state.ID)
+        {
+            player.OnStateEnded -= OnRemove;
+            Debug.LogWarning("zxcvbnm,.");
+            Destroy(this.gameObject);
+        }
     }
 }

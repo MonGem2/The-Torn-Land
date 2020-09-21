@@ -519,8 +519,13 @@ public class Creature : MyObject
                 if (item.Params[0] == 1) { return; }
             }
         }
-     //   Debug.Log("y2");
         float Damage = bulletData.ManaDamage / MagResist + bulletData.PhysicDamage / PhysResist + bulletData.SoulDamage / SoulResist;
+        if (bulletData.type == BulletType.Area||bulletData.type== BulletType.Swing)
+        {
+            Damage *= Time.deltaTime / bulletData.AttackTimeout;
+        }
+     //   Debug.Log("y2");
+        
         HP -= Damage;
    //     Debug.Log("y3");
     //    Debug.Log("My hp is:"+HP);
@@ -891,6 +896,7 @@ public class Creature : MyObject
     {
         foreach (var item in Effects)
         {
+            Debug.LogError("Pexda "+item.ID);
             StartCoroutine(StateAdder(item));
         }
     }
@@ -898,6 +904,8 @@ public class Creature : MyObject
     public OnChangeParameterTrigger OnStateEnded;
     public IEnumerator StateAdder(State state)
     {
+        
+        Debug.Log(state.type);
         foreach (var item in States)
         {
             if (item.ID == state.ID)
@@ -988,6 +996,7 @@ public class Creature : MyObject
             {
                 yield break;
             }
+            Debug.LogError(state.Duration);
             yield return new WaitForSeconds(state.Duration);
             if (OnStateEnded != null)
             {
@@ -1017,16 +1026,121 @@ public class Creature : MyObject
             States.Remove(state);
             yield break;
         }
+        if (state.type == StateType.ParameterChanger)
+        {
+            if (MaxHPChangeTrigger != null)
+            {
+                MaxHPChangeTrigger(MaxHP);
+            }
+            if (MaxMPChangeTrigger != null)
+            {
+                MaxMPChangeTrigger(MaxMP);
+            }
+            if (MaxSTChangeTrigger != null)
+            {
+                MaxSTChangeTrigger(MaxST);
+            }
+            if (MaxSPChangeTrigger != null)
+            {
+                MaxSPChangeTrigger(MaxSP);
+            }
+            if (this.SumBaseDamageChangeTrigger != null)
+            {
+                SumBaseDamageChangeTrigger(SumBaseDamage);
+            }
+            if (RegSpeedMPChangeTrigger != null)
+            {
+                RegSpeedMPChangeTrigger(RegSpeedMP);
+            }
+            if (RegSpeedSTChangeTrigger != null)
+            {
+                RegSpeedSTChangeTrigger(RegSpeedST);
+            }
+            if (RegSpeedSPChangeTrigger != null)
+            {
+                RegSpeedSPChangeTrigger(RegSpeedSP);
+            }
+            if (MagResistChangeTrigger != null)
+            {
+                MagResistChangeTrigger(MagResist);
+            }
+            if (PhyResistChangeTrigger != null)
+            {
+                PhyResistChangeTrigger(PhysResist);
+            }
+            if (SoulResistChangeTrigger != null)
+            {
+                SoulResistChangeTrigger(SoulResist);
+            }
+            if (OnSpeedChanged != null)
+            {
+                OnSpeedChanged(Speed);
+            }
+        }
         if (state.Duration == -1)
         {
             yield break;
         }
+        Debug.LogError(state.Duration+"  "+state.type);
         yield return new WaitForSeconds(state.Duration);
+        States.Remove(state);
+        if (state.type == StateType.ParameterChanger)
+        {
+            if (MaxHPChangeTrigger != null)
+            {
+                MaxHPChangeTrigger(MaxHP);
+            }
+            if (MaxMPChangeTrigger != null)
+            {
+                MaxMPChangeTrigger(MaxMP);
+            }
+            if (MaxSTChangeTrigger != null)
+            {
+                MaxSTChangeTrigger(MaxST);
+            }
+            if (MaxSPChangeTrigger != null)
+            {
+                MaxSPChangeTrigger(MaxSP);
+            }
+            if (this.SumBaseDamageChangeTrigger != null)
+            {
+                SumBaseDamageChangeTrigger(SumBaseDamage);
+            }
+            if (RegSpeedMPChangeTrigger != null)
+            {
+                RegSpeedMPChangeTrigger(RegSpeedMP);
+            }
+            if (RegSpeedSTChangeTrigger != null)
+            {
+                RegSpeedSTChangeTrigger(RegSpeedST);
+            }
+            if (RegSpeedSPChangeTrigger != null)
+            {
+                RegSpeedSPChangeTrigger(RegSpeedSP);
+            }
+            if (MagResistChangeTrigger != null)
+            {
+                MagResistChangeTrigger(MagResist);
+            }
+            if (PhyResistChangeTrigger != null)
+            {
+                PhyResistChangeTrigger(PhysResist);
+            }
+            if (SoulResistChangeTrigger != null)
+            {
+                SoulResistChangeTrigger(SoulResist);
+            }
+            if (OnSpeedChanged != null)
+            {
+                OnSpeedChanged(Speed);
+            }
+        }
         if (OnStateEnded != null)
         {
             OnStateEnded(state);
         }
-        States.Remove(state);
+        Debug.LogError("pizdec Ended");
+
     }
     protected void InfinityPowerON(State state)
     {

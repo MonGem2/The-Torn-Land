@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using UnityEngine.UI;
 
 public class MapRogulikeGenerator : MonoBehaviour
 {
@@ -50,6 +51,7 @@ public class MapRogulikeGenerator : MonoBehaviour
         }
         MapSet();
         Setted = true;
+        GetComponent<Image>().sprite = Resources.Load<Sprite>("Grey Stones");
         //Debug.Log(StaticData.MapData[9][10].Message);
         //ThisCell = StaticData.ActiveCell;
         //Debug.Log(ThisCell.Message);
@@ -157,7 +159,7 @@ public class MapRogulikeGenerator : MonoBehaviour
         {
             for (int k = 0; k < ThisCell.MapHeight; k++)
             {
-                Debug.Log($"Loading cell:{i},{k} and it's :{Map[i, k]}");
+     //           Debug.Log($"Loading cell:{i},{k} and it's :{Map[i, k]}");
                 if (Map[i, k] == (int)MapCell.CellType.Wall)
                 {
                     // Debug.Log($"it's wall");
@@ -209,13 +211,7 @@ public class MapRogulikeGenerator : MonoBehaviour
                 {
                     WorldKey cell =Instantiate( Resources.Load<WorldKey>("WorldKey"));
                     cell.transform.SetParent(gameObject.transform);
-                    for (int blat = 0; blat < ThisCell.keys.Count(); blat++)
-                    {
-                        if (ThisCell.keys[blat] == null)
-                        {
-                            ThisCell.keys[blat] = cell;
-                        }
-                    }
+                    ThisCell.AddKey(cell);
                     cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.white, MapCell.CellType.Key, 0.5f, 0.5f);
                 //    cell.transform.position = new Vector3(k, i, -1);
                     cell.gameObject.SetActive(false);

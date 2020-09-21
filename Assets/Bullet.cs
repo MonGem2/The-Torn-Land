@@ -52,9 +52,9 @@ public class Bullet : MonoBehaviour
             }
         
         }
-     //   Debug.Log("ResAngle1:   "+ResAngle);
+        //Debug.Log("ResAngle1:   "+ResAngle);
         ResAngle += DAngle + data.AdditionalAngle;
-       // Debug.Log("ResAngle2:   " + ResAngle);
+        //Debug.Log("ResAngle2:   " + ResAngle);
         //Debug.Log($"Res angle:{ResAngle}");
         Direction.x = (float)Math.Cos(ResAngle * Math.PI / 180);
         Direction.y = (float)Math.Sin(ResAngle * Math.PI / 180);
@@ -119,23 +119,23 @@ public class Bullet : MonoBehaviour
         if(data.type==BulletType.Area)
         {
             //Debug.Log("Holl");
-            if (Vector2.Distance(playerPos, targetPos) < data.Range)
+            if (Vector2.Distance(playerPos, targetPos) < data.Range && !data.Binded)
             {
-                if (data.Binded)
-                {
-
-                    transform.position = playerPos + Direction *  targetPos.magnitude;
-                }
-                else
-                {
-                    transform.position = playerPos + Direction * Vector2.Distance(targetPos, playerPos);
-                }
-                transform.position = new Vector3(transform.position.x, transform.position.y, 1);
+            //    Debug.LogError("1");
+                transform.position = playerPos + Direction * Vector2.Distance(targetPos, playerPos);
+                transform.position = new Vector3(transform.position.x, transform.position.y, 0.5f);
+            }
+            else if (Vector2.Distance(playerPos,playerPos + targetPos) < data.Range && data.Binded)
+            {
+              //  Debug.LogError("2");
+                transform.position = playerPos + Direction * targetPos.magnitude;
+                transform.position = new Vector3(transform.position.x, transform.position.y, 0.5f);
             }
             else
             {
+                //Debug.LogError("3");
                 transform.position = playerPos + Direction * data.Range;
-                transform.position=new Vector3(transform.position.x, transform.position.y, 1);
+                transform.position = new Vector3(transform.position.x, transform.position.y, 0.5f);
             }
             
             //DeleteOnTime(data.FlyTime);
@@ -232,24 +232,16 @@ public class Bullet : MonoBehaviour
         {
             if (item == collision.tag)
             {
-                DestroyTrigger(false);
                 return;
             }
         }
         //Debug.Log("HIIIII!");
-        if (collision.tag == "detector")
-        {
-            //Debug.Log("HIIIII232435!");
-            return;
-        }
+
         if (collision.tag == "bullet")
         {
             return;
         }
-        if (collision.tag == "item")
-        {
-            return;
-        }
+
         if (collision.tag == "undestruct")
         {
             //Debug.Log("HIIIII232435!");
@@ -259,21 +251,22 @@ public class Bullet : MonoBehaviour
             }
             return;
         }
+
+        if (collision.GetComponent<MyObject>() == null)
+        {
+            return;
+        }
         // Debug.Log("i'm finaly here");
 
         //Physics.IgnoreCollision(collision.collider, collider);
 
         //data.PhysicDamage / data.AttackTimeout * Time.deltaTime;
-        if (data.type == BulletType.Area)
-            {
-                //data.PhysicDamage / data.AttackTimeout * Time.deltaTime;
-                collision.GetComponent<Creature>().Damage(data);
-            }
-            else
-            {
-                collision.GetComponent<Creature>().Damage(data);
-            }       
-        if (!data.Through&&collision.GetComponent<Bullet>()==null)
+
+        
+        
+        collision.GetComponent<Creature>().Damage(data);
+               
+        if (!data.Through)
         {
             DestroyTrigger(true);
         }
@@ -315,22 +308,73 @@ public class Bullet : MonoBehaviour
     }
 }
 public class BulletData {
+    /// <summary>
+    /// Timeout before shooting
+    /// </summary>
     public float ShootPeriod;
+    /// <summary>
+    /// Tags with no damage
+    /// </summary>
     public List<string> DontAttack;
+    /// <summary>
+    /// Perhub in loader
+    /// </summary>
     public int PerhubID;
+    /// <summary>
+    /// Damage multiplier set 2 to get 200% damage
+    /// </summary>
     public float PhysicDamage = 0;
+    /// <summary>
+    /// Damage multiplier set 2 to get 200% damage
+    /// </summary>
     public float ManaDamage = 0;
+    /// <summary>
+    /// Damage multiplier set 2 to get 200% damage
+    /// </summary>
     public float SoulDamage = 0;
+    /// <summary>
+    /// Effects that target receives
+    /// </summary>
     public List<int> EffectsIDs;
+    /// <summary>
+    /// Bullet type
+    /// </summary>
     public BulletType type;
+    /// <summary>
+    /// Time from spawn to removing
+    /// </summary>
     public float FlyTime = 0;
+    /// <summary>
+    /// Max distance from user to point
+    /// </summary>
     public float Range = 1;
+    /// <summary>
+    /// This coordinate will be added to start point of bullet
+    /// </summary>
     public Vector2 Distance;
+    /// <summary>
+    /// This field decide will this bullet be destoyed on first colision
+    /// </summary>
     public bool Through;
+    /// <summary>
+    /// This angle will be added to to bullet direction
+    /// </summary>
     public float AdditionalAngle;
+    /// <summary>
+    /// The angle in range (-Delta, Delta) will be added to to bullet direction
+    /// </summary>
     public float DeltaAngle;
+    /// <summary>
+    /// Only for area and ray decide how many times in one secon do damage
+    /// </summary>
     internal float AttackTimeout;
+    /// <summary>
+    /// consider moving by user
+    /// </summary>
     public bool Binded;
+    /// <summary>
+    /// Not damage user
+    /// </summary>
     public bool SelfAttack;
     public BulletData Clone() {
         BulletData bullet = new BulletData();

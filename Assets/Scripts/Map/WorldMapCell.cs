@@ -17,6 +17,18 @@ public class WorldMapCell
 
     }
     public WorldKey[] keys = new WorldKey[4];
+    public void AddKey(WorldKey key)
+    {
+        for (int blat = 0; blat < this.keys.Length; blat++)
+        {
+            if (this.keys[blat] == null)
+            {
+                this.keys[blat] = key;
+                key.SetWorldSides(blat);
+                return;
+            }
+        }
+    }
     public WorldKey GetKey(int DX, int DY)
     {
         if (DX != 0 && DY != 0)
@@ -33,11 +45,11 @@ public class WorldMapCell
         }
         if (DY == 1)
         {
-            return keys[(int)WorldSides.W];
+            return keys[(int)WorldSides.S];
         }
         if (DY == -1)
         {
-            return keys[(int)WorldSides.S];
+            return keys[(int)WorldSides.N];
         }
         return null;
     }

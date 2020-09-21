@@ -31,7 +31,7 @@ public class Loader:MonoBehaviour
         }
         MapLoaded = true;
 
-        Debug.LogError("Pidr 1");
+      //  Debug.LogError("Pidr 1");
         for (int i = 0; i < WorldSize; i++)
         {
             StaticData.MapData.Add(new List<WorldMapCell>());
@@ -70,15 +70,15 @@ public class Loader:MonoBehaviour
         // получаем поток, куда будем записывать сериализованный объект
         Debug.Log("saving "+ MapGenerated + $"{position.PosX}_{position.PosY}.mapcell");
         //File.Create($"{position.x}_{position.y}.mapcell");
-        Debug.Log("i'm here 1");
+       // Debug.Log("i'm here 1");
             position.Generated = true;
         using (FileStream fs = new FileStream(MapGenerated+$"{position.PosX}_{position.PosY}.mapcell", FileMode.OpenOrCreate))
         {
-            Debug.Log("i'm here 2");
+         //   Debug.Log("i'm here 2");
             formatter.Serialize(fs, map);
             
         }
-        Debug.Log("i'm here 3");
+       // Debug.Log("i'm here 3");
             // десериализация из файла people.dat                                               
 
         }
@@ -802,7 +802,7 @@ public class Loader:MonoBehaviour
         {
             Skill skill = new Skill();
             skill.ID = 3;
-            skill.Cooldown = 0.5f;
+            skill.Cooldown = 2;
             skill.EffectsIds = new List<State>();
             //skill.EffectsIds.Add(States[0]);
             skill.MPIntake = 2;
@@ -825,7 +825,7 @@ public class Loader:MonoBehaviour
                     data.DontAttack = new List<string>();
                     //data.DontAttack.Add("player");
                     data.EffectsIDs = new List<int>();
-                    data.FlyTime = 3;
+                    data.FlyTime = 5;
                     data.ManaDamage = 0;
                     data.PerhubID = 0;
                     data.PhysicDamage = 1.1f;
@@ -833,7 +833,7 @@ public class Loader:MonoBehaviour
                     data.SoulDamage = 0;
                     data.Through = false;
                     data.type = BulletType.Bullet;
-                    data.AttackTimeout = 0.05f;
+                    //data.AttackTimeout = 0.05f; -ray attack
                     data.ShootPeriod = 0.3f;
                     data.Binded = true;
                     data.SelfAttack = false;
@@ -860,6 +860,72 @@ public class Loader:MonoBehaviour
             skill.ico = "87087784c56e9b45bd9a3c63a35b2e93";
             skill.spriteN = 45;
             skill.Bullets = new List<BulletData>();
+            Skills.Add(skill);
+        }
+        {
+            Skill skill = new Skill();
+            skill.ID = 4;
+            skill.Cooldown = 2f;
+            skill.EffectsIds = new List<State>();
+            //skill.EffectsIds.Add(States[0]);
+            skill.MPIntake = 20;
+            skill.STIntake = 0;
+            skill.SPIntake = 0;
+            skill.Range = 15.5f;
+            skill.skillType = GeneralSkillType.Control;
+            skill.SkillBehaviourType = SkillBehaviourType.Attack;
+            skill.SPParameter = SkillParameterType.Litle;
+            skill.STParameter = SkillParameterType.Litle;
+            skill.MPParameter = SkillParameterType.Litle;
+            skill.ico = "9f39f4a735d044598164d3b63609c4eb";
+            skill.Bullets = new List<BulletData>();
+            {
+                {
+                    BulletData data = new BulletData();
+                    data.AdditionalAngle = 0;
+                    data.DeltaAngle = 5;
+                    data.Distance = new Vector2(0f, 0f);
+                    data.DontAttack = new List<string>();
+                    //data.DontAttack.Add("player");
+                    data.EffectsIDs = new List<int>();
+                    data.FlyTime = 3;
+                    data.ManaDamage = 0;
+                    data.PerhubID = 2;
+                    data.PhysicDamage = 0.5f;
+                    data.Range = 10;
+                    data.SoulDamage = 0;
+                    data.Through = true;
+                    data.type = BulletType.Area;
+                    data.AttackTimeout = 0.1f;
+                    data.ShootPeriod = 0f;
+                    data.Binded = true;
+                    data.SelfAttack = false;
+                    skill.Bullets.Add(data);
+                }
+            }
+
+            Skills.Add(skill);
+        }
+        {
+            Skill skill = new Skill();
+            skill.ID = 5;
+            skill.Cooldown = 5f;
+            skill.EffectsIds = new List<State>();
+            skill.EffectsIds.Add(States[4]);
+            skill.EffectsIds.Add(States[9]);
+            skill.MPIntake = 0;
+            skill.STIntake = 0;
+            skill.SPIntake = 25;
+            skill.Range = 15.5f;
+            skill.skillType = GeneralSkillType.Control;
+            skill.SkillBehaviourType = SkillBehaviourType.Attack;
+            skill.SPParameter = SkillParameterType.Litle;
+            skill.STParameter = SkillParameterType.Litle;
+            skill.MPParameter = SkillParameterType.Litle;
+            skill.ico = "9f39f4a735d044598164d3b63609c4eb";
+            skill.Bullets = new List<BulletData>();
+          
+
             Skills.Add(skill);
         }
 
@@ -980,6 +1046,18 @@ public class Loader:MonoBehaviour
             States.Add(state);
             index++;
         }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 30;
+            state.ico = "5dd6b30614b14477e4f3157fe4c405cc";
+            //state.spriteN = -1;
+            state.type = StateType.ParameterChanger;
+            state.Params = new List<float>() { 0.2f, 0, 0, 0, 0.01f, 0, 0, 0, 0,0, 0, 0, 0.5f  };
+            States.Add(state);
+            index++;
+        }
 
     }
 
@@ -1001,6 +1079,7 @@ public class Loader:MonoBehaviour
 
         }
         player.transform.position = ((MyVector3)Data[0]).Get();
+       // player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, 0);
         player.MaxHP = (float)Data[1];
         player.HP = (float)Data[2];
         player.RegSpeedHP = (float)Data[3];
@@ -1078,6 +1157,8 @@ public class Loader:MonoBehaviour
         player.Skills.Add(Skills[1].Clone());
         player.Skills.Add(Skills[2].Clone());
         player.Skills.Add(Skills[4].Clone());
+        player.Skills.Add(Skills[5].Clone());
+        player.Skills.Add(Skills[6].Clone());
         Debug.Log(".mapcell");
         world.StartGeneration(new MyVector3(10, 10));
     }
@@ -1119,10 +1200,9 @@ public class MyVector3 {
         x = X;
         y = Y;
     }
-    public static MyVector3 Set(Vector3 vector3)
+    public static MyVector3 Set(Vector2 vector3)
     {
-        MyVector3 vec=new MyVector3(vector3.x, vector3.y);        
-        vec.z = vector3.z;
+        MyVector3 vec=new MyVector3(vector3.x, vector3.y);                
         return vec;
     }
     public Vector3 Get()
