@@ -522,4 +522,27 @@ public class Player : Creature
         GUI.active = false;
         DeadScreen.active = true;
     }
+    public bool CheckItem(int ID)
+    {
+        foreach (var item in States)
+        {
+            if (item.type == StateType.DazerItems)
+            {
+                if (item.Params.Count == 0)
+                {
+                    return false;
+                }
+                foreach (var item1 in item.Params)
+                {
+                    if ((int)item1 == ID)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+
+    }
 }

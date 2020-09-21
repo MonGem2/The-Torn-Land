@@ -16,11 +16,14 @@ public class Loader:MonoBehaviour
     public List<GameObject> BulletsPerhubs;
     public List<State> States=new List<State>();
     public List<Skill> Skills=new List<Skill>();
+    public List<ItemData> items=new List<ItemData>();
     bool SkillsLoaded = false;
     bool StatesLoaded = false;
     bool MapLoaded = false;
+    bool ItemsLoaded = false;
     string MapAccesed = "Map/Accesed/";
     string MapGenerated = "Map/Generated/";
+    
 
     public void LoadMap()
     {
@@ -525,6 +528,15 @@ public class Loader:MonoBehaviour
             str += "\n";
         }
         Debug.Log(str);
+    }
+    public void LoadItems()
+    {
+        if (!ItemsLoaded)
+        {
+            ItemsLoaded = true;
+        }
+
+
     }
     public void LoadSkills()
     {
@@ -1058,6 +1070,18 @@ public class Loader:MonoBehaviour
             States.Add(state);
             index++;
         }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 30;
+            state.ico = "5dd6b30614b14477e4f3157fe4c405cc";
+            //state.spriteN = -1;
+            state.type = StateType.PlayerParameterAdder;
+            state.Params = new List<float>() { 10, 0,0,0 };
+            States.Add(state);
+            index++;
+        }
 
     }
 
@@ -1115,6 +1139,9 @@ public class Loader:MonoBehaviour
         player.Corruption = (float)Data[26];
         player.RegSpeedCP = (float)Data[27];
         world.StartGeneration((MyVector3)Data[28]);
+        player.MaxXP = (float)Data[29];
+        player.XP = (float)Data[30];
+        player.Lvl = (int)Data[31];
         Debug.Log("Loader:load player true");
         return true;
     }
@@ -1149,6 +1176,8 @@ public class Loader:MonoBehaviour
         player.Corruption = 0;
         player.RegSpeedCP = 0.2f;
         player.Skills = new List<Skill>();
+        player.MaxXP = 100;
+        player.Lvl = 1;
         if (!SkillsLoaded)
         {
             LoadSkills();
@@ -1176,7 +1205,8 @@ public class Loader:MonoBehaviour
         player.MaxHungry, player.Hungry, player.RegSpeedH,
         player.MaxThirst, player.Thirst, player.RegSpeedT,
         player.MaxCorruption, player.Corruption, player.RegSpeedCP,
-        new MyVector3(world.ActiveMapCell.ThisCell.PosX, world.ActiveMapCell.ThisCell.PosY)
+        new MyVector3(world.ActiveMapCell.ThisCell.PosX, world.ActiveMapCell.ThisCell.PosY),
+        player.MaxXP, player.XP, player.Lvl
         };
         BinaryFormatter formatter = new BinaryFormatter();
         using (FileStream fs = new FileStream($"player.save", FileMode.OpenOrCreate))

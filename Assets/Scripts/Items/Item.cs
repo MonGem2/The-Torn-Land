@@ -14,6 +14,8 @@ public class Item : ScriptableObject, IItem
 
     public ItemData Data { get { return _data; } set { _data = value; } }
 
+    public Player player;
+
     [SerializeField] private string _name;
     [SerializeField] private string _descr;
     [SerializeField] private Sprite _uiIcon;

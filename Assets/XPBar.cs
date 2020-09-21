@@ -9,9 +9,23 @@ public class XPBar : MonoBehaviour
     public Slider slider;
     public Text text;
     public float xp;
+    public Player player;
     void Start()
     {
-        
+        slider.maxValue = player.MaxXP;
+        slider.value = player.XP;
+        xp = player.XP;
+        text.text = player.XP + "/" + player.MaxXP;
+        player.XPChangeTrigger += (x) => {
+            slider.value = player.XP;
+            xp = player.XP;
+            text.text = player.XP + "/" + player.MaxXP;
+        };
+        player.MaxXPChangeTrigger += (x) =>
+        {
+            slider.maxValue = player.MaxXP;                        
+            text.text = player.XP + "/" + player.MaxXP;
+        };
     }
     public bool CheckXP(float XP)
     {

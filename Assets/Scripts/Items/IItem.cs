@@ -17,8 +17,12 @@ public interface IItem
 
 public class ItemData
 {
+    public int ID;
     public List<State> Effects;
     public ItemType type;
+    public string Sprite;
+    public int spriteN=-1;
+    public string Decription;
 
 }
 
