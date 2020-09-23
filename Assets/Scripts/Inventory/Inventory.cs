@@ -14,10 +14,11 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Transform _container;
     [SerializeField] private Transform _originalParent;
     [SerializeField] private Transform _draggingParent;
-    [SerializeField] private Transform _equipParent;
+    public Equipment equipment;
+    //[SerializeField] private Transform _equipParent;
     [SerializeField] private Transform _infoPanel;
     public static int _capacity = 40;
-
+    public Player player;
     ///public Button InvButton;
 
 
@@ -28,42 +29,52 @@ public class Inventory : MonoBehaviour
         Items.Capacity = _capacity;
 
         (_container as RectTransform).sizeDelta =  new Vector2 (0, (float)(107 + (_capacity / 10 - 1) * 105.3));
-
-        for (int i = 0; i < /*UnityEngine.Random.Range(5, */_capacity-5/* + 1)*/; i++)
-        {
-            Items.Add(ScriptableObject.CreateInstance("Item") as Item);
-            Items[i].Data = new ItemData() { type = ItemType.Disposable };
-            Items[i].Name = "PFNSDHKFHDS";
-        }
-
-        Items.Add(new Item() { Data = new ItemData() { type = ItemType.Boots }, Name = "PFNSDHKFHDS" });
-        Items.Add(new Item() { Data = new ItemData() { type = ItemType.Bracers }, Name = "PFNSDHKFHDS" });
-        Items.Add(new Item() { Data = new ItemData() { type = ItemType.Armor }, Name = "PFNSDHKFHDS" });
-        Items.Add(new Item() { Data = new ItemData() { type = ItemType.Pants }, Name = "PFNSDHKFHDS" });
-        Items.Add(new Item() { Data = new ItemData() { type = ItemType.Pants }, Name = "PFNSDHKFHDS" });
-
-        foreach (var item in Items)
-        {
-            var cell = Instantiate(_inventoryCellTemplate, _container);
-            cell.Init(_originalParent,_draggingParent, _equipParent);
-            cell.Render(item);
-
-            cell.Ejection += Destroyer;
-            cell.Deselection += InfoHide;
-            cell.Selection += InfoSet;
-            cell.Using += UseItem;
-        }
-
         transform.parent.parent.gameObject.SetActive(false);
+        Render(Items);
 
     }
+    public void AddItem(Item item)
+    {
+        try
+        {
 
+        Items.Add(item);
+        Render(Items);
+
+        }
+        catch (Exception)
+        {
+
+            Debug.Log(item.Name);
+        }
+    }
+    public bool Remove(Item item)
+    {
+        bool x = Items.Remove(item);
+        Render(Items);
+        return x;
+    }
     //void ClickBtn()
     //{
     //    this._draggingParent.gameObject.active = !this._draggingParent.gameObject.active;
     //    Debug.Log("Inventory");
     //}
+    public void SetEquipment(Item item)
+    {
+        if (item.type <= ItemType.Disposable)
+        {
+            return;
+        }
+        var cell = Instantiate(_inventoryCellTemplate, _container);
+        cell.Init(_originalParent, _draggingParent, equipment.transform);
+        cell.Render(item);
 
+        cell.Ejection += Destroyer;
+        cell.Deselection += InfoHide;
+        cell.Selection += InfoSet;
+        cell.Using += UseItem;
+        equipment.AddEquip(cell);
+    }
     private void OnEnable()
     {
         Render(Items);
@@ -78,7 +89,7 @@ public class Inventory : MonoBehaviour
         foreach (var item in items) 
         {
             var cell = Instantiate(_inventoryCellTemplate, _container);
-            cell.Init(_originalParent, _draggingParent, _equipParent);
+            cell.Init(_originalParent, _draggingParent, equipment.transform);
             cell.Render(item);
 
             cell.Ejection += Destroyer;
@@ -110,7 +121,7 @@ public class Inventory : MonoBehaviour
             }
             GameObject.Find("NameItem").GetComponent<Text>().text = (sender as InventoryCell)._item.Name;
             GameObject.Find("ImageItem").GetComponent<Image>().sprite = (sender as InventoryCell)._item.UIIcon;
-            GameObject.Find("TypeItem").GetComponent<Text>().text = (sender as InventoryCell)._item.Data.type.ToString();
+            GameObject.Find("TypeItem").GetComponent<Text>().text = (sender as InventoryCell)._item.type.ToString();
             GameObject.Find("DescrItem").GetComponent<Text>().text = (sender as InventoryCell)._item.Description;
             Debug.LogWarning("//TODO: Effects inventory");
         }
@@ -128,50 +139,44 @@ public class Inventory : MonoBehaviour
         Debug.LogWarning("Qwerpop");
 
     }
+    
     private void UseItem(object sender, EventArgs e)
     {
+
+        InventoryCell cell = (sender as InventoryCell);
         _infoPanel.gameObject.SetActive(false);
-        if ((sender as InventoryCell)._item.Use())
+        if (player.CheckItem(cell._item.ID))
         {
-            if ((sender as InventoryCell)._item.Data.type > (ItemType)1
-                && (sender as InventoryCell).transform.parent != _equipParent
-                .Find((sender as InventoryCell)._item.Data.type.ToString() + "BackCell"))
+            if (cell._item.type > (ItemType)1&& cell != equipment.GetEquip(cell._item.type))//if item type is equipment and it doesn't equiped now
             {
-                if (_equipParent.Find((sender as InventoryCell)
-                    ._item.Data.type.ToString() + "BackCell").childCount == 0)
+                player.AddEffects(cell._item.EffectIds);
+                if (equipment.GetEquip(cell._item.type) != null)//if something equiped now
                 {
-                    (sender as InventoryCell).transform.SetParent(_equipParent.Find((sender as InventoryCell)
-                        ._item.Data.type.ToString() + "BackCell"));
-                    (sender as InventoryCell).transform.localPosition = new Vector3(0, 0, 0);
-                    Equips.Add((sender as InventoryCell)._item);
-                    Items.Remove((sender as InventoryCell)._item);
+                    InventoryCell AlreadyEquiped = equipment.GetEquip(cell._item.type);
+                    player.RemoveEffects(AlreadyEquiped._item.EffectIds);
+                    AlreadyEquiped.transform.SetParent(_originalParent);
+                    Equips.Remove(AlreadyEquiped._item);
+                    Items.Add(AlreadyEquiped._item);
                 }
-                else
-                {
-                    _equipParent.Find((sender as InventoryCell)
-                        ._item.Data.type.ToString() + "BackCell").GetChild(0).SetParent(_originalParent);
-                    (sender as InventoryCell).transform.SetParent(_equipParent.Find((sender as InventoryCell)
-                        ._item.Data.type.ToString() + "BackCell"));
-                    (sender as InventoryCell).transform.localPosition = new Vector3(0, 0, 0);
-                    Equips.Remove(_equipParent.Find((sender as InventoryCell)
-                        ._item.Data.type.ToString() + "BackCell").GetChild(0).GetComponent<InventoryCell>()._item);
-                    Equips.Add((sender as InventoryCell)._item);
-                    Items.Remove((sender as InventoryCell)._item);
-                    Items.Add(_equipParent.Find((sender as InventoryCell)
-                        ._item.Data.type.ToString() + "BackCell").GetChild(0).GetComponent<InventoryCell>()._item);
-                }
+                equipment.AddEquip(cell);                    
+                cell.transform.localPosition = new Vector3(0, 0, 0);
+                Equips.Add(cell._item);
+                Items.Remove(cell._item);
+
             }
-            else if ((sender as InventoryCell).transform.parent == _equipParent
-                .Find((sender as InventoryCell)._item.Data.type.ToString() + "BackCell"))
+            else if (cell._item.type > (ItemType)1 && cell == equipment.GetEquip(cell._item.type))//if this item equiped now
             {
-                (sender as InventoryCell).transform.SetParent(_originalParent);
-                (sender as InventoryCell).transform.localPosition = new Vector3(0, 0, 0);
-                Items.Add((sender as InventoryCell)._item);
-                Equips.Remove((sender as InventoryCell)._item);
+                player.RemoveEffects(cell._item.EffectIds);
+                cell.transform.SetParent(_originalParent);
+                cell.transform.localPosition = new Vector3(0, 0, 0);
+                equipment.RemoveEquip(cell._item.type);
+                Items.Add(cell._item);
+                Equips.Remove(cell._item);
             }
-            else if ((sender as InventoryCell)._item.Data.type == ItemType.Disposable)
+            else if (cell._item.type == ItemType.Disposable)
             {
-                Items.Remove((sender as InventoryCell)._item);
+                player.AddEffects(cell._item.EffectIds);
+                Items.Remove(cell._item);
                 Destroyer(sender, e);
             }
 

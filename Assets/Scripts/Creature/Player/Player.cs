@@ -282,9 +282,11 @@ public class Player : Creature
             {
                 if (item.type == StateType.ParameterChanger)
                 {
+                    
                     Aditional += item.Params[(int)PlayerStatsChangeLD.XPBonus];
                 }
             }
+          //  Debug.Log("MyBonus:"+Aditional);
             if (value > MaxXP)
             {
                 Lvl++;
@@ -294,9 +296,12 @@ public class Player : Creature
             {
                 if (value-_xP>0)
                 {
-                    value += (value - _xP)*Aditional;
+                   // Debug.Log("value-_xP:" + (value - _xP));
+                    value =_xP + (value - _xP)*Aditional;
+                    //Debug.Log("Result:" + value);
                 }
                 _xP = value;
+            
             }
             if (XPChangeTrigger != null)
             {
@@ -327,12 +332,102 @@ public class Player : Creature
 
     }
     #endregion
+    public void AddEffects(List<int> StateIds)
+    {
+        foreach (var item in StateIds)
+        {
+            AddEffect(loader.States[item]);
+        }
+    }
+    public void RemoveEffects(List<int> StateIds)
+    {
+        foreach (var item in StateIds)
+        {
+            State state = loader.States[item];
+            if (OnStateEnded != null)
+            {
+                OnStateEnded(state);
+            }
+            if (state.type == StateType.DazerAttack)
+            {
+                AttackLock = false;
+            }
+            if (state.type == StateType.DazerMovement)
+            {
+                MoveLock = false;
+            }
+            if (state.type == StateType.InfinityPower)
+            {
+                InfinityPowerOFF(state);
+            }
+            if (state.type == StateType.ParameterChanger)
+            {
+                if (MaxHPChangeTrigger != null)
+                {
+                    MaxHPChangeTrigger(MaxHP);
+                }
+                if (MaxMPChangeTrigger != null)
+                {
+                    MaxMPChangeTrigger(MaxMP);
+                }
+                if (MaxSTChangeTrigger != null)
+                {
+                    MaxSTChangeTrigger(MaxST);
+                }
+                if (MaxSPChangeTrigger != null)
+                {
+                    MaxSPChangeTrigger(MaxSP);
+                }
+                if (this.SumBaseDamageChangeTrigger != null)
+                {
+                    SumBaseDamageChangeTrigger(SumBaseDamage);
+                }
+                if (RegSpeedMPChangeTrigger != null)
+                {
+                    RegSpeedMPChangeTrigger(RegSpeedMP);
+                }
+                if (RegSpeedSTChangeTrigger != null)
+                {
+                    RegSpeedSTChangeTrigger(RegSpeedST);
+                }
+                if (RegSpeedSPChangeTrigger != null)
+                {
+                    RegSpeedSPChangeTrigger(RegSpeedSP);
+                }
+                if (MagResistChangeTrigger != null)
+                {
+                    MagResistChangeTrigger(MagResist);
+                }
+                if (PhyResistChangeTrigger != null)
+                {
+                    PhyResistChangeTrigger(PhysResist);
+                }
+                if (SoulResistChangeTrigger != null)
+                {
+                    SoulResistChangeTrigger(SoulResist);
+                }
+                if (OnSpeedChanged != null)
+                {
+                    OnSpeedChanged(Speed);
+                }
+            }
+            if (state.type == StateType.SkillAdder)
+            {
+                SkillAdderOff(state);
+            }
+            if (state.type == StateType.SkillHider)
+            {
+                SkillHiderOff(state);
+            }
+            States.Remove(state);
+        }
+    }
     public OnChangeParameterTrigger OnLoaded;
     public bool Loaded = false;
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("QAZWSXEDCRFV.mapcell");
+//        Debug.Log("QAZWSXEDCRFV.mapcell");
         //this.MaxHP = 200;
         //this.MaxMP = 200;
         //this.MaxSP = 200;
@@ -371,13 +466,13 @@ public class Player : Creature
         // Skills.Add(loader.Skills[0].Clone());
         // Skills.Add(loader.Skills[1].Clone());
         // Skills.Add(loader.Skills[2].Clone());
-        Debug.Log(Skills.Count+"  .mapcell");
-        ActiveSkill = Skills[2];
-        OnLeftClickSkill = ActiveSkill;
-        SkillBar.SetSkillOnButton(Skills[0], 0);
-        SkillBar.SetSkillOnButton(Skills[1], 1);
-       // SkillBar.SetSkillOnButton(Skills[3]);
-        OnRightClickSkill = Skills[3];
+//        Debug.Log(Skills.Count+"  .mapcell");
+        //ActiveSkill = Skills[2];
+        //OnLeftClickSkill = ActiveSkill;
+        //SkillBar.SetSkillOnButton(Skills[0], 0);
+        //SkillBar.SetSkillOnButton(Skills[1], 1);
+       //// SkillBar.SetSkillOnButton(Skills[3]);
+        //OnRightClickSkill = Skills[3];
         this.TeleporteInObject += (x) => { Debug.Log("Pidor"); };
         this.RegenerationTriggered += RegTrigger;
         this.OnSkillAdded += (x) =>
@@ -387,21 +482,51 @@ public class Player : Creature
                 SkillBar.SetSkillOnButton((Skill)x);
             }
         };
+        this.OnStateAdded += PlayerStateAdded;
+        this.OnSkillRemoved += (x) =>
+        {
+            int id = (int)x;
+            if (OnRightClickSkill != null)
+            {
+                if (OnRightClickSkill.ID == id)
+                {
+                    OnRightClickSkill = null;
+                }
+            }
+            if (OnLeftClickSkill != null)
+            {
+                if (OnLeftClickSkill.ID == id)
+                {
+                    OnLeftClickSkill = null;
+                }
+            }
+            if (ActiveSkill != null)
+            {
+                if (ActiveSkill.ID == id)
+                {
+                    ActiveSkill = null;
+                }
+            }
+
+        };
         Loaded = true;
         if (OnLoaded != null)
         {
             OnLoaded(this);
         }
     }
-    public void PlayerStateAdded(State state)
+    public void PlayerStateAdded(object value)
     {
+        State state = (State)value;
         if (state.type == StateType.PlayerParameterAdder)
         {
-            Debug.Log("Creature:ParameterAdder triggered");
+          //  Debug.LogError("player: adding parameters:"+state.Params[(int)PlayerParameterAdderLD.XP]);
             this.Corruption += state.Params[(int)PlayerParameterAdderLD.Corruption];
             this.Hungry += state.Params[(int)PlayerParameterAdderLD.Hungry];
             this.Thirst += state.Params[(int)PlayerParameterAdderLD.Threat];
+          //  Debug.Log(this.XP);
             this.XP += state.Params[(int)PlayerParameterAdderLD.XP];
+       //     Debug.Log(this.XP);
             return;
         }
     }
@@ -409,7 +534,7 @@ public class Player : Creature
     {
         yield return new WaitForSeconds(10);
         loader.SavePlayer();
-    
+        States.RemoveAll(x => x.Duration != -1);
     }
     void RegTrigger(object obj, object eventArgs)
     {
@@ -461,12 +586,20 @@ public class Player : Creature
 
             if (Input.GetMouseButtonDown(0)&&OnLeftClickSkill!=null)
             {
+                if (ActiveSkill == null)
+                {
+                    ActiveSkill = OnLeftClickSkill; 
+                }
                 if (!AttackLock && CanShoot && ActiveSkill.CanBeUsed && CanAttack && !ActiveSkill.locked)
                 {
                     Skill temp = ActiveSkill;
                     if (ActiveSkill != OnLeftClickSkill)
                     {
                         ActiveSkill = OnLeftClickSkill;
+                    }
+                    if (temp == null)
+                    {
+                        temp = OnLeftClickSkill;
                     }
                     StartCoroutine(this.UseSkill(temp, Camera.main.ScreenToWorldPoint(Input.mousePosition)));
 
@@ -485,7 +618,7 @@ public class Player : Creature
                     messanger.SetMessage("Skill locked");
                 }
             }
-            else if (OnLeftClickSkill == null)
+            else if (OnLeftClickSkill == null&& Input.GetMouseButtonDown(0)&&CanShoot)
             {
                 messanger.SetMessage("You have no skill");
             }
@@ -510,7 +643,7 @@ public class Player : Creature
                     messanger.SetMessage("Skill locked");
                 }
             }
-            else if (OnRightClickSkill == null)
+            else if (Input.GetMouseButtonDown(1)&&OnRightClickSkill == null&&CanShoot)
             {
                 messanger.SetMessage("You have no skill");
             }
@@ -544,5 +677,20 @@ public class Player : Creature
 
         return true;
 
+    }
+    public void SetSkillsOnButtons(List<int> ids)
+    {
+        foreach (var item in ids)
+        {
+            if (item == -1)
+            {
+                continue;
+            }
+            Skill sk = Skills.Where(x => x.ID == item).First();
+            if(sk!=null)
+            {
+                SkillBar.SetSkillOnButton(sk);
+            }
+        }
     }
 }

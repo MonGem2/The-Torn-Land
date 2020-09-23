@@ -7,23 +7,93 @@ public class State
     public int ID;
     public float Duration;
     //public float Timeout;
-    public StateType type;
+    public int Type;
+    public StateType type { get { return (StateType)Type; } set { Type = (int)value; } }
     public string ico;
     public int spriteN=-1;
     public List<float> Params;
 }
-public enum StateType { 
-    ParameterChanger=0,//complete/checked
+public enum StateType {
+    /// <summary>
+    ///     MaxHP=0,
+    ///     MaxMP = 1,
+    ///     MaxST,
+    ///     MaxSP,
+    ///     SumBaseDamage,
+    ///     RegSpeedHP,
+    ///     RegSpeedMP,
+    ///     RegSpeedST,
+    ///     RegSpeedSP,
+    ///     MagResist,
+    ///     PhyResisst,
+    ///     SoulResist,
+    ///     Speed
+    /// </summary>
+    ParameterChanger =0,//complete/checked
+    /// <summary>
+    /// Skills ids
+    /// </summary>
     SkillAdder,//complete/checked
+    /// <summary>
+    /// Skills ids
+    /// </summary>
     SkillHider,//complete/checked
+    /// <summary>
+    /// No params
+    /// </summary>
     DazerMovement,//complete/checked
+    /// <summary>
+    /// No Params
+    /// </summary>
     DazerAttack,//complete/checked
+    /// <summary>
+    /// Items ids or no params
+    /// </summary>
     DazerItems,
+    /// <summary>
+    ///     type,
+    ///     directionType,
+    ///     Direction_x,
+    ///     Direction_y,
+    ///     time,
+    ///     distance_damagemodifier
+    /// </summary>
     Move,//need move method
+    /// <summary>
+    ///     InfinityHP,
+    ///     InfinityMP,
+    ///     InfinityST,
+    ///     InfinitySP,
+    ///     OneShot
+    /// </summary>
     InfinityPower, //complete/checked
+    /// <summary>
+    ///     HPReg,
+    ///     Magreg,
+    ///     STReg,
+    ///     SPReg
+    /// </summary>
     RegenerationStop,//complete/checked
+    /// <summary>
+    ///     HungryRegSpeed,
+    ///     ThirstRegSpeed,
+    ///     CorruptionRegSpeed,
+    ///     XPBonus
+    /// </summary>
     playerStatsChange,//complete/checked
+    /// <summary>
+    ///     HP = 0,
+    ///     MP = 1,
+    ///     ST,
+    ///     SP
+    /// </summary>
     ParameterAdder,//complete/checked
+    /// <summary>
+    ///     XP,
+    ///     Corruption,
+    ///     Hungry,
+    ///     Threat
+    /// </summary>
     PlayerParameterAdder//complete/checked
 }
 

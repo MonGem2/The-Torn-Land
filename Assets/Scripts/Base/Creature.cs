@@ -456,7 +456,7 @@ public class Creature : MyObject
     #endregion
     #region States
     protected List<State> _states = new List<State>();
-    public List<State> States { get=>_states; set { UnityEngine.Debug.Log("hheeyy"); _states = value; } }
+    public List<State> States { get=>_states; set {  _states = value; } }
     #endregion
     #region Skills
     protected List<Skill> _skills=new List<Skill>();
@@ -511,7 +511,7 @@ public class Creature : MyObject
     #region Intake
     public override void Damage(BulletData bulletData, bool MaxEffectSet = true)
     {
-      //  Debug.Log("y1");
+      //  ////Debug.Log("y1");
         foreach (var item in States)
         {
             if (item.type == StateType.InfinityPower)
@@ -524,28 +524,28 @@ public class Creature : MyObject
         {
             Damage *= Time.deltaTime / bulletData.AttackTimeout;
         }
-     //   Debug.Log("y2");
+     //   ////Debug.Log("y2");
         
         HP -= Damage;
-   //     Debug.Log("y3");
-    //    Debug.Log("My hp is:"+HP);
+   //     ////Debug.Log("y3");
+    //    ////Debug.Log("My hp is:"+HP);
         if (HP < 0)
         {
-       //     Debug.Log("y4");
+       //     //Debug.Log("y4");
             Death();
 
         }
         if (HP > MaxHP)
         {
-         //   Debug.Log("y5");
+         //   //Debug.Log("y5");
             HP = MaxHP;
             if (MaxEffectSet)
             {
                 //AddEffect(0);
             }
         }
-       // Debug.Log("y6");
-        //Debug.LogWarning("//TODO:IntakeDamage");
+       // //Debug.Log("y6");
+        ////Debug.LogWarning("//TODO:IntakeDamage");
     }
     public bool IntakeMP(float Count, bool MaxEffectSet = true)
     {
@@ -573,7 +573,7 @@ public class Creature : MyObject
             return false;
         }
         return true;
-        Debug.LogWarning("//TODO:IntakeMP");
+        //Debug.LogWarning("//TODO:IntakeMP");
     }
     public bool IntakeST(float Count, bool MaxEffectSet = true)
     {
@@ -601,7 +601,7 @@ public class Creature : MyObject
             return false;
         }
         return true;
-        Debug.LogWarning("//TODO:IntakeST");
+        //Debug.LogWarning("//TODO:IntakeST");
     }
     public bool IntakeSP(float Count, bool MaxEffectSet = true)
     {
@@ -629,7 +629,7 @@ public class Creature : MyObject
             return false;
         }
         return true;
-        Debug.LogWarning("//TODO:IntakeSP");
+        //Debug.LogWarning("//TODO:IntakeSP");
     }
     #endregion
     #region SkillsCode
@@ -644,19 +644,21 @@ public class Creature : MyObject
                 return;
             }
         }
+
+        Skills.Add(Skill);
         if (OnSkillAdded != null)
         {
             OnSkillAdded(Skill);
         }
-        Skills.Add(Skill);
     }
     public void RemoveSkill(int SkillID)
     {
-        if (OnSkillRemoved!=null)
+    
+        Skills.Remove(Skills.Find(x => x.ID == SkillID));
+        if (OnSkillRemoved != null)
         {
             OnSkillRemoved(SkillID);
         }
-        Skills.Remove(Skills.Find(x => x.ID == SkillID));
     }
     private protected IEnumerator UseSkill(Skill skill, Vector2 targetPos)
     {
@@ -673,7 +675,7 @@ public class Creature : MyObject
         {
             yield break;
         }
-       // Debug.Log("x2");
+       // //Debug.Log("x2");
         skill.CanBeUsed = false;
 
         StartCoroutine(SkillCooldownReset(skill.Cooldown, skill));
@@ -682,7 +684,7 @@ public class Creature : MyObject
         IntakeST(skill.STIntake);
         IntakeSP(skill.SPIntake);
         AddEffects(skill.EffectsIds);
-     //   Debug.Log("x3");
+     //   //Debug.Log("x3");
         CanAttack = false;
         Vector2 vector = targetPos - (Vector2)transform.position;
         if (skill.onSkillUse != null)
@@ -694,17 +696,17 @@ public class Creature : MyObject
             yield return new WaitForSeconds(item.ShootPeriod);
             Bullet bullet = Instantiate(loader.BulletsPerhubs[item.PerhubID]).GetComponent<Bullet>();
             bullet.data = item.Clone();
-            //Debug.Log("My damage:  " + item.ManaDamage + "  " + item.SoulDamage + "  " + item.PhysicDamage);
+            ////Debug.Log("My damage:  " + item.ManaDamage + "  " + item.SoulDamage + "  " + item.PhysicDamage);
             bullet.data.ManaDamage *= SumBaseDamage;
             bullet.data.SoulDamage *= SumBaseDamage;
             bullet.data.PhysicDamage *= SumBaseDamage;
-            //Debug.Log("My damage:  "+item.ManaDamage+"  "+item.SoulDamage+"  "+item.PhysicDamage);
+            ////Debug.Log("My damage:  "+item.ManaDamage+"  "+item.SoulDamage+"  "+item.PhysicDamage);
             if (!item.SelfAttack)
             {
-        //        Debug.Log("123456789");
+        //        //Debug.Log("123456789");
                 bullet.User = transform;
             }
-          //  Debug.LogWarning("qweryu:   "+item.Binded);
+          //  //Debug.LogWarning("qweryu:   "+item.Binded);
             if (item.Binded)
             {
 
@@ -712,13 +714,13 @@ public class Creature : MyObject
             }
             else
             {
-            //    Debug.Log("-qweww8790-----------");
+            //    //Debug.Log("-qweww8790-----------");
                 bullet.Shoot(transform.position, targetPos);
             }
 
         }
         CanAttack = true;
-  //      Debug.Log("x4");
+  //      //Debug.Log("x4");
 
     }
     private protected IEnumerator SkillCooldownReset(float Cooldown, Skill skill)
@@ -734,7 +736,7 @@ public class Creature : MyObject
     protected bool PointerOnObject(string Tags)
     {
         bool CanShoot = true;
-        // Debug.Log(EventSystem.current.lastSelectedGameObject.tag);
+        // //Debug.Log(EventSystem.current.lastSelectedGameObject.tag);
         if (EventSystem.current.IsPointerOverGameObject())
         {
             
@@ -745,7 +747,7 @@ public class Creature : MyObject
             {
                 if (Tags.Contains(result.gameObject.tag))
                 {
-                    //Debug.Log(result.gameObject.tag);
+                    ////Debug.Log(result.gameObject.tag);
                     return true;
                 }
             }
@@ -754,27 +756,27 @@ public class Creature : MyObject
     }
     protected bool PointerOnObject(string Tags, Vector3 point)
     {
-        Debug.Log("PointerOnObject 1");
+        //Debug.Log("PointerOnObject 1");
         bool CanShoot = true;
-        // Debug.Log(EventSystem.current.lastSelectedGameObject.tag);
+        // //Debug.Log(EventSystem.current.lastSelectedGameObject.tag);
         if (EventSystem.current.IsPointerOverGameObject())
         {
-            Debug.Log("PointerOnObject 2");
-            Debug.Log(point);
-            Debug.Log(Camera.main.WorldToScreenPoint(point));
-            Debug.Log(Camera.main.ScreenToWorldPoint(point));
-            Debug.Log("Pointer cursor "+ (Input.mousePosition));
-            Debug.Log("Pointer cursor " + Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            //Debug.Log("PointerOnObject 2");
+            //Debug.Log(point);
+            //Debug.Log(Camera.main.WorldToScreenPoint(point));
+            //Debug.Log(Camera.main.ScreenToWorldPoint(point));
+            //Debug.Log("Pointer cursor "+ (Input.mousePosition));
+            //Debug.Log("Pointer cursor " + Camera.main.ScreenToWorldPoint(Input.mousePosition));
             var pd = new PointerEventData(eventSystem) { position =Camera.main.WorldToScreenPoint(point) };
             var results = new List<RaycastResult>();
             eventSystem.RaycastAll(pd, results);
-            Debug.Log("PointerOnObject 3  "+results.Count);
+            //Debug.Log("PointerOnObject 3  "+results.Count);
             foreach (var result in results)
             {
-                Debug.Log("PointerOnObject  "+result.gameObject.tag);
+                //Debug.Log("PointerOnObject  "+result.gameObject.tag);
                 if (Tags.Contains(result.gameObject.tag))
                 {
-                    //Debug.Log(result.gameObject.tag);
+                    ////Debug.Log(result.gameObject.tag);
                     return true;
                 }
             }
@@ -788,10 +790,10 @@ public class Creature : MyObject
     {
 
 
-        Debug.Log("Creature:Move 1");
+        //Debug.Log("Creature:Move 1");
         if (state.Params[(int)MoveLD.type] == (int)MoveTypeLD.Teleportation&&!MoveLock)
         {
-            Debug.Log("Creature:Move 6");
+            //Debug.Log("Creature:Move 6");
             bool MoveLocked = !MoveLock;
             bool AttackLocked = !AttackLock;
             MoveLock = true;
@@ -837,7 +839,7 @@ public class Creature : MyObject
                 endPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 endPos.z = -1;
             }
-            Debug.Log("087654321");
+            //Debug.Log("087654321");
             if ( PointerOnObject("undestruct", endPos))
             {
                 if (TeleporteInObject!=null)
@@ -857,11 +859,11 @@ public class Creature : MyObject
 
 
             SpaceVortex spaceVortex1 = Instantiate(Resources.Load<GameObject>("SpaceVortexPerhub")).GetComponent<SpaceVortex>();
-            Debug.Log(spaceVortex1);
+            //Debug.Log(spaceVortex1);
             spaceVortex1.Set(this, state.Params[(int)MoveLD.time], state.Params[(int)MoveLD.distance_damagemodifier], transform.position);
 
             SpaceVortex spaceVortex2 = Instantiate(Resources.Load<GameObject>("SpaceVortexPerhub")).GetComponent<SpaceVortex>();
-            Debug.Log(spaceVortex2);
+            //Debug.Log(spaceVortex2);
             spaceVortex2.Set(this, state.Params[(int)MoveLD.time], state.Params[(int)MoveLD.distance_damagemodifier], endPos);
 
             if (OnEffectMove != null)
@@ -896,16 +898,21 @@ public class Creature : MyObject
     {
         foreach (var item in Effects)
         {
-            Debug.LogError("Pexda "+item.ID);
+            //Debug.LogError("Pexda "+item.ID);
             StartCoroutine(StateAdder(item));
         }
+    }
+    public virtual void AddEffect(State Effect)
+    {
+        StartCoroutine(StateAdder(Effect));
+        
     }
     public OnChangeParameterTrigger OnStateAdded;
     public OnChangeParameterTrigger OnStateEnded;
     public IEnumerator StateAdder(State state)
     {
         
-        Debug.Log(state.type);
+//        ////Debug.Log(state.type);
         foreach (var item in States)
         {
             if (item.ID == state.ID)
@@ -913,30 +920,31 @@ public class Creature : MyObject
                 yield break;
             }
         }
-        Debug.Log("Creature:State adder:spell:"+state.ID);
+//        ////Debug.Log("Creature:State adder:spell:"+state.ID);
         if (state.type == StateType.ParameterAdder)
         {
-            Debug.Log("Creature:ParameterAdder triggered");
+            ////Debug.Log("Creature:ParameterAdder triggered");
             this.HP += state.Params[(int)ParameterAdderLD.HP];
             this.MP += state.Params[(int)ParameterAdderLD.MP];
-            this.SP += state.Params[(int)ParameterAdderLD.SP];
+            this.SP += state.Params[(int)ParameterAdderLD.SP];            
             this.ST += state.Params[(int)ParameterAdderLD.ST];
             yield break;
         }
         if (state.type == StateType.Move)
         {
-            Debug.Log("Creature:Move triggered");
+            ////Debug.Log("Creature:Move triggered");
             StartCoroutine(Move(state));
             yield break;
+        }
+
+        if (OnStateAdded != null)
+        {
+            OnStateAdded(state);
         }
         if (state.type == StateType.PlayerParameterAdder)
         {
             yield break;
         }
-        if (OnStateAdded != null)
-        {
-            OnStateAdded(state);
-        }       
         States.Add(state);
         if (state.type == StateType.SkillHider)
         {
@@ -972,7 +980,7 @@ public class Creature : MyObject
         }
         if (state.type == StateType.DazerMovement)
         {
-            Debug.Log("Dazer start");
+            ////Debug.Log("Dazer start");
             MoveLock = true;
             if (state.Duration == -1)
             {
@@ -984,32 +992,32 @@ public class Creature : MyObject
                 OnStateEnded(state);
             }
             MoveLock = false;
-            Debug.Log("Dazer end");
+            ////Debug.Log("Dazer end");
             States.Remove(state);
             yield break;
         }
         if (state.type == StateType.DazerAttack)
         {
-            Debug.Log("Dazer attack start");
+            ////Debug.Log("Dazer attack start");
             AttackLock = true;
             if (state.Duration == -1)
             {
                 yield break;
             }
-            Debug.LogError(state.Duration);
+            ////Debug.LogError(state.Duration);
             yield return new WaitForSeconds(state.Duration);
             if (OnStateEnded != null)
             {
                 OnStateEnded(state);
             }
             AttackLock = false;
-            Debug.Log("Dazer attack end");
+            ////Debug.Log("Dazer attack end");
             States.Remove(state);
             yield break;
         }
         if (state.type == StateType.InfinityPower)
         {
-            Debug.Log("infinity power start");
+            ////Debug.Log("infinity power start");
             InfinityPowerON(state);
             if (state.Duration == -1)
             {
@@ -1022,7 +1030,7 @@ public class Creature : MyObject
             }
 
             InfinityPowerOFF(state);
-            Debug.Log("infinity power end");
+            ////Debug.Log("infinity power end");
             States.Remove(state);
             yield break;
         }
@@ -1081,7 +1089,7 @@ public class Creature : MyObject
         {
             yield break;
         }
-        Debug.LogError(state.Duration+"  "+state.type);
+        ////Debug.LogError(state.Duration+"  "+state.type);
         yield return new WaitForSeconds(state.Duration);
         States.Remove(state);
         if (state.type == StateType.ParameterChanger)
@@ -1139,7 +1147,7 @@ public class Creature : MyObject
         {
             OnStateEnded(state);
         }
-        Debug.LogError("pizdec Ended");
+        ////Debug.LogError("pizdec Ended");
 
     }
     protected void InfinityPowerON(State state)
@@ -1196,6 +1204,8 @@ public class Creature : MyObject
     {
         foreach (var item in state.Params)
         {
+            ////Debug.Log(item);
+            ////Debug.Log(loader.Skills[(int)item]);
             AddSkill(loader.Skills[(int)item].Clone());
 
         }
@@ -1252,7 +1262,7 @@ public class Creature : MyObject
 
         while (true)
         {
-            //Debug.Log(HP+"      "+MaxHP);
+            //////Debug.Log(HP+"      "+MaxHP);
             yield return new WaitForSeconds(Timeout);
             if (RegenerationTriggered != null)
             {
@@ -1294,7 +1304,7 @@ public class Creature : MyObject
     #endregion
     protected virtual void Death()
     {
-        Debug.Log("12345678");
+        ////Debug.Log("12345678");
         Destroy(gameObject);
     }
     #region GetCharacter

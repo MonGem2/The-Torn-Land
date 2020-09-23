@@ -16,7 +16,7 @@ public class Loader:MonoBehaviour
     public List<GameObject> BulletsPerhubs;
     public List<State> States=new List<State>();
     public List<Skill> Skills=new List<Skill>();
-    public List<ItemData> items=new List<ItemData>();
+    public List<Item> Items=new List<Item>();
     bool SkillsLoaded = false;
     bool StatesLoaded = false;
     bool MapLoaded = false;
@@ -34,7 +34,7 @@ public class Loader:MonoBehaviour
         }
         MapLoaded = true;
 
-      //  Debug.LogError("Pidr 1");
+      //  //Debug.LogError("Pidr 1");
         for (int i = 0; i < WorldSize; i++)
         {
             StaticData.MapData.Add(new List<WorldMapCell>());
@@ -46,13 +46,13 @@ public class Loader:MonoBehaviour
                 {
                     gg.Generated = true;
                     gg.Accesed = false;
-                  //  Debug.LogWarning("map generated");
+                  //  //Debug.LogWarning("map generated");
                 }
                 if (File.Exists(MapAccesed+$"{k}_{i}.mapcell"))
                 {
                     gg.Generated = true;
                     gg.Accesed = true;
-                   // Debug.LogWarning("map accesed");
+                   // //Debug.LogWarning("map accesed");
                 }
                 gg.MapHeight = StaticData.WorldCellSize;
                 gg.MapWidth = StaticData.WorldCellSize;
@@ -71,24 +71,24 @@ public class Loader:MonoBehaviour
 
         BinaryFormatter formatter = new BinaryFormatter();
         // получаем поток, куда будем записывать сериализованный объект
-        Debug.Log("saving "+ MapGenerated + $"{position.PosX}_{position.PosY}.mapcell");
+        //Debug.Log("saving "+ MapGenerated + $"{position.PosX}_{position.PosY}.mapcell");
         //File.Create($"{position.x}_{position.y}.mapcell");
-       // Debug.Log("i'm here 1");
+       // //Debug.Log("i'm here 1");
             position.Generated = true;
         using (FileStream fs = new FileStream(MapGenerated+$"{position.PosX}_{position.PosY}.mapcell", FileMode.OpenOrCreate))
         {
-         //   Debug.Log("i'm here 2");
+         //   //Debug.Log("i'm here 2");
             formatter.Serialize(fs, map);
             
         }
-       // Debug.Log("i'm here 3");
+       // //Debug.Log("i'm here 3");
             // десериализация из файла people.dat                                               
 
         }
         catch (Exception ex)
         {
 
-            Debug.Log(ex.Message);
+            //Debug.Log(ex.Message);
             throw;
         }
     }
@@ -102,15 +102,15 @@ public class Loader:MonoBehaviour
         {
             return;
         }
-            Debug.Log("Moving "+ MapAccesed + $"{position.PosX}_{position.PosY}.mapcell");
+            //Debug.Log("Moving "+ MapAccesed + $"{position.PosX}_{position.PosY}.mapcell");
         File.Move(MapGenerated + $"{position.PosX}_{position.PosY}.mapcell", MapAccesed + $"{position.PosX}_{position.PosY}.mapcell");
         position.Accesed = true;
 
         }
         catch (Exception ex)
         {
-            Debug.Log(ex.Message);
-            Debug.Log($"{ position.PosX}_{ position.PosY}.mapcell");
+            //Debug.Log(ex.Message);
+            //Debug.Log($"{ position.PosX}_{ position.PosY}.mapcell");
             throw;
         }
     }
@@ -128,7 +128,7 @@ public class Loader:MonoBehaviour
                 {
                     result = (int[,])formatter.Deserialize(fs);
                 }
-                //Debug.Log("Loading from file");
+                ////Debug.Log("Loading from file");
                 return result;
             }
         }
@@ -148,7 +148,7 @@ public class Loader:MonoBehaviour
                 {
                     result = (int[,])formatter.Deserialize(fs);
                 }
-                //Debug.Log("Loading from file");
+                ////Debug.Log("Loading from file");
                 return result;
             }
         }
@@ -164,7 +164,7 @@ public class Loader:MonoBehaviour
                 {
                     result = (int[,])formatter.Deserialize(fs);
                 }
-                //Debug.Log("Loading from file");
+                ////Debug.Log("Loading from file");
                 return result;
             }
         }
@@ -181,7 +181,7 @@ public class Loader:MonoBehaviour
         bool Cell1_2 = false; 
         bool Cell2_2 = false;
         int[,] Result = new int[StaticData.WorldCellSize * 3, StaticData.WorldCellSize * 3];
-        //Debug.Log("Stage1");
+        ////Debug.Log("Stage1");
         //100
         //100
         //100
@@ -192,7 +192,7 @@ public class Loader:MonoBehaviour
             Cell0_2 = true;
             Result = FillArrayRange(Result, new Vector2(0, 0), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 3), 0);
         }
-        //Debug.Log("Stage2");
+        ////Debug.Log("Stage2");
         //111
         //000
         //000
@@ -203,7 +203,7 @@ public class Loader:MonoBehaviour
             Cell2_0 = true;
             Result = FillArrayRange(Result, new Vector2(0, 0), new Vector2(StaticData.WorldCellSize*3, StaticData.WorldCellSize), 0);
         }
-        //Debug.Log("Stage3");
+        ////Debug.Log("Stage3");
         //001
         //001
         //001
@@ -214,7 +214,7 @@ public class Loader:MonoBehaviour
             Cell2_2 = true;
             Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize*2, 0), new Vector2(StaticData.WorldCellSize*3, StaticData.WorldCellSize * 3), 0);
         }
-        //Debug.Log("Stage4");
+        ////Debug.Log("Stage4");
         //000
         //000
         //111
@@ -225,7 +225,7 @@ public class Loader:MonoBehaviour
             Cell2_2 = true;
             Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize*2), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize*3), 0);
         }
-        //Debug.Log("Stage5");
+        ////Debug.Log("Stage5");
         //100
         //000
         //000
@@ -242,7 +242,7 @@ public class Loader:MonoBehaviour
                 Result = FillArrayRange(Result, new Vector2(0, 0), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize), array);
             }
         }
-        //Debug.Log("Stage6");
+        ////Debug.Log("Stage6");
         //010
         //000
         //000
@@ -258,7 +258,7 @@ public class Loader:MonoBehaviour
                 Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize, 0), new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize), array);
             }
         }
-        //Debug.Log("Stage7");
+        ////Debug.Log("Stage7");
         //001
         //000
         //000
@@ -274,7 +274,7 @@ public class Loader:MonoBehaviour
                 Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, 0), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize), array);
             }
         }
-        //Debug.Log("Stage8");
+        ////Debug.Log("Stage8");
         //000
         //100
         //000
@@ -290,7 +290,7 @@ public class Loader:MonoBehaviour
                 Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 2), array);
             }
         }
-        //Debug.Log("Stage9");
+        ////Debug.Log("Stage9");
         //000
         //001
         //000
@@ -306,7 +306,7 @@ public class Loader:MonoBehaviour
                 Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize * 2), array);
             }
         }
-        //Debug.Log("Stage10");
+        ////Debug.Log("Stage10");
         //000
         //000
         //100
@@ -322,7 +322,7 @@ public class Loader:MonoBehaviour
                 Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 3), array);
             }
         }
-        //Debug.Log("Stage11");
+        ////Debug.Log("Stage11");
         //000
         //000
         //010
@@ -338,7 +338,7 @@ public class Loader:MonoBehaviour
                 Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize * 3), array);
             }
         }
-        //Debug.Log("Stage12");
+        ////Debug.Log("Stage12");
         //000
         //000
         //001
@@ -374,7 +374,7 @@ public class Loader:MonoBehaviour
             Result = FillArrayRange(Result, new Vector2(0, 0), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize), 0);
         }
         
-        //Debug.Log("Stage6");
+        ////Debug.Log("Stage6");
         //010
         //000
         //000
@@ -388,7 +388,7 @@ public class Loader:MonoBehaviour
             Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize, 0), new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize), 0);
         }
         
-        //Debug.Log("Stage7");
+        ////Debug.Log("Stage7");
         //001
         //000
         //000
@@ -401,7 +401,7 @@ public class Loader:MonoBehaviour
             Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, 0), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize), 0);
         }
         
-        //Debug.Log("Stage8");
+        ////Debug.Log("Stage8");
         //000
         //100
         //000
@@ -414,7 +414,7 @@ public class Loader:MonoBehaviour
             Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 2), 0);
         }
         
-        //Debug.Log("Stage9");
+        ////Debug.Log("Stage9");
         //000
         //001
         //000
@@ -427,7 +427,7 @@ public class Loader:MonoBehaviour
             Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize), new Vector2(StaticData.WorldCellSize * 3, StaticData.WorldCellSize * 2), 0);
         }
         
-        //Debug.Log("Stage10");
+        ////Debug.Log("Stage10");
         //000
         //000
         //100
@@ -440,7 +440,7 @@ public class Loader:MonoBehaviour
             Result = FillArrayRange(Result, new Vector2(0, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 3), 0);
         }
         
-        //Debug.Log("Stage11");
+        ////Debug.Log("Stage11");
         //000
         //000
         //010
@@ -453,7 +453,7 @@ public class Loader:MonoBehaviour
             Result = FillArrayRange(Result, new Vector2(StaticData.WorldCellSize, StaticData.WorldCellSize * 2), new Vector2(StaticData.WorldCellSize * 2, StaticData.WorldCellSize * 3), 0);
         }
    
-        //Debug.Log("Stage12");
+        ////Debug.Log("Stage12");
         //000
         //000
         //001
@@ -493,7 +493,7 @@ public class Loader:MonoBehaviour
         {
             for (int k = (int)from.x; k < to.x; k++)
             {
-                //Debug.Log($"My Indexes:y:{i}, x:{k};");
+                ////Debug.Log($"My Indexes:y:{i}, x:{k};");
                 array[i, k] = Content;
             }
         }
@@ -527,15 +527,100 @@ public class Loader:MonoBehaviour
             }
             str += "\n";
         }
-        Debug.Log(str);
+        //Debug.Log(str);
     }
     public void LoadItems()
     {
-        if (!ItemsLoaded)
+        //Debug.LogError(ItemsLoaded);
+        if (ItemsLoaded)
         {
-            ItemsLoaded = true;
+            
+            return;
         }
-
+        ItemsLoaded = true;
+        LoadStates();
+        //Debug.LogError("Loading items");
+        int index = 0;
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Potions/RedLittlePotion";
+            //item.spriteN = -1;
+            item.type = ItemType.Disposable;
+            item.Description = "Heal 100";
+            item.Name = "Little heal potion";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(11);
+            Items.Add(item);
+            index++;
+        }
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Potions/YellowLittlePotion";
+            //item.spriteN = -1;
+            item.type = ItemType.Disposable;
+            item.Description = "Add 10 xp";
+            item.Name = "Little xp potion";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(15);
+            Items.Add(item);
+            index++;
+        }
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Potions/BlackLittlePotion";
+            //item.spriteN = -1;
+            item.type = ItemType.Disposable;
+            item.Description = "Add 10 xp";
+            item.Name = "Little potion of purity";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(16);
+            Items.Add(item);
+            index++;
+        }
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Potions/GreenLittlePotion";
+            //item.spriteN = -1;
+            item.type = ItemType.Disposable;
+            item.Description = "This legendary potion can up all your parameters 10%";
+            item.Name = "Potion unlimited power";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(17);
+            Items.Add(item);
+            index++;
+        }
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Equip/Gear";
+            item.spriteN = 0;
+            item.type = ItemType.Weapon;
+            item.Description = "This sword up your damage 15%";
+            item.Name = "Demonic sword";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(18);
+            item.EffectIds.Add(19);
+            Items.Add(item);
+            index++;
+        }
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Potions/YellowLittlePotion";
+            //item.spriteN = -1;
+            item.type = ItemType.Disposable;
+            item.Description = "Add 10xp";
+            item.Name = "Potion of xp";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(15);
+            Items.Add(item);
+            index++;
+        }
+        //Debug.Log(Items[0]);
 
     }
     public void LoadSkills()
@@ -1082,28 +1167,142 @@ public class Loader:MonoBehaviour
             States.Add(state);
             index++;
         }
+        {//11
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 10;
+            state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
+            state.spriteN = 6;
+            state.type = StateType.ParameterAdder;
+            state.Params = new List<float>() { 100, 0, 0, 0 };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 10;
+         //   state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
+         //   state.spriteN = 6;
+            state.type = StateType.ParameterAdder;
+            state.Params = new List<float>() { 0, 100, 0, 0 };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 10;
+          //  state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
+          //  state.spriteN = 6;
+            state.type = StateType.ParameterAdder;
+            state.Params = new List<float>() { 0, 0, 100, 0 };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 10;
+           // state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
+           // state.spriteN = 6;
+            state.type = StateType.ParameterAdder;
+            state.Params = new List<float>() { 0, 0, 0, 100 };
+            States.Add(state);
+            index++;
+        }
+        {//add 10 xp
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 10;
+            // state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
+            // state.spriteN = 6;
+            state.type = StateType.PlayerParameterAdder;
+            state.Params = new List<float>() { 10, 0, 0, 0 };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 10;
+            // state.ico = "1a8bd0a22186f7b3a3d1056fbc806d35";
+            // state.spriteN = 6;
+            state.type = StateType.PlayerParameterAdder;
+            state.Params = new List<float>() { 0, -10, 0, 0 };
+            States.Add(state);
+            index++;
+        }
+        //17
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = -1;
+            state.ico = "83f1bb86821f7a0a772a4d17109bb07f";
+            state.spriteN = -1;
+            state.type = StateType.ParameterChanger;
+            state.Params = new List<float>() { 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = -1;
+            state.ico = "7e1740d8a7c5902df38f30bff77b7fa9";
+            state.spriteN = -1;
+            state.type = StateType.ParameterChanger;
+            state.Params = new List<float>() { 0, 0, 0, 0, 0.15f, 0, 0, 0, 0, 0, 0, 0, 0 };
+            States.Add(state);
+            index++;
+        }
+        //19
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = -1;
+            state.ico = "Equip/Gear";
+            state.spriteN = 0;
+            state.type = StateType.SkillAdder;
+            state.Params = new List<float>() { 0 };
+            States.Add(state);
+            index++;
+        }
 
     }
 
 
     public bool LoadPlayer(Player player)
     {
-        Debug.Log("Loader:load player");
+        LoadMap();
+        LoadSkills();
+        LoadStates();
+        LoadItems();
+        //Debug.Log("Loader:load player");
         if (!File.Exists("player.save"))
         {
-            Debug.Log("Loader:load player false");
+            //Debug.Log("Loader:load player false");
             return false;
         }
         List<object> Data;
         BinaryFormatter formatter = new BinaryFormatter();
         using (FileStream fs = new FileStream($"player.save", FileMode.Open))
         {
-            Debug.Log("i'm here 2");
-            Data= (List<object>)formatter.Deserialize(fs);
+            //Debug.Log("i'm here 2");
+            Data = (List<object>)formatter.Deserialize(fs);
 
         }
         player.transform.position = ((MyVector3)Data[0]).Get();
-       // player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, 0);
+        // player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, 0);
         player.MaxHP = (float)Data[1];
         player.HP = (float)Data[2];
         player.RegSpeedHP = (float)Data[3];
@@ -1119,7 +1318,7 @@ public class Loader:MonoBehaviour
         player.ST = (float)Data[13];
         player.RegSpeedST = (float)Data[14];
         player.PhysResist = (float)Data[15];
-        player.SumBaseDamage= (float)Data[16];
+        player.SumBaseDamage = (float)Data[16];
         player.Speed = (float)Data[17];
         if (!SkillsLoaded)
         {
@@ -1142,12 +1341,41 @@ public class Loader:MonoBehaviour
         player.MaxXP = (float)Data[29];
         player.XP = (float)Data[30];
         player.Lvl = (int)Data[31];
-        Debug.Log("Loader:load player true");
+
+        player.AddEffects((List<int>)Data[32]);
+        foreach (var item in (List<int>)Data[33])
+        {
+            Inventory.Items.Add(Items[item]);
+        }
+        player.inventory.Render(Inventory.Items);
+        foreach (var item in (List<int>)Data[34])
+        {
+            if (item == -1)
+            {
+                continue;
+            }
+            player.inventory.SetEquipment(Items[item]);
+
+        }
+        if ((int)Data[35]!=-1)
+        {
+            player.OnRightClickSkill = Skills[(int)Data[35]];
+        }
+        if ((int)Data[36] != -1)
+        {
+            player.OnLeftClickSkill = Skills[(int)Data[36]];
+        }
+        player.SetSkillsOnButtons((List<int>)Data[37]);
+        //Debug.Log("Loader:load player true");
         return true;
     }
     public void CreatePlayer(Player player)
     {
-        Debug.Log("Loader:create player");
+        LoadMap();
+        LoadSkills();
+        LoadStates();
+        LoadItems();
+        //Debug.Log("Loader:create player");
         //player.transform.position = new Vector3();
         player.MaxHP = 100;
         player.HP = 100;
@@ -1182,18 +1410,29 @@ public class Loader:MonoBehaviour
         {
             LoadSkills();
         }
-        player.Skills.Add(Skills[0].Clone());
-        player.Skills.Add(Skills[1].Clone());
-        player.Skills.Add(Skills[2].Clone());
-        player.Skills.Add(Skills[4].Clone());
-        player.Skills.Add(Skills[5].Clone());
-        player.Skills.Add(Skills[6].Clone());
-        Debug.Log(".mapcell");
+        //player.Skills.Add(Skills[0].Clone());
+        //player.Skills.Add(Skills[1].Clone());
+        //player.Skills.Add(Skills[2].Clone());
+        //player.Skills.Add(Skills[4].Clone());
+        //player.Skills.Add(Skills[5].Clone());
+        //player.Skills.Add(Skills[6].Clone());
+        //Debug.Log(Items[0].Description);
+        player.inventory.AddItem(Items[0]);
+        player.inventory.AddItem(Items[0]);
+        player.inventory.AddItem(Items[1]);
+        player.inventory.AddItem(Items[1]);
+        player.inventory.AddItem(Items[2]);
+        player.inventory.AddItem(Items[2]);
+        player.inventory.AddItem(Items[3]);
+        player.inventory.AddItem(Items[4]);
+        player.inventory.AddItem(Items[5]);
+        player.inventory.AddItem(Items[5]);
+        //Debug.Log(".mapcell");
         world.StartGeneration(new MyVector3(10, 10));
     }
     public void SavePlayer()
     {
-        Debug.Log("Loader: player saved");
+        //Debug.Log("Loader: player saved");
         List<object> Data = new List<object>() {MyVector3.Set(world.localPosition(player.transform.position)),
         player.GetMaxHP(), player.HP,  player.GetHPRegSpeed(),
         player.GetMaxMP(), player.MP, player.GetMPRegSpeed(),player.GetMagReist(),
@@ -1206,12 +1445,32 @@ public class Loader:MonoBehaviour
         player.MaxThirst, player.Thirst, player.RegSpeedT,
         player.MaxCorruption, player.Corruption, player.RegSpeedCP,
         new MyVector3(world.ActiveMapCell.ThisCell.PosX, world.ActiveMapCell.ThisCell.PosY),
-        player.MaxXP, player.XP, player.Lvl
+        player.MaxXP, player.XP, player.Lvl,
+        player.States.Where(x=>x.Duration==-1).Select(x=>x.ID).ToList(),
+        Inventory.Items.Select(x=>x.ID).ToList(),//33
+        player.inventory.equipment.equipment.Select((x)=>{
+            if(x.child==null)
+            {
+                return -1;
+            }
+            return x.child._item.ID;
+
+        }).ToList(),
+        player.OnRightClickSkill==null?-1:player.OnRightClickSkill.ID,
+        player.OnLeftClickSkill==null?-1:player.OnLeftClickSkill.ID,
+        player.SkillBar.buttons.Select((x)=>{
+            if(x.skill==null)
+            {
+                return -1;
+            }
+            return x.skill.ID;
+
+        }).ToList()
         };
         BinaryFormatter formatter = new BinaryFormatter();
         using (FileStream fs = new FileStream($"player.save", FileMode.OpenOrCreate))
         {
-            Debug.Log("i'm here 2");
+            //Debug.Log("i'm here 2");
             formatter.Serialize(fs, Data);
         }
         

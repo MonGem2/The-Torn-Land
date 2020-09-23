@@ -154,7 +154,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.512, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1187,7 +1187,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0.07999992, y: 0}
   m_SizeDelta: {x: -0.1547327, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1581,7 +1581,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2439,6 +2439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 6
+  child: {fileID: 0}
 --- !u!114 &327905978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2888,6 +2889,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 5
+  child: {fileID: 0}
 --- !u!114 &354402095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3199,6 +3201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 5
+  child: {fileID: 0}
 --- !u!114 &385407955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3642,6 +3645,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 8
+  child: {fileID: 0}
 --- !u!114 &435145886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3846,6 +3850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 4
+  child: {fileID: 0}
 --- !u!114 &447694547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4286,6 +4291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 505269128}
+  - component: {fileID: 505269129}
   m_Layer: 5
   m_Name: EquipCells
   m_TagString: Untagged
@@ -4322,6 +4328,29 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &505269129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505269127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408d309221287074493d44c6c5e9e72e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  equipment:
+  - {fileID: 2102412323}
+  - {fileID: 1685780389}
+  - {fileID: 447694546}
+  - {fileID: 385407954}
+  - {fileID: 354402094}
+  - {fileID: 327905977}
+  - {fileID: 1318393806}
+  - {fileID: 435145885}
+  - {fileID: 815661772}
+  - {fileID: 1234013422}
 --- !u!1 &508638460
 GameObject:
   m_ObjectHideFlags: 0
@@ -4389,10 +4418,34 @@ MonoBehaviour:
   InfinitySP: 0
   OneShot: 0
   Loot:
-  - {fileID: 11400000, guid: 3f7e576ab122f5d42827308c8f4dc06f, type: 2}
-  - {fileID: 11400000, guid: 3f7e576ab122f5d42827308c8f4dc06f, type: 2}
-  - {fileID: 11400000, guid: 3f7e576ab122f5d42827308c8f4dc06f, type: 2}
-  - {fileID: 11400000, guid: 3f7e576ab122f5d42827308c8f4dc06f, type: 2}
+  - ID: 0
+    EffectIds: 
+    Type: 0
+    Sprite: 
+    spriteN: -1
+    Description: 
+    Name: 
+  - ID: 0
+    EffectIds: 
+    Type: 0
+    Sprite: 
+    spriteN: -1
+    Description: 
+    Name: 
+  - ID: 0
+    EffectIds: 
+    Type: 0
+    Sprite: 
+    spriteN: -1
+    Description: 
+    Name: 
+  - ID: 0
+    EffectIds: 
+    Type: 0
+    Sprite: 
+    spriteN: -1
+    Description: 
+    Name: 
   LootPerhub: {fileID: 2576347870628786613, guid: 653ba1f46eb686e4f9f3aeb180139ea3,
     type: 3}
   Targets: []
@@ -4990,9 +5043,9 @@ RectTransform:
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 3}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &568610433
 MonoBehaviour:
@@ -5117,6 +5170,7 @@ MonoBehaviour:
   - {fileID: 5939735376096012639, guid: ca449c620a2a357468704c5612afe91a, type: 3}
   - {fileID: 8262095109858224056, guid: 2a4104f3a4b34984687c000ee5d42d87, type: 3}
   - {fileID: 322062939501561588, guid: f6ab0f5a29d2dee46b0f1b37bd93f3b8, type: 3}
+  Items: []
 --- !u!4 &573169230
 Transform:
   m_ObjectHideFlags: 0
@@ -5166,9 +5220,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 3, y: 3}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &578262713
 MonoBehaviour:
@@ -5552,7 +5606,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &615166549
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5791,7 +5845,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &639773525
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7355,9 +7409,9 @@ RectTransform:
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 3, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &765224349
 MonoBehaviour:
@@ -7650,6 +7704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 9
+  child: {fileID: 0}
 --- !u!114 &815661773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8813,7 +8868,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &953510202
 GameObject:
   m_ObjectHideFlags: 0
@@ -10295,6 +10350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 10
+  child: {fileID: 0}
 --- !u!114 &1234013423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10428,7 +10484,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1284259267
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10469,8 +10525,9 @@ MonoBehaviour:
   _container: {fileID: 251736826}
   _originalParent: {fileID: 251736826}
   _draggingParent: {fileID: 168040783}
-  _equipParent: {fileID: 505269128}
+  equipment: {fileID: 505269129}
   _infoPanel: {fileID: 1292214180}
+  player: {fileID: 1453720539}
 --- !u!114 &1284259269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10837,6 +10894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 7
+  child: {fileID: 0}
 --- !u!114 &1318393807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11186,7 +11244,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &1358914749
 GameObject:
   m_ObjectHideFlags: 0
@@ -12146,7 +12204,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453720532}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.88, y: -10, z: 0}
+  m_LocalPosition: {x: 4.48, y: 2.97, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 869905579}
@@ -12187,7 +12245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loader: {fileID: 573169229}
-  inventory: {fileID: 0}
+  inventory: {fileID: 1284259268}
   eventSystem: {fileID: 823651539}
   MoveLock: 0
   AttackLock: 0
@@ -13447,6 +13505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 3
+  child: {fileID: 0}
 --- !u!114 &1685780390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14352,7 +14411,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 27922974}
   m_HandleRect: {fileID: 0}
@@ -14481,8 +14540,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1817844462}
   m_HandleRect: {fileID: 1817844461}
   m_Direction: 2
-  m_Value: 0.99999976
-  m_Size: 0.5240163
+  m_Value: 1
+  m_Size: 0.52401626
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -16071,6 +16130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 2
+  child: {fileID: 0}
 --- !u!114 &2102412324
 MonoBehaviour:
   m_ObjectHideFlags: 0

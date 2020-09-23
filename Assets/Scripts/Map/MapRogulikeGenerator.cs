@@ -26,7 +26,7 @@ public class MapRogulikeGenerator : MonoBehaviour
     int[,] Map;
     public void Setter(Loader loader, WorldMapCell thisscell, int UnBorder = 5)
     {
-        Debug.LogWarning("disablings");
+//        Debug.LogWarning("disablings");
         GetComponent<BoxCollider2D>().enabled = false;
         //Debug.Log("asdfghjkl;:"+loader.IsMapGenered);
         this.loader = loader;
@@ -1108,7 +1108,7 @@ Interesting Patterns
         public void EndGeneration()
         {
 
-            Debug.Log("Pidr");
+            //Debug.Log("Pidr");
             int di = 0;
             int dk;
             ResultMap = new int[StaticData.WorldCellSize, StaticData.WorldCellSize];

@@ -33,7 +33,14 @@ public class InventoryCell : MonoBehaviour, IDragHandler, IEndDragHandler, IBegi
     {
         //_nameField.text = item.Name;
         //_descrField.text = item.Description;
-        _iconField.sprite = item.UIIcon;
+        try
+        {
+
+            _iconField.sprite = item.UIIcon;
+        }
+        catch {
+            Debug.LogError("WTF");
+        }
         _item = item;
     }
 
