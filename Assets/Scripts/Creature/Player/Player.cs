@@ -287,8 +287,15 @@ public class Player : Creature
                 }
             }
           //  Debug.Log("MyBonus:"+Aditional);
-            if (value > MaxXP)
+            if (value >= MaxXP)
             {
+                if (value - _xP > 0)
+                {
+                    // Debug.Log("value-_xP:" + (value - _xP));
+                    value = _xP + (value - _xP) * Aditional;
+                    Debug.Log("Result:" + value);
+                }
+                _xP = value;
                 Lvl++;
                 //_xP = MaxXP;
             }
@@ -425,7 +432,7 @@ public class Player : Creature
     public OnChangeParameterTrigger OnLoaded;
     public bool Loaded = false;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
 //        Debug.Log("QAZWSXEDCRFV.mapcell");
         //this.MaxHP = 200;

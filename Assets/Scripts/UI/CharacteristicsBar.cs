@@ -295,18 +295,43 @@ public class CharacteristicsBar : MonoBehaviour
         text.text = StartText + Text;
      
     }
-
+    public void SetButtons(bool value)
+    {
+        for (int i = 0; i < transform.GetChildCount(); i++)
+        {
+            var item = transform.GetChild(i);
+            if (item.GetComponent<Button>() != null)
+            {
+                item.gameObject.SetActive(value);
+            }
+        }
+    }//set child buttons on/off
+    bool LvlUp = false;
     public void LevelUP()
     {
         Count = GetPlayerParameterNoBonus();
+        LvlUp = true;
+        UpdateUI();        
+        SetButtons(true);        
         SetTextBox(Count.ToString());
-        Up.gameObject.SetActive(true);
-        Down.gameObject.SetActive(true);
     }
     public void EndLevelUP()
     {
-        Up.gameObject.SetActive(true);
-        Down.gameObject.SetActive(true);
+        LvlUp = false;
+        SetPlayerParameter(Count);
+        UpdateUI();
+        SetButtons(false);
+        
+    }
+    public void UpdateUI()
+    {
+        if (LvlUp)
+        {
+            text.text = StartText + Count + ";";
+            return;
+        }
+
+        text.text = StartText + GetPlayerParameterNoBonus() + ";" + GetPlayerParameter();
     }
     // Update is called once per frame
     void Update()
@@ -315,11 +340,21 @@ public class CharacteristicsBar : MonoBehaviour
     }
     public void OnButtonUp()
     {
-        
+        float Price =  Balancer.GetParameterPrice(Count, player.Lvl);
+        if(xp.XPGet(Price))
+        {
+            Count++;
+        }
+        UpdateUI();
     }
     public void OnButtonDown()
     {
-
+        float Price = Balancer.GetParameterPrice(Count-1, player.Lvl);
+        if (xp.XPReturn(Price))
+        {
+            Count--;
+        }
+        UpdateUI();
     }
 }
 public enum Characteristics

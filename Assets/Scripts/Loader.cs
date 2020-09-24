@@ -1427,6 +1427,24 @@ public class Loader:MonoBehaviour
         player.inventory.AddItem(Items[4]);
         player.inventory.AddItem(Items[5]);
         player.inventory.AddItem(Items[5]);
+
+        player.inventory.AddItem(Items[5]);
+        player.inventory.AddItem(Items[5]);
+
+        player.inventory.AddItem(Items[5]);
+        player.inventory.AddItem(Items[5]);
+
+        player.inventory.AddItem(Items[5]);
+        player.inventory.AddItem(Items[5]);
+
+        player.inventory.AddItem(Items[5]);
+        player.inventory.AddItem(Items[5]);
+
+        player.inventory.AddItem(Items[5]);
+        player.inventory.AddItem(Items[5]);
+
+        player.inventory.AddItem(Items[5]);
+        player.inventory.AddItem(Items[5]);
         //Debug.Log(".mapcell");
         world.StartGeneration(new MyVector3(10, 10));
     }
