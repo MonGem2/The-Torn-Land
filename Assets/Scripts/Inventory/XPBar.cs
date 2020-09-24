@@ -46,7 +46,7 @@ public class XPBar : MonoBehaviour
         if (LvlUp)
         {
             Debug.LogError("qwertyu");
-            slider.value = player.XP;
+            slider.value = xp;
            //slider.gameObject.
             text.text = xp + "/" + player.MaxXP;
         }
