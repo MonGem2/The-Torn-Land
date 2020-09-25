@@ -488,6 +488,7 @@ MonoBehaviour:
   Distance: 1
   behavior: 0
   entity: {fileID: 8200936270247431013}
+  detector: {fileID: 8200936270447637053}
 --- !u!1 &8200936270335528890
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,4 +657,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2234010ba0b6834886922cae8297145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EntityMovement: {fileID: 8200936270247431014}

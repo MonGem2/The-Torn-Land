@@ -343,7 +343,11 @@ public class CharacteristicsBar : MonoBehaviour
         float Price =  Balancer.GetParameterPrice(Count, player.Lvl);
         if(xp.XPGet(Price))
         {
-            Count++;
+            if (param == Characteristics.Speed)
+                Count += 0.05f;
+            else if (param == Characteristics.SumBaseDamage)
+                Count++;
+            else Count += 10;
         }
         UpdateUI();
     }
@@ -352,7 +356,11 @@ public class CharacteristicsBar : MonoBehaviour
         float Price = Balancer.GetParameterPrice(Count-1, player.Lvl);
         if (xp.XPReturn(Price))
         {
-            Count--;
+            if (param == Characteristics.Speed)
+                Count -= 0.05f;
+            else if (param == Characteristics.SumBaseDamage)
+                Count--;
+            else Count -= 10;
         }
         UpdateUI();
     }
