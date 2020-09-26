@@ -16,8 +16,11 @@ public class CharacteristicsBar : MonoBehaviour
     public string StartText;
     public Button Up;
     public Button Down;
-    void Start()
+    bool Started = false;
+    public void Start()
     {
+        if (Started) { return; }
+        Started = true;
         StartText = text.text;
         Up.gameObject.SetActive(false);
         Down.gameObject.SetActive(false);

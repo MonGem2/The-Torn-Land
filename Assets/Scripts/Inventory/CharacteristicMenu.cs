@@ -24,10 +24,20 @@ public class CharacteristicMenu : MonoBehaviour
     bool Levelup=false;
     void Start()
     {
+        foreach (var item in Bars)
+        {
+            item.Start();
+        }
+        xP.Start();
+        gameObject.SetActive(false);
+        
+        Debug.LogError("Pizda?");
         player.OnLevelChange += LevelUp;
+        
     }
     public void LevelUp(object x)
     {
+        Debug.LogError("Level up");
         xP.LevelUpBegin();
         foreach (var item in Bars)
         {
@@ -54,6 +64,7 @@ public class CharacteristicMenu : MonoBehaviour
     }
     public void Close()
     {
+        Debug.LogError("Level up close");
         foreach (var item in Bars)
         {
             item.EndLevelUP();

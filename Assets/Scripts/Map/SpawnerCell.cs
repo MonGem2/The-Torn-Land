@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class SpawnerCell : MonoBehaviour
 {
-    public int LimitMobs = 0;
     public AIForm _aIFormPrefab;
     public List<AIForm> Mobs = new List<AIForm>();
     public Player _player;
@@ -16,7 +15,6 @@ public class SpawnerCell : MonoBehaviour
     {
         _loader = loader;
         _player = player;
-        LimitMobs = 1;
     }
 
 
@@ -28,24 +26,16 @@ public class SpawnerCell : MonoBehaviour
         
     }
 
-    float gameTimer = 0;
-
     // Update is called once per frame
     void Update()
     {
         Mobs.RemoveAll(item => item == null);
-        gameTimer += Time.deltaTime;
 
-        if (gameTimer!= 0 && gameTimer < 30)
-        {
-            return;
-        }
 
         if (Mobs.Count == 0)
         {
-            if (Vector2.Distance(transform.position, _player.transform.position) < 8)
+            if (Vector2.Distance(transform.position, _player.transform.position) >= 8 && Vector2.Distance(transform.position, _player.transform.position) < 12)
             {
-                Debug.LogError("Start spawn");
                 foreach (var item in Mobs)
                 {
                     item.gameObject.SetActive(true);
@@ -53,17 +43,28 @@ public class SpawnerCell : MonoBehaviour
                 var mob = Instantiate(_aIFormPrefab);
                 mob.transform.position = transform.position;
                 mob.loader = _loader;
-
+                mob.Loot.Add(_loader.Items[UnityEngine.Random.Range(0, 12)]);
+                mob.Loot.Add(_loader.Items[UnityEngine.Random.Range(0, 12)]);
+                mob.Loot.Add(_loader.Items[UnityEngine.Random.Range(0, 12)]);
+                mob.Loot.Add(_loader.Items[UnityEngine.Random.Range(0, 12)]);
+                mob.Loot.Add(_loader.Items[1]);
                 // TODO: LootFill
 
                 Mobs.Add(mob);
                 Debug.LogError("End spawn");
-                gameTimer = 0;
             }
             
         }
-        else 
-        if(Vector2.Distance(Mobs[0].transform.position, _player.transform.position) >= 8)
+        else
+        if (Vector2.Distance(Mobs[0].transform.position, _player.transform.position) < 8)
+        {
+            foreach (var item in Mobs)
+            {
+                item.gameObject.SetActive(true);
+            }
+        }
+        else
+        if (Vector2.Distance(Mobs[0].transform.position, _player.transform.position) >= 12)
         {
             foreach (var item in Mobs)
             {

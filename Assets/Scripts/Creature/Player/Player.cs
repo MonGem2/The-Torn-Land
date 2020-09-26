@@ -333,27 +333,25 @@ public class Player : Creature
             {
                 Aditional = 5;
             }
-            //  Debug.Log("MyBonus:"+Aditional);
+
+
+            if (value - _xP > 0)
+            {
+                // Debug.Log("value-_xP:" + (value - _xP));
+                value = _xP + (value - _xP) * Aditional;
+                //Debug.Log("Result:" + value);
+            }
+            //Debug.Log("MaxXP:"+MaxXP);
             if (value >= MaxXP)
             {
-                if (value - _xP > 0)
-                {
-                    // Debug.Log("value-_xP:" + (value - _xP));
-                    value = _xP + (value - _xP) * Aditional;
-                    Debug.Log("Result:" + value);
-                }
+              //  Debug.LogError("WTF");
                 _xP = value;
                 Lvl++;
                 //_xP = MaxXP;
             }
             else
             {
-                if (value-_xP>0)
-                {
-                   // Debug.Log("value-_xP:" + (value - _xP));
-                    value =_xP + (value - _xP)*Aditional;
-                    //Debug.Log("Result:" + value);
-                }
+
                 _xP = value;
             
             }

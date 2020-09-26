@@ -12,9 +12,11 @@ public class XPBar : MonoBehaviour
     public Player player;
     public Text lvlText;
     bool LvlUp=false;
-    void Start()
+    bool Started = false;
+    public void Start()
     {
-
+        if (Started) { return; }
+        Started = true;
         slider.maxValue = player.MaxXP;
         slider.value = player.XP;
         xp = player.XP;

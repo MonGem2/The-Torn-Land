@@ -535,6 +535,7 @@ public class AIForm : Creature
     {
         Loot loot = Instantiate(LootPerhub);
         loot.Items = Loot;
+        loot.Render(loot.Items);
         loot.transform.position = transform.position;
         Destroy(gameObject);
     }

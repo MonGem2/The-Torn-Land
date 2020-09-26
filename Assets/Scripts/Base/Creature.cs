@@ -596,6 +596,7 @@ public class Creature : MyObject
     public OnChangeParameterTrigger OnLevelChange;
     public int Lvl { get => _lvl; set {
             _lvl = value;
+            Debug.LogError("WTF");
             if (OnLevelChange!=null)
             {
                 OnLevelChange(value);
