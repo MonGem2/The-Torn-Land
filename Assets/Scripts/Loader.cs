@@ -1556,7 +1556,7 @@ public class Loader:MonoBehaviour
             state.ico = "ParametersIco/Hungry";
             
             state.type = StateType.ParameterChanger;
-            state.Params = new List<float>() { 0, -0.5f, -0.5f, -0.5f, -0.5f, -0.3f, -0.3f, -0.3f, -0.3f, -0.1f, -0.1f, -0.1f, -0.5f };
+            state.Params = new List<float>() { 0, -0f, -0f, -0f, -0f, -0.3f, -0.3f, -0.3f, -0.3f, -0.1f, -0.1f, -0.1f, -0.1f };
             States.Add(state);
             index++;
         }
@@ -1569,7 +1569,7 @@ public class Loader:MonoBehaviour
             state.ico = "ParametersIco/Threat";
             
             state.type = StateType.ParameterChanger;
-            state.Params = new List<float>() { 0, -0.5f, -0.5f, -0.5f, -0.5f, -0.3f, -0.3f, -0.3f, -0.3f, -0.1f, -0.1f, -0.1f, -0.5f };
+            state.Params = new List<float>() { 0, -0f, -0f, -0f, -0.5f, -0.3f, -0.3f, -0.3f, -0.3f, -0.1f, -0.1f, -0.1f, -0.1f };
             States.Add(state);
             index++;
         }
@@ -1581,7 +1581,7 @@ public class Loader:MonoBehaviour
             state.Duration = 5;
             state.ico = "ParametersIco/Corruption";            
             state.type = StateType.ParameterChanger;
-            state.Params = new List<float>() { -0.7f, -0.5f, -0.5f, -0.5f, -0.5f, -0.3f, -0.3f, -0.3f, -0.3f, -0.1f, -0.1f, -0.1f, -0.5f };
+            state.Params = new List<float>() { -0f, -0f, -0f, -0f, -0.5f, -0.3f, -0.3f, -0.3f, -0.3f, -0.1f, -0.1f, -0.1f, -0.1f };
             States.Add(state);
             index++;
         }
@@ -1716,13 +1716,13 @@ public class Loader:MonoBehaviour
         player.SumBaseDamage = 10;
         player.Speed = 1;
         player.MaxHungry = 100;
-        player.Hungry = 70;
+        player.Hungry = 0;
         player.RegSpeedH = 0.2f;
         player.MaxThirst = 100;
-        player.Thirst = 70;
+        player.Thirst = 0;
         player.RegSpeedT = 0.2f;
         player.MaxCorruption = 100;
-        player.Corruption = 70;
+        player.Corruption = 0;
         player.RegSpeedCP = 0.2f;
         player.Skills = new List<Skill>();
         player.MaxXP = 100;
