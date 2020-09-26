@@ -38,10 +38,6 @@ public class Loot : MonoBehaviour
     //    Debug.Log("Inventory");
     //}
 
-    private void OnEnable()
-    {
-        Render(Items);
-    }
 
     public void Render(List<Item> items)
     {
