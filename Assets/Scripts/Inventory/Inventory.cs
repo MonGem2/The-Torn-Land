@@ -20,14 +20,12 @@ public class Inventory : MonoBehaviour
     public static int _capacity = 40;
     public Player player;
     ///public Button InvButton;
-
-
     private void Start()
     {
         //InvButton.onClick.AddListener(ClickBtn);
         //this._draggingParent.gameObject.SetActive(false);
         Items.Capacity = _capacity;
-
+        
         (_container as RectTransform).sizeDelta =  new Vector2 (0, (float)(107 + (_capacity / 10 - 1) * 105.3));
         transform.parent.parent.gameObject.SetActive(false);
         Render(Items);

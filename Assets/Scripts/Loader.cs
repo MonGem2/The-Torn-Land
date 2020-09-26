@@ -1731,6 +1731,7 @@ public class Loader:MonoBehaviour
         {
             LoadSkills();
         }
+        Inventory.Items = new List<Item>();
         //player.Skills.Add(Skills[0].Clone());
         //player.Skills.Add(Skills[1].Clone());
         //player.Skills.Add(Skills[2].Clone());
