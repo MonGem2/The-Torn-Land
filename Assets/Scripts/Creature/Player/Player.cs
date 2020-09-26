@@ -54,6 +54,7 @@ public class Player : Creature
             if (value > MaxHungry)
             {
                 _hungry = MaxHungry;
+                AddEffect(loader.States[35]);
             }
             else if (value<0)
             {
@@ -61,6 +62,10 @@ public class Player : Creature
             }
             else
             {
+                if (Hungry / MaxHungry > 0.75)
+                {
+                    AddEffect(loader.States[32]);
+                }
                 _hungry = value;
             }
 
@@ -86,6 +91,14 @@ public class Player : Creature
                 {
                     Aditional += item.Params[(int)PlayerStatsChangeLD.HungryRegSpeed];
                 }
+            }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if(Aditional>5)
+            {
+                Aditional = 5;
             }
             return _regSpeedH * Aditional;
         }
@@ -137,6 +150,7 @@ public class Player : Creature
             if (value > MaxThirst)
             {
                 _thirst = MaxThirst;
+                AddEffect(loader.States[35]);
             }
             else if (value < 0)
             {
@@ -144,6 +158,10 @@ public class Player : Creature
             }
             else
             {
+                if(Thirst/MaxThirst>0.75)
+                {
+                    AddEffect(loader.States[33]);
+                }
                 _thirst = value;
             }
             if (ThirstChangeTrigger != null)
@@ -168,6 +186,14 @@ public class Player : Creature
                 {
                     Aditional += item.Params[(int)PlayerStatsChangeLD.ThirstRegSpeed];
                 }
+            }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
             }
             return _regSpeedT * Aditional;
         }
@@ -219,6 +245,7 @@ public class Player : Creature
             if (value > MaxCorruption)
             {
                 _corruption = MaxCorruption;
+                AddEffect(loader.States[35]);
             }
             else if (value < 0)
             {
@@ -226,6 +253,10 @@ public class Player : Creature
             }
             else
             {
+                if (Corruption / MaxCorruption > 0.75)
+                {
+                    AddEffect(loader.States[34]);
+                }
                 _corruption = value;
             }
             if (CorruptionChangeTrigger != null)
@@ -250,6 +281,14 @@ public class Player : Creature
                 {
                     Aditional += item.Params[(int)PlayerStatsChangeLD.CorruptionRegSpeed];
                 }
+            }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
             }
             return _regSpeedCP * Aditional;
         }
@@ -280,13 +319,21 @@ public class Player : Creature
             float Aditional = 1;
             foreach (var item in States)
             {
-                if (item.type == StateType.ParameterChanger)
+                if (item.type == StateType.playerStatsChange)
                 {
                     
                     Aditional += item.Params[(int)PlayerStatsChangeLD.XPBonus];
                 }
             }
-          //  Debug.Log("MyBonus:"+Aditional);
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
+            }
+            //  Debug.Log("MyBonus:"+Aditional);
             if (value >= MaxXP)
             {
                 if (value - _xP > 0)
@@ -591,7 +638,7 @@ public class Player : Creature
                 }
             }
 
-            if (Input.GetMouseButtonDown(0)&&OnLeftClickSkill!=null)
+            if (Input.GetMouseButtonDown(0)&&(OnLeftClickSkill!=null||ActiveSkill!=null))
             {
                 if (ActiveSkill == null)
                 {
@@ -670,12 +717,14 @@ public class Player : Creature
             {
                 if (item.Params.Count == 0)
                 {
+                    messanger.SetMessage("You can't use items");
                     return false;
                 }
                 foreach (var item1 in item.Params)
                 {
                     if ((int)item1 == ID)
                     {
+                        messanger.SetMessage("You can't use this item");
                         return false;
                     }
                 }

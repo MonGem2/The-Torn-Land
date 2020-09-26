@@ -551,6 +551,7 @@ public class Loader:MonoBehaviour
             item.Name = "Little heal potion";
             item.EffectIds = new List<int>();
             item.EffectIds.Add(11);
+            item.EffectIds.Add(25);
             Items.Add(item);
             index++;
         }
@@ -573,7 +574,7 @@ public class Loader:MonoBehaviour
             item.Sprite = "Potions/BlackLittlePotion";
             //item.spriteN = -1;
             item.type = ItemType.Disposable;
-            item.Description = "Add 10 xp";
+            item.Description = "-10 corruption";
             item.Name = "Little potion of purity";
             item.EffectIds = new List<int>();
             item.EffectIds.Add(16);
@@ -607,16 +608,125 @@ public class Loader:MonoBehaviour
             Items.Add(item);
             index++;
         }
+        //5
+        //Mana +100
         {
             Item item = new Item();
             item.ID = index;
-            item.Sprite = "Potions/YellowLittlePotion";
+            item.Sprite = "Potions/BlueLittlePotion";
             //item.spriteN = -1;
             item.type = ItemType.Disposable;
-            item.Description = "Add 10xp";
-            item.Name = "Potion of xp";
+            item.Description = "Add 100 mp";
+            item.Name = "Potion of mp";
             item.EffectIds = new List<int>();
-            item.EffectIds.Add(15);
+            item.EffectIds.Add(22);
+            item.EffectIds.Add(26);
+            Items.Add(item);
+            index++;
+        }
+        //6
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Food/Meat";
+            //item.spriteN = -1;
+            item.type = ItemType.Disposable;
+            item.Description = "-10 hungry +2 corruption +1 Threat";
+            item.Name = "Meat";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(20);
+            Items.Add(item);
+            index++;
+        }
+        //7
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Food/Water";
+            //item.spriteN = -1;
+            item.type = ItemType.Disposable;
+            item.Description = "-10 Threat +1 corruption";
+            item.Name = "Water";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(21);
+            Items.Add(item);
+            index++;
+        }
+
+        //8
+        //ST+100
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Potions/GreenLittlePotion";
+            //item.spriteN = -1;
+            item.type = ItemType.Disposable;
+            item.Description = "Add 100 st";
+            item.Name = "Potion of st";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(23);
+            item.EffectIds.Add(27);
+            Items.Add(item);
+            index++;
+        }
+        //9
+        //SP+100
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Potions/GrayLittlePotion";
+            //item.spriteN = -1;
+            item.type = ItemType.Disposable;
+            item.Description = "Add 100 sp";
+            item.Name = "Potion of sp";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(24);
+            item.EffectIds.Add(28);
+            Items.Add(item);
+            index++;
+        }
+        //10
+        // Helm
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Equip/Gear";
+            item.spriteN = 13;
+            item.type = ItemType.Helmet;
+            item.Description = "Physic resist +15%, mana resist +10%, soul resist +10%, speed -5%";
+            item.Name = "Demonic helment";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(29);            
+            Items.Add(item);
+            index++;
+        }
+        //11
+        // Helm
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Equip/Gear";
+            item.spriteN = 17;
+            item.type = ItemType.Boots;
+            item.Description = "Physic resist +5%, mana resist +5% speed +10%";
+            item.Name = "Demonic boots";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(30);
+            Items.Add(item);
+            index++;
+        }
+        //12
+        // Pants
+        {
+            Item item = new Item();
+            item.ID = index;
+            item.Sprite = "Equip/Gear";
+            item.spriteN = 15;
+            item.type = ItemType.Armor;
+            item.Description = "Physic resist +15%, mana resist +15%, soul resist +15%";
+            item.Name = "Demonic armor";
+            item.EffectIds = new List<int>();
+            item.EffectIds.Add(31);
             Items.Add(item);
             index++;
         }
@@ -1277,6 +1387,217 @@ public class Loader:MonoBehaviour
             States.Add(state);
             index++;
         }
+        {
+
+            State state = new State();
+            state.ID = index;
+            //state.Duration = -1;
+            //state.ico = "Equip/Gear";
+            //state.spriteN = 0;
+            state.type = StateType.PlayerParameterAdder;
+            state.Params = new List<float>() { 0, 2, -10, 1 };
+            States.Add(state);
+            index++;
+        }
+        {
+
+            State state = new State();
+            state.ID = index;
+            //state.Duration = -1;
+            //state.ico = "Equip/Gear";
+            //state.spriteN = 0;
+            state.type = StateType.PlayerParameterAdder;
+            state.Params = new List<float>() { 0, 1,0, -10 };
+            States.Add(state);
+            index++;
+        }
+        //22
+        //Mana +100
+        {
+
+            State state = new State();
+            state.ID = index;
+            //state.Duration = -1;
+            //state.ico = "Equip/Gear";
+            //state.spriteN = 0;
+            state.type = StateType.ParameterAdder;
+            state.Params = new List<float>() { 0, 100, 0, 0 };
+            States.Add(state);
+            index++;
+        }
+        //ST +100
+        {
+
+            State state = new State();
+            state.ID = index;
+            //state.Duration = -1;
+            //state.ico = "Equip/Gear";
+            //state.spriteN = 0;
+            state.type = StateType.ParameterAdder;
+            state.Params = new List<float>() { 0, 0, 100, 0 };
+            States.Add(state);
+            index++;
+        }
+        //SP +100
+        {
+
+            State state = new State();
+            state.ID = index;
+            //state.Duration = -1;
+            //state.ico = "Equip/Gear";
+            //state.spriteN = 0;
+            state.type = StateType.ParameterAdder;
+            state.Params = new List<float>() { 0, 0, 0, 100 };
+            States.Add(state);
+            index++;
+        }
+        //25
+        // hp potion cooldown
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 30;
+            state.ico = "Potions/RedLittlePotion";
+            state.spriteN = 0;
+            state.type = StateType.DazerItems;
+            state.Params = new List<float>() { 0 };
+            States.Add(state);
+            index++;
+        }
+        //26
+        // mp potion cooldown
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 30;
+            state.ico = "Potions/BlueLittlePotion";
+            state.spriteN = 0;
+            state.type = StateType.DazerItems;
+            state.Params = new List<float>() { 5 };
+            States.Add(state);
+            index++;
+        }
+        //27
+        // st potion cooldown
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 30;
+            state.ico = "Potions/GreenLittlePotion";
+            state.spriteN = 0;
+            state.type = StateType.DazerItems;
+            state.Params = new List<float>() { 8 };
+            States.Add(state);
+            index++;
+        }
+        //28
+        // st potion cooldown
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 30;
+            state.ico = "Potions/GrayLittlePotion";
+            state.spriteN = 0;
+            state.type = StateType.DazerItems;
+            state.Params = new List<float>() { 9 };
+            States.Add(state);
+            index++;
+        }
+        //29
+        // st potion cooldown
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = -1;
+            state.ico = "Equip/Gear";
+            state.spriteN = 13;
+            state.type = StateType.ParameterChanger;
+            state.Params = new List<float>() { 0 , 0 , 0 , 0 , 0 ,0, 0,0,0,0.1f,0.15f, 0.1f, -0.05f};
+            States.Add(state);
+            index++;
+        }
+        //30 boots
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = -1;
+            state.ico = "Equip/Gear";
+            state.spriteN = 17;
+            state.type = StateType.ParameterChanger;
+            state.Params = new List<float>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.05f, 0.05f, 0f, +0.1f };
+            States.Add(state);
+            index++;
+        }
+        //31 armor
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = -1;
+            state.ico = "Equip/Gear";
+            state.spriteN = 15;
+            state.type = StateType.ParameterChanger;
+            state.Params = new List<float>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.15f, 0.15f, 0.15f, 0 };
+            States.Add(state);
+            index++;
+        } 
+        //32 hung>75%
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 5;
+            state.ico = "ParametersIco/Hungry";
+            
+            state.type = StateType.ParameterChanger;
+            state.Params = new List<float>() { 0, -0.5f, -0.5f, -0.5f, -0.5f, -0.3f, -0.3f, -0.3f, -0.3f, -0.1f, -0.1f, -0.1f, -0.5f };
+            States.Add(state);
+            index++;
+        }
+        //33 threat>75%
+        {
+            
+            State state = new State();
+            state.ID = index;
+            state.Duration = 5;
+            state.ico = "ParametersIco/Threat";
+            
+            state.type = StateType.ParameterChanger;
+            state.Params = new List<float>() { 0, -0.5f, -0.5f, -0.5f, -0.5f, -0.3f, -0.3f, -0.3f, -0.3f, -0.1f, -0.1f, -0.1f, -0.5f };
+            States.Add(state);
+            index++;
+        }
+        //34 corruption>75%
+        {
+
+            State state = new State();
+            state.ID = index;
+            state.Duration = 5;
+            state.ico = "ParametersIco/Corruption";            
+            state.type = StateType.ParameterChanger;
+            state.Params = new List<float>() { -0.7f, -0.5f, -0.5f, -0.5f, -0.5f, -0.3f, -0.3f, -0.3f, -0.3f, -0.1f, -0.1f, -0.1f, -0.5f };
+            States.Add(state);
+            index++;
+        }
+        //35 rip=100%
+        {
+
+            State state = new State();
+            state.ID = index;
+            //state.Duration = 1;
+            //state.ico = "Equip/Gear";
+            //state.spriteN = 15;
+            state.type = StateType.ParameterAdder;
+            state.Params = new List<float>() { -10, -10, -10, -10 };
+            States.Add(state);
+            index++;
+        }
 
     }
 
@@ -1395,13 +1716,13 @@ public class Loader:MonoBehaviour
         player.SumBaseDamage = 10;
         player.Speed = 1;
         player.MaxHungry = 100;
-        player.Hungry = 0;
+        player.Hungry = 70;
         player.RegSpeedH = 0.2f;
         player.MaxThirst = 100;
-        player.Thirst = 0;
+        player.Thirst = 70;
         player.RegSpeedT = 0.2f;
         player.MaxCorruption = 100;
-        player.Corruption = 0;
+        player.Corruption = 70;
         player.RegSpeedCP = 0.2f;
         player.Skills = new List<Skill>();
         player.MaxXP = 100;
@@ -1425,26 +1746,40 @@ public class Loader:MonoBehaviour
         player.inventory.AddItem(Items[2]);
         player.inventory.AddItem(Items[3]);
         player.inventory.AddItem(Items[4]);
-        player.inventory.AddItem(Items[5]);
-        player.inventory.AddItem(Items[5]);
+        player.inventory.AddItem(Items[1]);
+        player.inventory.AddItem(Items[1]);
+
+        player.inventory.AddItem(Items[1]);
+        player.inventory.AddItem(Items[1]);
+
+        player.inventory.AddItem(Items[1]);
+        player.inventory.AddItem(Items[1]);
+
+        player.inventory.AddItem(Items[1]);
+        player.inventory.AddItem(Items[1]);
+
+        player.inventory.AddItem(Items[1]);
+        player.inventory.AddItem(Items[1]);
+
+        player.inventory.AddItem(Items[1]);
+        player.inventory.AddItem(Items[1]);
+
+        player.inventory.AddItem(Items[1]);
+        player.inventory.AddItem(Items[1]);
 
         player.inventory.AddItem(Items[5]);
         player.inventory.AddItem(Items[5]);
 
-        player.inventory.AddItem(Items[5]);
-        player.inventory.AddItem(Items[5]);
+        player.inventory.AddItem(Items[8]);
+        player.inventory.AddItem(Items[8]);
+        player.inventory.AddItem(Items[9]);
+        player.inventory.AddItem(Items[9]);
+        player.inventory.AddItem(Items[2]);
+        player.inventory.AddItem(Items[2]);
 
-        player.inventory.AddItem(Items[5]);
-        player.inventory.AddItem(Items[5]);
-
-        player.inventory.AddItem(Items[5]);
-        player.inventory.AddItem(Items[5]);
-
-        player.inventory.AddItem(Items[5]);
-        player.inventory.AddItem(Items[5]);
-
-        player.inventory.AddItem(Items[5]);
-        player.inventory.AddItem(Items[5]);
+        player.inventory.AddItem(Items[10]);
+        player.inventory.AddItem(Items[11]);
+        player.inventory.AddItem(Items[12]);
         //Debug.Log(".mapcell");
         world.StartGeneration(new MyVector3(10, 10));
     }

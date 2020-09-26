@@ -33,6 +33,14 @@ public class Creature : MyObject
                     Aditional += item.Params[(int)ParameterChangerLD.MaxHP];
                 }
             }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
+            }
             return _maxHp * Aditional;
         }
         set
@@ -61,6 +69,14 @@ public class Creature : MyObject
                 {
                     AditionalMP += item.Params[(int)ParameterChangerLD.MaxMP];
                 }
+            }
+            if (AditionalMP <= 0.0001)
+            {
+                AditionalMP = 0.0001f;
+            }
+            if (AditionalMP > 5)
+            {
+                AditionalMP = 5;
             }
             return _maxMp * AditionalMP;
         }
@@ -91,6 +107,14 @@ public class Creature : MyObject
                     Aditional += item.Params[(int)ParameterChangerLD.MaxST];
                 }
             }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
+            }
             return _maxSt * Aditional;
         }
         set
@@ -117,6 +141,14 @@ public class Creature : MyObject
                 {
                     Aditional += item.Params[(int)ParameterChangerLD.MaxSP];
                 }
+            }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
             }
             return _maxSp * Aditional;
         }
@@ -239,6 +271,14 @@ public class Creature : MyObject
                     Aditional += item.Params[(int)ParameterChangerLD.SumBaseDamage];
                 }
             }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
+            }
             return _sumBaseDamage * Aditional;
         }
         set
@@ -265,6 +305,14 @@ public class Creature : MyObject
                 {
                     Aditional += item.Params[(int)ParameterChangerLD.RegSpeedHP];
                 }
+            }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
             }
             return _regSpeedHP * Aditional;
         }
@@ -295,6 +343,14 @@ public class Creature : MyObject
                     Aditional += item.Params[(int)ParameterChangerLD.RegSpeedMP];
                 }
             }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
+            }
             return _regSpeedMP * Aditional;
         }
         set
@@ -323,6 +379,14 @@ public class Creature : MyObject
                 {
                     Aditional += item.Params[(int)ParameterChangerLD.RegSpeedST];
                 }
+            }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
             }
             return _regSpeedST * Aditional;
         }
@@ -353,6 +417,14 @@ public class Creature : MyObject
                     Aditional += item.Params[(int)ParameterChangerLD.RegSpeedSP];
                 }
             }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
+            }
             return _regSpeedSP * Aditional;
         }
         set
@@ -381,6 +453,14 @@ public class Creature : MyObject
                 {
                     Aditional += item.Params[(int)ParameterChangerLD.MagResist];
                 }
+            }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
             }
             return _magResist * Aditional;
         }
@@ -411,6 +491,14 @@ public class Creature : MyObject
                     Aditional += item.Params[(int)ParameterChangerLD.PhyResisst];
                 }
             }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
+            }
             return _phyResist * Aditional;
         }
         set
@@ -439,6 +527,14 @@ public class Creature : MyObject
                 {
                     Aditional += item.Params[(int)ParameterChangerLD.SoulResist];
                 }
+            }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
             }
             return _soulResist * Aditional;
         }
@@ -474,6 +570,14 @@ public class Creature : MyObject
                 {
                     Aditional += item.Params[(int)ParameterChangerLD.Speed];
                 }
+            }
+            if (Aditional <= 0.0001)
+            {
+                Aditional = 0.0001f;
+            }
+            if (Aditional > 5)
+            {
+                Aditional = 5;
             }
             return _speed*Aditional;
                 

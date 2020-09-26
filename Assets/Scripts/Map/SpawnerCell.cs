@@ -16,26 +16,34 @@ public class SpawnerCell : MonoBehaviour
     {
         _loader = loader;
         _player = player;
-        LimitMobs = 3;
-        StartCoroutine(Spawn());
+        LimitMobs = 1;
     }
 
 
-    IEnumerator Spawn()
+
+
+    // Start is called before the first frame update
+    void Start()
     {
         
-        while (true)
+    }
+
+    float gameTimer = 0;
+
+    // Update is called once per frame
+    void Update()
+    {
+        Mobs.RemoveAll(item => item == null);
+        gameTimer += Time.deltaTime;
+
+        if (gameTimer!= 0 && gameTimer < 30)
         {
-            
-            Mobs.RemoveAll(item => item == null);
+            return;
+        }
 
-
-            if (Mobs.Count >= LimitMobs)
-            {
-                yield return null;
-            }
-
-            if (Vector2.Distance(transform.position, _player.transform.position) < 10)
+        if (Mobs.Count == 0)
+        {
+            if (Vector2.Distance(transform.position, _player.transform.position) < 8)
             {
                 Debug.LogError("Start spawn");
                 foreach (var item in Mobs)
@@ -45,33 +53,22 @@ public class SpawnerCell : MonoBehaviour
                 var mob = Instantiate(_aIFormPrefab);
                 mob.transform.position = transform.position;
                 mob.loader = _loader;
+
+                // TODO: LootFill
+
                 Mobs.Add(mob);
-                yield return new WaitForSeconds(20);
                 Debug.LogError("End spawn");
+                gameTimer = 0;
             }
-            else
-            {
-                foreach (var item in Mobs)
-                {
-                    item.gameObject.SetActive(false);
-                }
-            }
-
-
+            
         }
-    
-    }
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        else 
+        if(Vector2.Distance(Mobs[0].transform.position, _player.transform.position) >= 8)
+        {
+            foreach (var item in Mobs)
+            {
+                item.gameObject.SetActive(false);
+            }
+        }
     }
 }

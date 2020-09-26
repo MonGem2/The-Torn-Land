@@ -218,15 +218,15 @@ public class MapRogulikeGenerator : MonoBehaviour
                     MapCells.Add(cell.gameObject);
                     //ThisCell.KeyPoints.Add(new Vector2(k, i));
                 }
-               // if (Map[i, k] == (int)MapCell.CellType.SpawnP)
-               // {
-               //     GameObject cell = Instantiate(SpawnPerhub);
-               //     cell.transform.SetParent(gameObject.transform);
-               //     MapCells.Add(cell);
-               //     cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.SpawnP, 1, 1);
-               //     cell.GetComponent<SpawnerCell>().Setter(GameObject.Find("Player").GetComponent<Player>(), loader);
-               //
-               // }
+                if (Map[i, k] == (int)MapCell.CellType.SpawnP)
+                {
+                    GameObject cell = Instantiate(SpawnPerhub);
+                    cell.transform.SetParent(gameObject.transform);
+                    cell.GetComponent<MapCell>().SetAll(k, i, UnityEngine.Color.red, MapCell.CellType.SpawnP, 1, 1);
+                    cell.GetComponent<SpawnerCell>().Setter(GameObject.Find("Player").GetComponent<Player>(), loader);
+                    MapCells.Add(cell);
+                     
+                }
                 if (Map[i, k] == (int)MapCell.CellType.SaveP)
                 {
                     SafePoint cell =Instantiate(Resources.Load<SafePoint>("SafePoint"));
